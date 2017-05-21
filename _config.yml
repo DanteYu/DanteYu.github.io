@@ -1,6 +1,6 @@
 # Site settings
 title: 
-SEOTitle: 你的博客 | Your Blog
+SEOTitle: DanteYu Blog
 header-img: img/home-bg.jpg
 email: yudi5158@gmail.com
 description: "Thoughts on Software testing and quality"
@@ -12,7 +12,7 @@ baseurl: ""         # for example, '/blog' if your blog hosted on 'host/blog'
 
 # SNS settings
 RSS: false
-github_username:    DanteYu
+github_username: DanteYu
 
 
 
