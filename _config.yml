@@ -1,9 +1,9 @@
 # Site settings
-title: DanteYu Blog
+title: Thoughts on Software Testing and Quality
 SEOTitle: DanteYu Blog
 header-img: img/home-bg.jpg
 email: yudi5158@gmail.com
-description: "Thoughts on Software testing and quality"
+description: ""
 keyword: ""
 url: ""              # your host, for absolute URL
 baseurl: ""         # for example, '/blog' if your blog hosted on 'host/blog'
