@@ -1,9 +1,9 @@
 ---
 layout:     post
-title:      "探索式测试读书笔记"
+title:      探索式测试读书笔记
 subtitle:   ""
 date:       2017-04-13 12:00:00
-author:     "Dante"
+author:     DanteYu
 tags:
     - book
 ---

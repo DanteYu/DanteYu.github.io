@@ -1,8 +1,8 @@
 ---
 layout:     post
-title:      "测试之美读书笔记"
+title:      测试之美读书笔记
 date:       2011-10-15 12:00:00
-author:     "Dante"
+author:     DanteYu
 tags:
     - book
 ---
