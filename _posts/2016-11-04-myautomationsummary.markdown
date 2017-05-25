@@ -63,6 +63,11 @@ class TextTestRunner 进行测试用例执行的实例，其中Text的意思是�
 金字塔顶层是少量的基于图形界面的自动化测试
 金字塔上方是手工测试
 
+![ideal automated testing pyramid](https://watirmelon.files.wordpress.com/2012/01/idealautomatedtestingpyramid.png)
+![agile testing pyramid](http://riis.com/images/posts/Recording-UI-Testing-with-XCUI-Swift/gregory1_fig01.jpg)
+
+
+![AT_mindmap](images/AT_mindmap.jpg)
 
 面向调试的测试代码
 测试代码应该尽可能简单

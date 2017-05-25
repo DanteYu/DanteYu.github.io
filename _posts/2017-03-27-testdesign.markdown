@@ -8,7 +8,6 @@ tags:
     - test design
 ---
 
-
 #### 来自于局部探索性测试的思考思路
 * Business value
 * Input/output
