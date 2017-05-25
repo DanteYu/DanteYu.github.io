@@ -8,32 +8,21 @@ tags:
     - concordion
     - BDD
 ---
+### concordion简要
 
-1. concordion活文档
-自然语言，易读
-包含很多examples
-文档是html，所以构建出可以navigable structure的文档
-频繁的运行可以使文档和系统功能同步。如果系统行为发生了变化，相应的文档就会fail
-
+1. concordion的实现可以理解为活文档，自然语言，易读，包含很多examples。文档是html，所以构建出可以navigable structure的文档。 频繁的运行可以使文档和系统功能同步。如果系统行为发生了变化，相应的文档就会fail
 2. concordion文档不包含实现细节，把需求和实现分开，包含列子，实现方式可变，方便重构
-
 3. concordion是Junit的扩展
-
 4. 易学，基于specifications by example、
-
 5. 不需要特定的语言格式，使用自然语言，关注易读性
-
 6. 丰富的测试报告。 HTML格式的报告可以加入超链接和图片等多种
-
 7. 文档可以当成unit test来运行。具备和Junit测试一样的深度
-
 8. BA QA DEV可以一起合作写出文档
-
 9. 文档可以适用于不同级别 unit， component， subsystem， system
-
 10. 活文档可以用来定义story的验收条件，帮助PO来控制项目范围
-
 11. 提高测试覆盖率。不管实现如何，需求一定会被满足
+
+### concordion实现
 
 一个concordion规格文档由两部分组成
 
@@ -43,91 +32,105 @@ tags:
 
 两个文件应该在同一个文件夹下
 
-为了两个文档的融合使用，html里面应该包含concordion的相关命令。这个命令已结点的属性形式出现
+为了两个文档的融合使用，html里面应该包含concordion的相关命令。这个命令以结点的属性形式出现
 
-- <html xmlns:concordion="http://www.concordion.org/2007/concordion">
--     <body>
+```html
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+     <body>
         <p concordion:assertEquals="getGreeting()">Hello World!</p>
--     </body>
+     </body>
 </html>
+```
 
 测试代码基于Junit，方法名需要和html中的名字一样，使用ConcordionRunner和Junit的RunWith来让concordion把相关的命令和类联系起来
 
-- package example;
+```java
+package example;
 
-- import org.concordion.integration.junit4.ConcordionRunner;
-- import org.junit.runner.RunWith;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
-- @RunWith(ConcordionRunner.class)
+@RunWith(ConcordionRunner.class)
 public class HelloWorldFixture {
 
--     public String getGreeting() {
--         return "Hello World!";
--     }
+     public String getGreeting() {
+        return "Hello World!";
+    }
 }
+```
 
-测试报告输出默认目录是
+测试报告输出默认目录是 system property： java.io.tmpdir.
 
-system property java.io.tmpdir.
 
-concordion:assertEquals  验证执行方法的返回值和所期待的结果一致
+### concordion使用方法
 
-concordion:set 定义一个变量
-        <p>
-            The greeting for user <span concordion:set="#firstName">Bob</span>
-            will be:
-            <span concordion:assertEquals="greetingFor(#firstName)">Hello Bob!</span>
-        </p>
+**concordion:assertEquals**：验证执行方法的返回值和所期待的结果一致
 
-concordion:execute 可以执行一个测试代码里面的方法
+**concordion:set**：定义一个变量
 
-- 执行一个没有返回值的方法。
+```html
+<p>
+The greeting for user <span concordion:set="#firstName">Bob</span>
+will be:
+<span concordion:assertEquals="greetingFor(#firstName)">Hello Bob!</span>
+</p>
+```
 
-    - 一般来说，执行一个没有返回值的方法，要用set或是setUp开头。
-        <p>
-            If the time is
-            <span concordion:set="#time">09:00AM</span>
-    -             <span concordion:execute="setCurrentTime(#time)" />
-    -             then the greeting will say:
-            <span concordion:assertEquals="getGreeting()">Good Morning World!</span>
-    -         </p>
+**concordion:execute**:可以执行一个测试代码里面的方法
 
-    - 利用#TEXT这个特殊变量可以简写上面的spec。可以不适用concordion:set。在把#TEXT作为参数传给方法，后面接着#TEXT的值
+##### 一般来说，执行一个没有返回值的方法，要用set或是setUp开头。
+```html
+<p>
+If the time is
+    <span concordion:set="#time">09:00AM</span>
+    <span concordion:execute="setCurrentTime(#time)" />
+                then the greeting will say:
+    <span concordion:assertEquals="getGreeting()">Good Morning World!</span>
+</p>
+```
+
+利用**#TEXT**这个特殊变量可以简写上面的spec。可以不使用concordion:set。
+
+在把#TEXT作为参数传给方法，后面接着#TEXT的值
+```html
         <p>
             If the time is
             <span concordion:execute="setCurrentTime(#TEXT)">09:00AM</span>
-    -             then the greeting will say:
+                 then the greeting will say:
             <span concordion:assertEquals="getGreeting()">Good Morning World!</span>
         </p>
+```
 
-- 执行一个有返回值的方法
+##### 执行一个有返回值的方法，可以使用方法接受返回值
 
-    - 可以使用方法接受返回值
-            <p>
-                The full name
-                <span concordion:execute="#result = split(#TEXT)">John Smith</span>
-    -                 will be broken into first name
-                <span concordion:assertEquals="#result.firstName">John</span>
-    -                 and last name
-                <span concordion:assertEquals="#result.lastName">Smith</span>.
-    -             </p>
+```html
+        <p>
+            The full name
+            <span concordion:execute="#result = split(#TEXT)">John Smith</span>
+                will be broken into first name
+            <span concordion:assertEquals="#result.firstName">John</span>
+                and last name
+            <span concordion:assertEquals="#result.lastName">Smith</span>.
+            </p>
+```
+这里的#result是一个类,split()方法返回一个类对象. firstName and lastName 是类属性
 
-                   这里的#result是一个类,split()方法返回一个类对象. firstName and lastName 是类属性
+##### 处理不寻常的语句结构
 
-- 处理不寻常的语句结构
-
-    - 当我们面对规格文档描述不利于concordion命令的实现的时候，我们可以把execute命令放到更上一层结点结构当中
+当我们面对规格文档描述不利于concordion命令的实现的时候，我们可以把execute命令放到更上一层结点结构当中
+```html
 <p concordion:execute="#greeting = greetingFor(#firstName)">
-    -     The greeting "<span concordion:assertEquals="#greeting">Hello Bob!</span>"
-    -     should be given to user <span concordion:set="#firstName">Bob</span>
-    -     when he logs in.
+      The greeting "<span concordion:assertEquals="#greeting">Hello Bob!</span>"
+      should be given to user <span concordion:set="#firstName">Bob</span>
+      when he logs in.
 </p>
+```
 
-                          execute命令的执行是有一定的顺序的
-                              首先是处理所有child的set命令
-                              然后是自己的命令
-                              然后是自己child的execute命令
-                              最后是所有child的assertEquals方法
+##### execute命令的执行是有一定的顺序的
+1. 首先是处理所有child的set命令
+2. 然后是自己的命令
+3. 然后是自己child的execute命令
+4. 最后是所有child的assertEquals方法
 
 concordion:execute on a <table>  可以设置在table heading级别来执行table里面的每行数据
 

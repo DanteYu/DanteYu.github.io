@@ -8,13 +8,14 @@ tags:
     - BDD
 ---
 
-BDD是一个敏捷软件开发技术。鼓励开发，测试，非技术人员，需求方在软件项目中的合作
+#### BDD是什么
+BDD是一个敏捷软件开发技术。鼓励开发，测试，非技术人员，需求方在软件项目中的合作。
 
 BDD聚焦在通过stakeholder的讨论，得出对期待的软件行为的一致理解。它是TDD的衍生，通过使用自然语言来描述测试用例，使得非技术人员也能读懂。
 
 BDD的开发人员通过结合开发本身的语言和domain语言来描述代码的目的和好处，这样的话可以使得开发人员更加专注于为什么代码要这样写而不是技术细节；也会减少代码和domain语言的translation
 
-BDD的实践有哪些呢？
+### BDD的实践
 
 - 所有的利益相关者为将要实现的远景建立一个统一的目标
 
@@ -36,15 +37,17 @@ BDD是由business value来驱动的,一旦应用在了产品环境那么对于bu
 
 BDD developer应该最先开始进行UI code的编写，开发可以从UI得到写出来的代码是不是符合需求的快速反馈。然后基于UI写出其他代码。
 
+### BDD的实现
+
 在BDD中，一个需求会被分解为多个example来进行，描述这个example使用的语言叫做Gherkin
 
 当讨论scenario的时候，参与者可以质问是否所描述的结果就只能来至于描述的事件行为。这种类似的质问可以帮助参与者确定需求的范围，帮助对实现需求所需要的effort的估计
 
 一个feature包含多个scenario，一个scenario就是一个列子，用来展示应用行为的一个特征
-
+```
 Scenario: xxxxxx
-Given xxxx  (context)
-When xxxx   (event)
+Given xxxx (context)
+When xxxx (event)
 And xxxx
-Then xxxx    (outcome)
-
+Then xxxx (outcome)
+```
