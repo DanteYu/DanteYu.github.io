@@ -66,9 +66,6 @@ class TextTestRunner 进行测试用例执行的实例，其中Text的意思是�
 ![ideal automated testing pyramid](https://watirmelon.files.wordpress.com/2012/01/idealautomatedtestingpyramid.png)
 ![agile testing pyramid](http://riis.com/images/posts/Recording-UI-Testing-with-XCUI-Swift/gregory1_fig01.jpg)
 
-
-![AT_mindmap](images/AT_mindmap.jpg)
-
 面向调试的测试代码
 测试代码应该尽可能简单
 测试代码应该容易阅读
