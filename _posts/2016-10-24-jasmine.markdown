@@ -1135,7 +1135,7 @@ jasmine对异步操作的spec的默认时间5秒，超过5秒就会引起timeout
 如果需要使spec fail faster或是延长时间，我们可以调整传给it方法的时间
 
 如果想改变整个suite的timeout，我们设置jasmine.DEFAULT_TIMEOUT_INTERVAL，这个变量是全局的，超越任何describe
-
+```javascript
 describe("long asynchronous specs", function() {
     beforeEach(function(done) {
       done();
@@ -1152,6 +1152,7 @@ describe("long asynchronous specs", function() {
     }, 1000);
 
   });
+```
 
 如果需要使spec fail faster或是延长时间，我们可以调整传给it方法的时间
 done.fail function会fail spec

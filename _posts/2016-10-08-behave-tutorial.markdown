@@ -10,43 +10,50 @@ tags:
 ---
 
 
-基本概念
+### 基本概念
 
 behave要被执行，需要运行在满足下面两种情况的目录下
+1. 有feature files。这个feature files可以试由非技术人员编写
+2. 一个“steps”目录，steps里面包含python step implementation
 
-- 有feature files。这个feature files可以试由非技术人员编写
-
-- 一个”steps’目录，steps里面包含python step implementation
-
-还可以添加一些environmental controls。 比如before / after / scenarios / features / the whole shooting match
-
+还可以添加一些environmental controls。 比如
+```
+before
+after
+scenarios
+features
+```
 一个可执行的最小feature目录为
+
+```
 features/
 features/everything.feature
 features/steps/
-features/steps/steps.py
+  features/steps/steps.py
+```
 
 最小为一个features目录 下面一个feature文件和一个steps目录。steps里面包含了测试代码。
 
 一个更复杂的目录为
+```
 features/
 features/signup.feature
 features/login.feature
 features/account_details.feature
 features/environment.py
 features/steps/
-features/steps/website.py
-features/steps/utils.py
+  features/steps/website.py
+  features/steps/utils.py
+```
 
-按照项目的不同模块有不同的feature files，也有environment.py这样的环境配置文件
-在steps下面 也有 测试代码
+按照项目的不同模块有不同的feature files，也有environment.py这样的环境配置文件，在steps下面也有测试代码
 
-在命令行执行behave即可执行所有测试，在console能看到测试结果
+在命令行执行`behave`即可执行所有测试，在console能看到测试结果
 
-什么是feature files
+### 什么是feature files
 
 feature file是指一个通常命名为 **.feature的纯文本文件(UTF-8)。这个文件里面包含了用自然语言(Gherkin)描述的系统的功能特征。这些功能特征是具有代表性的期望结果。
-
+```
 Feature: Fight or flight
   In order to increase the ninja survival rate,
   As a ninja commander
@@ -63,7 +70,7 @@ Feature: Fight or flight
      When attacked by Chuck Norris
 
      Then the ninja should run for his life
-
+``` 
 使用Gherkin来描述，具有以下特点：
 
 - 结构是 feature下面有多个scenarios，scenarios下面是 GIVEN WHEN THEN的表述方法
@@ -72,20 +79,20 @@ Feature: Fight or flight
 - GIVEN： 在用户或是外部系统对应用进行交互之前，我们要把系统处于一个已知的状态。这个更加明确测试执行的前提条件和所要求的系统状态。要避免在GIVEN中涉及到用户交互
 - WHEN：用户或是外部系统所采取的与待测试系统的交互步骤。这个交互能改变待测试系统的状态
 - THEN： 待观察的结果或是期望结果
-
 - 除了GIVEN WHEN THEN，我们还可以使用AND或是BUT来做为步骤从而进行步骤描述的扩展。
-
+```
 Scenario: Stronger opponent
   Given the ninja has a third level black-belt
    When attacked by Chuck Norris
    Then the ninja should run for his life
 
     And fall off a cliff
+```
 
-Scenarios Outlines来实现数据驱动
+#### Scenarios Outlines来实现数据驱动
 
-在behave实现数据驱动测试可以使用Scenario Outline这个关键字 配合 Examples这个关键字使用。 不同的数据会在相同的方法中执行。
-
+在behave实现数据驱动测试可以使用**Scenario Outline**这个关键字配合Examples这个关键字使用。 不同的数据会在相同的方法中执行。
+```
 Scenario Outline: Blenders
    Given I put <thing> in a blender,
     when I switch the blender on
@@ -99,17 +106,19 @@ Scenario Outline: Blenders
    | thing         | other thing |
    | iPhone        | toxic waste |
    | Galaxy Nexus  | toxic waste |
+```
 
-上面的例子中 使用了Scenario Outline来定义scenario 在GIVEN中使用 <varible name>来定义数据变量。
-例子中有两个变量 <thing>和<other thing> 这两个变量名会在Examples中变为table的heading。Examples中的表格数据就是传入方法的数据
+上面的例子中 使用了Scenario Outline来定义scenario 在GIVEN中使用 `<varible name>`来定义数据变量。
+例子中有两个变量 `<thing>`和`<other thing>` 这两个变量名会在Examples中变为table的heading。Examples中的表格数据就是传入方法的数据
 
 behave会运行表格中的每一行，每一行就代表着一个场景
 
-Step Data 步骤数据
+#### Step Data 步骤数据
 
-behave支持对feature文件中的step增加描述(Context.text)和表格(Context.table)来增加对feature的描述以及实现数据驱动
+behave支持对feature文件中的step增加描述(Context.text)和表格(Context.table)来增加对feature的描述以及实现**数据驱动**
 
 描述 Context.text - 在step后用两个“”“包含的文本
+```
 Scenario: some scenario
   Given a sample text loaded into the frobulator
      """
@@ -118,9 +127,11 @@ Scenario: some scenario
      """
  When we activate the frobulator
  Then we will find it similar to English
+ ```
 这个文本可以在测试代码中使用Context.text来调用
 
 表格 Context.table - 在step后缩进表示的数据表格
+```
 Scenario: some scenario
   Given a set of specific users
      | name      | department  |
@@ -131,13 +142,16 @@ Scenario: some scenario
  When we count the number of people in each department
  Then we will find two people in "Silly Walks"
   But we will find one person in "Beer Cans"
+  ```
 这个表格的数据可以再测试代码中使用Context.table来调用，然后加到model里面。下面是example
+```python
 @given('a set of specific users')
 def step_impl(context):
     for row in context.table:
         model.add_user(name=row['name'], department=row['department'])
+```
 
-测试代码 - Python Step Implementations
+### 测试代码 - Python Step Implementations
 
 测试代码实现在python文件中，这些python文件都需要被放入到”steps“文件夹下。
 测试代码的文件名并不需要与feature文件的名称一致。
@@ -149,7 +163,7 @@ Scenario: Search for an account
    Given I search for a valid account
     Then I will see the account details
 则测试代码文件中应该如下
-
+```python
 @given('I search for a valid account')
 def step_impl(context):
    context.browser.get('http://localhost:8000/index')
@@ -164,7 +178,7 @@ def step_impl(context):
    h = get_element(context.browser, id='account-head')
    ok_(h.text.startswith("Account 61415551234"),
        'Heading %r has wrong text' % h.text)
-
+```
 given when then 都不是必须的，都可以根据情况来使用
 
 step修饰符即是 @given @then @when
