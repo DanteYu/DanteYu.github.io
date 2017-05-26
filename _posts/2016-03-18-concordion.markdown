@@ -132,10 +132,13 @@ If the time is
 3. 然后是自己child的execute命令
 4. 最后是所有child的assertEquals方法
 
-concordion:execute on a <table>  可以设置在table heading级别来执行table里面的每行数据
+##### concoirdion:execute在table里面的使用
+
+concordion:execute on a <table> 可以设置在table heading级别来执行table里面的每行数据
 
 当我们需要表现同一个行为的不同列子的时候，需要重复同样的语句结构。这种情况下可以使用table来表达
 
+```html
             <table>
                 <tr>
                     <th>Full Name</th>
@@ -153,13 +156,14 @@ concordion:execute on a <table>  可以设置在table heading级别来执行tabl
                     <td concordion:assertEquals="#result.lastName">Peterson</td>
                 </tr>
             </table>
+```
 
 但是这样看起来也是比较重复的
 
 所以concordion支持把concordion命令放在table heading级别，每一个td就会重复th的命令
 
-下面的列子中，execute在table级别，set  assertEquals在table heading级别
-
+下面的列子中，execute在table级别，set, assertEquals在table heading级别
+```html
             <table concordion:execute="#result = split(#fullName)">
                 <tr>
                     <th concordion:set="#fullName">Full Name</th>
@@ -177,12 +181,15 @@ concordion:execute on a <table>  可以设置在table heading级别来执行tabl
                     <td>Peterson</td>
                 </tr>
             </table>
+```
+
+##### concordion:execute在list上的使用
 
 concordion:execute on a <list> 可以给方法传递有层级的测试数据
 
 当我们使用concordion在列表上的时候，比如ol 和 ul 元素， 该execute命令会执行在每一个列表元素上。
 这个特性能帮我们设置有层级结构的测试数据
-
+```html
 <ol concordion:execute="parseNode(#TEXT, #LEVEL)">
     <li>Europe</li>
     <ul>
@@ -199,49 +206,29 @@ concordion:execute on a <list> 可以给方法传递有层级的测试数据
     </ul>
     <li>Australia</li>
 </ol>
+```
 
-当执行到<ol concordion:execute="parseNode(#TEXT, #LEVEL)”>时，给parseNode穿的参数就等于下面的表格
+当执行到`<ol concordion:execute="parseNode(#TEXT, #LEVEL)”>`时，给parseNode穿的参数就等于下面的表格
 
-#TEXT
+#TEXT | #LEVEL
+------- | -------
+Europe | 1
+Austria | 2
+Vienna |3
+UK | 2
+England | 3
+Scotland | 3
+France | 2
+Australia | 1
 
-#LEVEL
 
-Europe
 
-1
+##### concordion:verifyRows     
 
-Austria
-
-2
-
-Vienna
-
-3
-
-UK
-
-2
-
-England
-
-3
-
-Scotland
-
-3
-
-France
-
-2
-
-Australia
-
-1
-
-concordion:verifyRows     可以取出方法返回的可迭代的数据，并一一取出做验证。
+可以取出方法返回的可迭代的数据，并一一取出做验证。
 
 当我们需要处理方法返回的大量数据内容，并且这些数据是可迭代的时候，我们可以使用concordion:verifyRows。 比如处理一个方法返回值是列表，而我们需要对列表里面的每一个值进行验证
-
+```html
     <table concordion:execute="setUpUser(#username)">
         <tr><th concordion:set="#username">Username</th></tr>
         <tr><td>john.lennon</td></tr>
@@ -257,15 +244,15 @@ concordion:verifyRows     可以取出方法返回的可迭代的数据，并一
         <tr><td>george.harrison</td></tr>
         <tr><td>ringo.starr</td></tr>
     </table>
+```
 
-verifyRows的语法是： var : iteration_object
-#loopVar : expression
+verifyRows的语法是： `var : iteration_object` `#loopVar : expression`
 
 expression是一个可迭代对象并且对象里面的元素对象顺序是已知的
 #loopVar能够访问返回迭代对象的每一个元素，并且支持使用assertEquals去进行验证
 从expression返回的对象元素的顺序必须与行里设置的测试数据是一致的
 
-注解
+###### 注解
 
 当我们把未完成的测试代码加入到我们的build当中，为了避免使build失效，我们可以加注解。
 
@@ -273,6 +260,7 @@ expression是一个可迭代对象并且对象里面的元素对象顺序是已�
 - @ExpectedToFail      期待fail
 - @Unimplemented      未完成
 
+```java
 For example:
 
 import org.concordion.api.ExpectedToFail;
@@ -287,19 +275,17 @@ public class GreetingTest {
         return "TODO";
   }
 }
+```
 
-
-
-
-Fail-Fast
+##### Fail-Fast
 
 当出现异常的时候，concordion会继续执行剩下的测试来展示所有的问题。使用Fail-Fast可以使concordion遇到第一个异常时就停止继续执行，跳出测试。
 
 方法是使用注解
 
-Fail-Fast
 
 Fail-Fast有一个参数onExceptionType,这个参数是一个列表，列表里面的内容是各种异常类型，只有在执行当中遇到列表里面的异常类型，Fail-Fast才会生效。
+```java
 import org.concordion.api.FailFast;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
@@ -311,12 +297,12 @@ public class MyDataTest {
         ....
    }
 }
+```
 
-concordion:run 可以使该文档link到其他文档，并且run
-
-concordion:assertTrue 验证执行方法返回值是不是True
-concordion:assertFalse 验证执行方法返回值是不是False
-
+##### concordion:run 可以使该文档link到其他文档，并且run
+##### concordion:assertTrue 验证执行方法返回值是不是True
+##### concordion:assertFalse 验证执行方法返回值是不是False
+```html
 <p>
     When user <b concordion:set="#firstName">Bob</b>
     logs in, the greeting will be:
@@ -332,10 +318,10 @@ concordion:assertFalse 验证执行方法返回值是不是False
     The first name <span concordion:assertTrue="#firstName.startsWith(#letter)">starts
     with <b concordion:set="#letter">C</b></span>.
 </p>
+```
 
-支持Junit4.5以上
-
-测试代码使用ConcordionRunner
+##### 支持Junit4.5以上, 测试代码使用ConcordionRunner
+```java
 package example;
 
 import org.concordion.integration.junit4.ConcordionRunner;
@@ -348,9 +334,10 @@ public class HelloWorldFixture {
         return "Hello World!";
     }
 }
+``` 
 
 返回值的类型 也可以是map
-
+```java
     public Map split(String fullName) {
         String[] words = fullName.split(" ");
         Map<String, String> results = new HashMap<String, String>();
@@ -358,9 +345,12 @@ public class HelloWorldFixture {
         results.put("lastName", words[1]);
         return results;
     }
+```
 
-可以使用MultiValueResult来返回多个结果。 MultiValueResult 是concordion api的一个类
+可以使用MultiValueResult来返回多个结果
 
+MultiValueResult 是concordion api的一个类
+```java
 package example;
 
 import org.concordion.api.MultiValueResult;
@@ -377,29 +367,30 @@ public class SplittingNamesTest {
                 .with("lastName", words[1]);
     }
 }
-
+```
 使用这个方法，我们可以在测试代码里面设置比如属性firstName的值，然后在specification里面直接调用
 
-                <span concordion:assertEquals="#result.firstName">John</span>
+`<span concordion:assertEquals="#result.firstName">John</span>`
 
-特殊变量 #HREF
+##### 特殊变量 #HREF
 
 当我们想使用外部文件作为测试数据时，可以使用#HREF指向一个link，这个link就是数据源文件。
 
 比如我们把测试数据放在一个csv文件里面，我们就可以在html中写一个link，然后在这个<a>中使用concordion命令和#HREF
-
+```html
 <a href="blah.csv" concordion:execute="#x = myMethod(#HREF)">test file</a>
 
 <span concordion:assertEquals="#x">blah.csv</span>
+```
 
-Write specifications, not scripts
+##### Write specifications, not scripts
 
 只在Specification中描述feature和功能，不要有太详细的步骤，具体的实现细节都应该放在测试代码里面。
 
 Specification可以说是high level的测试脚本
 
-concordion:echo  is able to print the variable to test report
-
+##### `concordion:echo` is able to print the variable to test report
+```html
   <div class="example">
 
 <h3>Example</h3>
@@ -431,7 +422,8 @@ concordion:echo  is able to print the variable to test report
       </p>
 
   </div>
-
+```
+```java
 @RunWith(ConcordionRunner.class)
 public class HelloWorldFixture {
 
@@ -441,3 +433,4 @@ public class HelloWorldFixture {
         return new Greeter().greetingFor(firstName);
     }
 }
+```
