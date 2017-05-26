@@ -9,7 +9,7 @@ tags:
     - BDD
 ---
 
-Feature Testing Layout
+### Feature Testing Layout
 
 要让behave工作起来需要下面三种类型的文件
 
@@ -358,7 +358,7 @@ ags与environment.py的互动：
 - environment.py中的before_tag和after_tag。如果这两个方法被传入了”slow”，那么在执行被tag为slow的scenario之前，这两个方法会被调用
 
 for example，部分scenario被tag为@browser，则我们可以使用feature.tags来查看tag有没有browser.这样做，我们可以指定哪些feature需要执行这个before_和after_
-
+```python
 def before_feature(context, feature):
     model.init(environment='test')
     if 'browser' in feature.tags:
@@ -373,3 +373,4 @@ def after_feature(context, feature):
         context.server.shutdown()
         context.thread.join()
         context.browser.quit()
+```
