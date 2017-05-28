@@ -103,6 +103,3 @@ tags:
 - appium
 - calabash
 - espresso
-
-
-
