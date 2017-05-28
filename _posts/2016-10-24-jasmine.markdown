@@ -9,28 +9,21 @@ tags:
     - BDD
 ---
 
+### Jasmine是什么
 Jasmine是一个Javascript BDD测试框架。只要是Javascript能运行的地方，都可以运行jasmine
 
-安装方法
+### 安装方法
 
-# Local installation:
-`npm install --save-dev jasmine`
+Local installation `npm install --save-dev jasmine`
 
-# Global installation
-npm install -g jasmine
+Global installation `npm install -g jasmine`
 
-安装之后可以使用下面命令来初始化项目
+安装之后可以使用下面命令来初始化项目 `jasmine init`。使用这个命令会创建 ./spec/support这样一个目录，然后会在support下有`jasmine.json`这样一个配置文件
 
-To initialize a project for Jasmine
+`jasmine.json`是用来配置jasmine runner的，比如我可以再里面写上需要运行的测试文件是哪些
 
-jasmine init
-
-使用这个命令会创建 ./spec/support这样一个目录，然后会在support下有jasmine.json这样一个配置文件
-
-jasmine.json是用来配置jasmine runner的，比如我可以再里面写上需要运行的测试文件是哪些
-
-一个简单的jasmine.json的内容如下
-
+一个简单的`jasmine.json`的内容如下
+```json
 {
   "spec_dir": "spec",
   "spec_files": [
@@ -42,32 +35,25 @@ jasmine.json是用来配置jasmine runner的，比如我可以再里面写上需
   "stopSpecOnExpectationFailure": false,
   "random": false
 }
+```
 
-通过设置环境变量也可以自定义jasmine.json
+通过设置环境变量也可以自定义`jasmine.json`. 
 
-jasmine JASMINE_CONFIG_PATH=relative/path/to/your/jasmine.json
+`jasmine JASMINE_CONFIG_PATH=relative/path/to/your/jasmine.json`
 
-使用jasmine来运行测试套件
+使用命令`jasmine`来运行测试套件
 
-To run your test suite
+### Suites: describe your tests and Specs
 
-jasmine
+jasmine的全局方法 `describe()` 代表着测试套件test suite的实现。
 
-通过设置环境变量也可以自定义jasmine.json
-
-jasmine JASMINE_CONFIG_PATH=relative/path/to/your/jasmine.json
-
-Suites: describe your tests and Specs
-
-jasmine的全局方法 describe() 代表着测试套件 test suite的实现。
-
-describe(string, function)方法有两个参数
+`describe(string, function)`方法有两个参数
 - string指整个测试套件的名字或是title
 - function指整个测试套件的实现代码
 
-jasmine的全局方法 it() 代表着测试用例/测试规格 test specs的实现。
+jasmine的全局方法 `it()` 代表着测试用例/测试规格test specs的实现。
 
-it(string, function)方法有两个参数
+`it(string, function)`方法有两个参数
 - string指整个测试规格的名字或是title
 - function指整个测试规格的实现代码/测试代码
 
@@ -75,6 +61,7 @@ it(string, function)方法有两个参数
 
 下面的代码还表明任何在describe里面声明的变量都可以再it中使用
 
+```javascript
 describe("A suite is just a function", function() {
   var a;
 
@@ -84,28 +71,35 @@ describe("A suite is just a function", function() {
     expect(a).toBe(true);
   });
 });
+```
 
-Expectations
+#### Expectations
 
-在jasmine中，expectation就是一个assertion，结果要嘛为true要嘛为false
+在jasmine中，expectation就是一个assertion，结果要嘛为`true`要嘛为`false`
 
-在jasmine中，expectation是用方法expect(actual_value)实现的. 给expect传入的应该是系统实际运行出来的值。expect方法与Matcher方法链接，而Matcher方法接受的是期待结果，于是一句expectation可以写成：
+在jasmine中，expectation是用方法`expect(actual_value)`实现的. 给expect传入的应该是系统实际运行出来的值。
 
+expect方法与Matcher方法链接，而Matcher方法接受的是期待结果，于是一句expectation可以写成
+
+```javascript
   it("and has a positive case", function() {
     expect(true).toBe(true);
   });
+```
 
-toBe()就是Matcher方法。Matcher方法实现了期待值和实际结果值的比较，并把布尔型的比较结果报告给jasmine，然后jasmine在来是一个测试 pass或是fail
+`toBe()`就是Matcher方法。Matcher方法实现了期待值和实际结果值的比较，并把布尔型的比较结果报告给jasmine，然后jasmine再来判断一个测试pass或是fail
 
 通过在Matcher方法前面使用not，可以得到一个negative assertion
 
+```javascript
   it("and can have a negative case", function() {
     expect(false).not.toBe(true);
   });
 });
+```
 
 jasmine提供了非常丰富的Matchers。jasmine还提供custom matchers来满足项目特殊需求
-
+```javascript
 describe("Included matchers:", function() {
 
   it("The 'toBe' matcher compares with ===", function() {
@@ -171,10 +165,6 @@ it("The 'toBeNull' matcher compares against null", function() {
     expect(a).toBeNull();
     expect(foo).not.toBeNull();
   });
-
-
-
-
 
 it("The 'toBeTruthy' matcher is for boolean casting testing", function() {
     var a, foo = "foo";
@@ -254,9 +244,13 @@ it("The 'toBeCloseTo' matcher is for precision math comparison", function() {
     expect(foo).toThrowError(TypeError, "foo bar baz");
   });
 });
+```
 
-使用fail()方法来让一个spec失败。fail()的参数可以是一个failure message或是Error object
+### 使用fail()方法来让一个spec失败。
 
+`fail()`的参数可以是一个failure message或是Error object
+
+```javascript
 describe("A spec using the fail function", function() {
   var foo = function(x, callBack) {
     if (x) {
@@ -271,11 +265,15 @@ describe("A spec using the fail function", function() {
   });
 
 });
+```
 
-使用describe()来组织相关的specs可以帮助整个specs有BDD的style从而易读易懂，也可以帮助每一个spec有自己独一无二的命名以便于搜索
+### describe()
+
+使用`describe()`来组织相关的specs可以帮助整个specs有BDD的style从而易读易懂，也可以帮助每一个spec有自己独一无二的命名以便于搜索
 
 通常一个specs的命名是由describe的名字加上it的名字，我们可以像下面这个例子一样命名
 
+```javascript
 describe("A spec", function() {
   it("is just a function, so it can contain any code", function() {
     var foo = 0;
@@ -293,8 +291,10 @@ describe("A spec", function() {
   });
 
 });
+```
 
 通常一个specs的命名是由describe的名字加上it的名字，我们可以像下面这个例子一样命名
+```javascript
 describe("A spec", function() {
   it("is just a function, so it can contain any code", function() {
     var foo = 0;
@@ -310,14 +310,16 @@ describe("A spec", function() {
     expect(foo).toEqual(1);
     expect(true).toEqual(true);
   });
-
 });
+```
+### setup and teardown
 
-像大部分测试框架一样，jasmine也提供setup和teardown的功能来在测试前设置的环境状态设置和测试执行后的清理工作
-jasmine提供的是全局beforeEach(), afterEach(), beforeAll()和afterAll()方法
+像大部分测试框架一样，jasmine也提供setup和teardown的功能来在测试前设置的环境状态设置和测试执行后的清理工作。
+jasmine提供的是全局`beforeEach()`, `afterEach()`, `beforeAll()`和`afterAll()`方法
 
-beforeEach()和afterEach()会在每个spec前后执行
+`beforeEach()`和`afterEach()`会在每个spec前后执行
 
+```javascript
 describe("A spec using beforeEach and afterEach", function() {
   var foo = 0;
 
@@ -339,9 +341,10 @@ describe("A spec using beforeEach and afterEach", function() {
   });
 
 });
+```
+`beforeAll()`和`afterAll()`会在所有spec前后执行。不过，我们要小心使用这两个方法因为他们不会再spec之间充值状态。
 
-beforeAll()和afterAll()会在所有spec前后执行。不过，我们要小心使用这两个方法因为他们不会再spec之间充值状态。
-
+```javascript
 describe("A spec using beforeAll and afterAll", function() {
   var foo;
 
@@ -363,10 +366,14 @@ describe("A spec using beforeAll and afterAll", function() {
   });
 
 });
+```
+### this 关键字
 
-this 关键字
-我们可以通过在describe里面设置全局变量来传递此变量到it()中。而在beforeEach, it和afterEach中我们可以通过this关键字来分享变量。但是对下一个beforeEach, it和afterEach this关键字都会被重置为empty file
+我们可以通过在`describe`里面设置全局变量来传递此变量到`it()`中。而在`beforeEach`, `it`和`afterEach`中我们可以通过this关键字来分享变量。但是对下一个`beforeEach`, `it`和`afterEach`
 
+`this`关键字都会被重置为empty file
+
+```javascript
 describe("A spec", function() {
   beforeEach(function() {
     this.foo = 0;
@@ -382,11 +389,13 @@ describe("A spec", function() {
     expect(this.bar).toBe(undefined);
   });
 });
+```
 
-可内嵌的describe
+### 可内嵌的describe
 
 一个describe可以内嵌到一个describe中的任何specs级别的位置
 
+```javascript
 describe("A spec", function() {
   var foo;
 
@@ -421,9 +430,11 @@ describe("A spec", function() {
   });
 
 });
+```
 
-skip describe
-如果想要一个测试套件不被执行，可以使用 xdescribe()方法。使用了xdescribe之后，相应的测试套件和specs就不被执行
+### skip describe
+如果想要一个测试套件不被执行，可以使用 `xdescribe()`方法。使用了xdescribe之后，相应的测试套件和specs就不被执行
+```javascript
 xdescribe("A spec", function() {
   var foo;
 
@@ -437,13 +448,14 @@ xdescribe("A spec", function() {
   });
 
 });
+```
 
-Pending Spec
+### Pending Spec
 
 通过使用xit可以让spec处于一个pending的状态，这个spec不会run但是相关信息会在result中显示为pending
 除了使用xit，如果一个spec没有function参数传入的时候也会被标记为pending
 如果在spec内部使用pending方法，无论内部expectation如何，这个spec都会被标记为pending。pending方法接受一串字符串作为参数来表示pending的理由，这个字符串会显示在最终的测试执行结果里
-
+```javascript
 describe("Pending specs", function() {
 xit("can be declared 'xit'", function() {
     expect(true).toBe(false);
@@ -455,16 +467,18 @@ it("can be declared by calling 'pending' in the spec body", function() {
     pending('this is why it is pending');
   });
 });
+```
 
-Test Spies
+### Test Spies
 jasmine支持一个test double叫spies。 一个spy是一个test stub，能够记录一个方法的调用情况和参数情况。spy只存在describe和it中，然后会在每一个spec之后被删除。
 
 使用spyOn来设置track的方法，被track的方法不会被执行
 
-toHaveBeenCalled Matcher会返回true如果spy被调用
-toHaveBeenCalledTimes Matcher会比对spy被调用的次数
-toHaveBeenCalledWith Matcher会返回true如果参数列表 match 被记录的调用
+- `toHaveBeenCalled` Matcher会返回true如果spy被调用
+- `toHaveBeenCalledTimes` Matcher会比对spy被调用的次数
+- `toHaveBeenCalledWith` Matcher会返回true如果参数列表 match 被记录的调用
 
+```javascript
 describe("A spy", function() {
   var foo, bar = null;
 
@@ -502,9 +516,12 @@ it("stops all execution on a function", function() {
     expect(bar).toBeNull();
   });
 });
+```
 
-Spies: and.callThrough
-使用spyOn().and.callThrough除了记录被调用的信息，而且还可以让被track的方法真实的执行
+#### Spies: and.callThrough
+
+使用`spyOn().and.callThrough`除了记录被调用的信息，而且还可以让被track的方法真实的执行
+```javascript
 describe("A spy, when configured to call through", function() {
   var foo, bar, fetchedBar;
 
@@ -536,9 +553,10 @@ describe("A spy, when configured to call through", function() {
     expect(fetchedBar).toEqual(123);
   });
 });
-
-Spies: and.returnValue
-使用spyOn().and.returnValue可以让被调用的方法返回固定的值
+```
+#### Spies: and.returnValue
+使用`spyOn().and.returnValue`可以让被调用的方法返回固定的值
+```javascript
 describe("A spy, when configured to fake a return value", function() {
   var foo, bar, fetchedBar;
 
@@ -571,10 +589,10 @@ describe("A spy, when configured to fake a return value", function() {
   });
 
 });
-
-Spies: and.returnValues
-使用spyOn().and.returnValues可以让被调用的方法按顺序连续地返回固定的值，最后一个值为undefined
-
+```
+#### Spies: and.returnValues
+使用`spyOn().and.returnValues`可以让被调用的方法按顺序连续地返回固定的值，最后一个值为undefined
+```javascript
 describe("A spy, when configured to fake a series of return values", function() {
   var foo, bar;
 
@@ -609,9 +627,11 @@ describe("A spy, when configured to fake a series of return values", function() 
   });
 
 });
+```
 
-Spies: and.callFake
-使用spyOn().and.callFake(function(){return ...})可以让被调用的方法转为执行callFake()里面提供的方法
+#### Spies: and.callFake
+使用`spyOn().and.callFake(function(){return ...})`可以让被调用的方法转为执行`callFake()`里面提供的方法
+```javascript
 describe("A spy, when configured with an alternate implementation", function() {
   var foo, bar, fetchedBar;
 
@@ -645,10 +665,12 @@ spyOn(foo, "getBar").and.callFake(function(arguments, can, be, received) {
     expect(fetchedBar).toEqual(1001);
   });
 });
+```
 
-Spies: and.throwError
-使用spyOn().and.throwError可以让被调用的方法返回一个指定的异常
+#### Spies: and.throwError
+使用`spyOn().and.throwError`可以让被调用的方法返回一个指定的异常
 
+```javascript
 describe("A spy, when configured to throw an error", function() {
   var foo, bar;
 
@@ -669,10 +691,11 @@ describe("A spy, when configured to throw an error", function() {
   });
 
 });
+```
 
-Spies: and.stub
-当一个spy使用了spyOn().and.callThrough()，我们可以在一个spec中使用and.stub随时返回原始的stubbing行为
-
+#### Spies: and.stub
+当一个spy使用了`spyOn().and.callThrough()`，我们可以在一个spec中使用and.stub随时返回原始的stubbing行为
+```javascript
 describe("A spy", function() {
   var foo, bar = null;
 
@@ -697,11 +720,12 @@ describe("A spy", function() {
     expect(bar).toBe(null);
   });
 });
+```
 
-Other tracking properties
+### Other tracking properties
 
 每次对spy的调用，调用的相关信息都会被暴露和跟踪到calls属性里面
-
+```javascript
 describe("A spy", function() {
   var foo, bar = null;
 
@@ -715,8 +739,10 @@ describe("A spy", function() {
     spyOn(foo, 'setBar');
 
   });
+```
 
-.calls.any()会返回false如果spy没有被调用过，返回true如果spy至少被调用一次
+`.calls.any()`会返回false如果spy没有被调用过，返回true如果spy至少被调用一次
+```javascript
 it("tracks if it was called at all", function() {
     expect(foo.setBar.calls.any()).toEqual(false);
 
@@ -725,8 +751,9 @@ it("tracks if it was called at all", function() {
     expect(foo.setBar.calls.any()).toEqual(true);
 
   });
-
-.calls.count()会返回spy被调用的次数
+```
+`.calls.count()`会返回spy被调用的次数
+```javascript
 it("tracks the number of times it was called", function() {
     expect(foo.setBar.calls.count()).toEqual(0);
 
@@ -736,8 +763,10 @@ it("tracks the number of times it was called", function() {
     expect(foo.setBar.calls.count()).toEqual(2);
 
   });
+```
 
-.calls.argsFor(index)会返回传给spy的参数，index是参数列表中的索引
+`.calls.argsFor(index)`会返回传给spy的参数，index是参数列表中的索引
+```javascript
 it("tracks the arguments of each call", function() {
     foo.setBar(123);
     foo.setBar(456, "baz");
@@ -746,8 +775,10 @@ it("tracks the arguments of each call", function() {
     expect(foo.setBar.calls.argsFor(1)).toEqual([456, "baz"]);
 
   });
+```
 
-.calls.allArgs()会返回所有调用所有传入的参数
+`.calls.allArgs()`会返回所有调用所有传入的参数
+```javascript
 it("tracks the arguments of all calls", function() {
     foo.setBar(123);
     foo.setBar(456, "baz");
@@ -755,31 +786,39 @@ it("tracks the arguments of all calls", function() {
     expect(foo.setBar.calls.allArgs()).toEqual([[123],[456, "baz"]]);
 
   });
+```
 
-.calls.all()会返回所有调用的the context(the this)和参数
+`.calls.all()`会返回所有调用的the context(the this)和参数
+```javascript
 it("can provide the context and arguments to all calls", function() {
     foo.setBar(123);
 
     expect(foo.setBar.calls.all()).toEqual([{object: foo, args: [123], returnValue: undefined}]);
   });
+```
 
-.calls.mostRecent()会返回最近一次调用的the context(the this)和参数
+`.calls.mostRecent()`会返回最近一次调用的the context(the this)和参数
+```javascript
 it("has a shortcut to the most recent call", function() {
     foo.setBar(123);
     foo.setBar(456, "baz");
 
     expect(foo.setBar.calls.mostRecent()).toEqual({object: foo, args: [456, "baz"], returnValue: undefined});
   });
+```
 
-.calls.first()会返回第一次调用的the context(the this)和参数
+`.calls.first()`会返回第一次调用的the context(the this)和参数
+```javascript
 it("has a shortcut to the first call", function() {
     foo.setBar(123);
     foo.setBar(456, "baz");
 
     expect(foo.setBar.calls.first()).toEqual({object: foo, args: [123], returnValue: undefined});
   });
+```
 
-对于all() mostRecent() first()返回值中的object属性就是this的值，也就是对象名
+对于`all()` `mostRecent()` `first()`返回值中的object属性就是this的值，也就是对象名
+```javascript
 it("tracks the context", function() {
     var spy = jasmine.createSpy('spy');
     var baz = {
@@ -795,8 +834,10 @@ it("tracks the context", function() {
     expect(spy.calls.mostRecent().object).toBe(quux);
 
   });
+```
 
-.calls.reset()会重置所有spy的tracking
+`.calls.reset()`会重置所有spy的tracking
+```javascript
 it("can be reset", function() {
     foo.setBar(123);
     foo.setBar(456, "baz");
@@ -808,11 +849,12 @@ it("can be reset", function() {
     expect(foo.setBar.calls.any()).toBe(false);
   });
 });
+```
 
-Spies: createSpy
+#### Spies: createSpy
 
 当没有一个function需要spy on的时候，jasmine.createSpy 能创建一个”bare” spy。这个spy也能和其他spy一样能够tracking calls和参数等。但是这个spy背后没有什么具体实现，就像使用一个JavaScript对象一样。
-
+```javascript
 describe("A spy, when created manually", function() {
   var whatAmI;
 
@@ -843,11 +885,12 @@ describe("A spy, when created manually", function() {
   });
 
 });
+```
 
-Spies: createSpyObj
+#### Spies: createSpyObj
 
 为了创建多个spies，可以使用jasmine.createSpyObj，这个方法接受一个字符串数组，返回一个对象，这个对象的各个属性就是spy，名称就是字符串数组里面的字符串
-
+```javascript
 describe("Multiple spies, when created manually", function() {
   var tape;
 
@@ -877,10 +920,13 @@ describe("Multiple spies, when created manually", function() {
     expect(tape.rewind).toHaveBeenCalledWith(0);
   });
 });
+```
 
-Matching Anything with jasmine.any
-jasmine.any接受一个类型或是constructor作为参数也是期待结果。这个方法用于真实结果和期待结果在类型level上的比较
+### Matching Anything with jasmine.any
 
+`jasmine.any`接受一个类型或是constructor作为参数也是期待结果。这个方法用于真实结果和期待结果在类型level上的比较
+
+```javascript
 describe("jasmine.any", function() {
   it("matches any value", function() {
     expect({}).toEqual(jasmine.any(Object));
@@ -898,11 +944,12 @@ describe("jasmine.any", function() {
     });
   });
 });
+```
 
-Matching existence with jasmine.anything
+### Matching existence with jasmine.anything
 
-jasmine.anything返回true如果真实结果是非null或是undefined
-
+`jasmine.anything`返回true如果真实结果是非null或是undefined
+```javascript
 describe("jasmine.anything", function() {
   it("matches anything", function() {
     expect(1).toEqual(jasmine.anything());
@@ -919,11 +966,11 @@ describe("jasmine.anything", function() {
     });
   });
 });
+```
+### Partial Matching with jasmine.objectContaining
 
-Partial Matching with jasmine.objectContaining
-
-jasmine.objectContaining用于对键值对部分值的判断
-
+`jasmine.objectContaining`用于对键值对部分值的判断
+```javascript
 describe("jasmine.objectContaining", function() {
   var foo;
 
@@ -961,11 +1008,13 @@ describe("jasmine.objectContaining", function() {
     });
   });
 });
+```
 
-Partial Array Matching with jasmine.arrayContaining
+### Partial Array Matching with jasmine.arrayContaining
 
-jasmine.arrayContaining用于对数组部分值的判断
+`jasmine.arrayContaining`用于对数组部分值的判断
 
+```javascript
 describe("jasmine.arrayContaining", function() {
   var foo;
 
@@ -989,11 +1038,12 @@ describe("jasmine.arrayContaining", function() {
     });
   });
 });
+```
 
-String Matching with jasmine.stringContaining
+### String Matching with jasmine.stringContaining
 
-jasmine.stringContaining用于字符串的判断
-
+`jasmine.stringContaining`用于字符串的判断
+```javascript
 describe('jasmine.stringMatching', function() {
   it("matches as a regexp", function() {
     expect({foo: 'bar'}).toEqual({foo: jasmine.stringMatching(/^bar$/)});
@@ -1012,11 +1062,12 @@ describe('jasmine.stringMatching', function() {
   });
 
 });
+```
 
-Custom asymmetric equality tester
+### Custom asymmetric equality tester
 
 当你需要检查符合一定标准的结果的时候，不是严格相等，可以制定一个通过提供一个对象，这个对象里面包含asymmetricMatch function来实现custom asymmetric equality tester
-
+```javascript
 describe("custom asymmetry", function() {
   var tester = {
     asymmetricMatch: function(actual) {
@@ -1040,13 +1091,13 @@ describe("custom asymmetry", function() {
   });
 
 });
+```
+### Jasmine Clock
 
-Jasmine Clock
+Jasmine Clock用于测试时间依赖的代码。在spec或是suite中使用`jasmine.clock().install`来操作时间
 
-Jasmine Clock用于测试时间依赖的代码。在spec或是suite中使用jasmine.clock().install来操作时间
-
-记得使用jasmine.clock().uninstall来恢复。
-
+记得使用`jasmine.clock().uninstall`来恢复。
+```javascript
 describe("Manually ticking the Jasmine Clock", function() {
 
   var timerCallback;
@@ -1060,10 +1111,11 @@ beforeEach(function() {
 afterEach(function() {
     jasmine.clock().uninstall();
   });
+```
 
-Mocking the JavaScript Timeout Functions
-使用setTimeout或是setInterval同步执行registered functions，使用jasmine.clock().tick来执行前进
-
+### Mocking the JavaScript Timeout Functions
+使用setTimeout或是setInterval同步执行registered functions，使用`jasmine.clock().tick`来执行前进
+```javascript
 it("causes a timeout to be called synchronously", function() {
     setTimeout(function() {
       timerCallback();
@@ -1092,9 +1144,11 @@ it("causes a timeout to be called synchronously", function() {
     jasmine.clock().tick(50);
     expect(timerCallback.calls.count()).toEqual(2);
   });
+```
 
-Jasmine Clock也可以用于mock date
+### Jasmine Clock也可以用于mock date
 如果不提供一个时间，就会使用current date
+```javascript
 describe("Mocking the Date object", function(){
     it("mocks the Date object and sets it to a given time", function() {
 
@@ -1107,10 +1161,11 @@ describe("Mocking the Date object", function(){
     });
   });
 });
+```
+### Asynchronous Support
 
-Asynchronous Support
-
-调用beforeAll, afterAll, beforeEach, afterEach和it时，可以传入单个参数，这个参数被调用的时候就代表着一步操作的结束
+调用`beforeAll`, `afterAll`, `beforeEach`, `afterEach`和`it`时，可以传入单个参数，这个参数被调用的时候就代表着一步操作的结束
+```javascript
 describe("Asynchronous specs", function() {
 
   var value;
@@ -1121,15 +1176,15 @@ beforeEach(function(done) {
       done();
     }, 1);
   });
-
+```
 spec不会开始执行直到done function在beforeEach中调用。spec也不会结束直到spec的done函数被调用
-
+```javascript
 it("should support async execution of test preparation and expectations", function(done) {
     value++;
     expect(value).toBeGreaterThan(0);
     done();
   });
-
+```
 jasmine对异步操作的spec的默认时间5秒，超过5秒就会引起timeout failure。如果timeout在done被调用之前过期，current spec会被mark为failed，suite继续执行
 
 如果需要使spec fail faster或是延长时间，我们可以调整传给it方法的时间
@@ -1155,8 +1210,8 @@ describe("long asynchronous specs", function() {
 ```
 
 如果需要使spec fail faster或是延长时间，我们可以调整传给it方法的时间
-done.fail function会fail spec
-
+`done.fail` function会fail spec
+```javascript
 describe("A spec using done.fail", function() {
     var foo = function(x, callBack1, callBack2) {
       if (x) {
@@ -1176,3 +1231,4 @@ describe("A spec using done.fail", function() {
     });
   });
 });
+```

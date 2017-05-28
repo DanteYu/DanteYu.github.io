@@ -8,7 +8,7 @@ tags:
     - automation
 ---
 
-**Test Automation**一直是我工作中绕不开的内容，不同的公司有着不同目标的产品和不同背景的项目，自动化测试的实现也是不尽相同。
+**Test Automation**一直是我工作中重要的内容，不同的公司有着不同目标的产品和不同背景的项目，自动化测试的实现也是不尽相同。
 
 - 第一家公司主要用的是java+TestNG+selenium webdriver进行web UI测试
 - 第二家公司主要用的是python+RobotFramework+unittest进行在linux下的通信产品测试
