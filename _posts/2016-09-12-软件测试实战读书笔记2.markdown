@@ -2,7 +2,7 @@
 layout:     post
 title:      软件测试实战读书笔记 - 测试开发
 subtitle:   ""
-date:       2017-02-17 12:00:00
+date:       2016-09-12 12:00:00
 author:     DanteYu
 tags:
     - book
