@@ -5,7 +5,7 @@ subtitle:   ""
 date:       2017-03-27 12:00:00
 author:     DanteYu
 tags:
-    - test design
+    - Test Design
 ---
 
 #### 来自于局部探索式测试的思考思路

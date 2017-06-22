@@ -2,7 +2,7 @@
 layout:     post
 title:      unittest(Pytest)学习笔记
 subtitle:   ""
-date:       2014-06-21 12:00:00
+date:       2014-04-21 12:00:00
 author:     DanteYu
 tags:
     - unittest
@@ -10,4 +10,6 @@ tags:
 
 本文主要记录我对**HTSM**的学习笔记，采用mindmap的形式来记录
 
-![unittest_mindmap](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/unittest.png?raw=true)
+### 概念
+
+![概念](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/unittest1.png)
