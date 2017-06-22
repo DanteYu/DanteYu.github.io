@@ -18,8 +18,22 @@ tags:
 本文主要记录我对**HTSM**的学习和理解。
 
 ### 什么是HTSM
+
+
+
+![htsm](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/htsm.png?raw=true)
+
+上图是HTSM的概要，可以看到整个模型分为四个部分质量标准(Quality Criteria)、项目环境(Project Environment)、产品元素（Product Element）和测试技术(Test Techniques）。通过对前三个部分的考察，能够得应该选择的测试技术，从而执行测试，观察被测试出来的质量Perceived Quality）。
+
 ### HTSM的内容
+质量标准(Quality Criteria)、项目环境(Project Environment)、产品元素（Product Element）和测试技术(Test Techniques)各自有自己的处于不同层次的指导词和提问，下面简要总结如下
+
 ### 怎么运用HTSM
+通过HTSM先得出一个适用于自己项目的定制的HTSM
+在项目启动阶段
+在测试分析阶段
+> 在测试设计时，质量标准启发测试先知（Oracles），项目环境启发测试过程（Procedures），产品元素启发测试覆盖（Coverage），观察到的质量启发测试报告（Reporting）
+在测试执行阶段
 
 #### 参考资料  
 * [测试建模: 启发式测试策略模型 Heuristic Test Strategy Model](http://www.cnblogs.com/liangshi/archive/2012/02/23/2364947.html)
