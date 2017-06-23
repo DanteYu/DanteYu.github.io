@@ -57,7 +57,10 @@ tags:
 - 金字塔上方是手工测试
 
 ![ideal automated testing pyramid](https://watirmelon.files.wordpress.com/2012/01/idealautomatedtestingpyramid.png)
-![agile testing pyramid](http://riis.com/images/posts/Recording-UI-Testing-with-XCUI-Swift/gregory1_fig01.jpg)
+![agile testing pyramid](https://image.slidesharecdn.com/agiletestingframework-theartofautomatedtesting-140428114238-phpapp02/95/agile-testing-framework-the-art-of-automated-testing-18-638.jpg?cb=1442514508)
+
+#### 敏捷测试四象限里面有归纳出哪些测试是可以自动化的
+![Agile_Testing_Quadrants](http://istqbexamcertification.com/wp-content/uploads/2014/12/Agile_Testing_Quadrants.jpg)
 
 #### 一个关于自动化测试的mindmap
 
