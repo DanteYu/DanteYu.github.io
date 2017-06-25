@@ -1,0 +1,31 @@
+---
+layout:     post
+title:      RobotFramework学习笔记
+subtitle:   扩展RF
+date:       2014-01-11 12:00:00
+author:     DanteYu
+tags:
+    - RF
+---
+
+本文主要记录我对**RobotFramework**的学习笔记，采用mindmap的形式来记录
+
+### 扩展RF
+![rf4-1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF4-1.png?raw=true)
+![rf4-2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF4-2.png?raw=true)
+![rf4-3](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF4-3.png?raw=true)
+![rf4-4](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF4-4.png?raw=true)
+![rf4-5](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF4-5.png?raw=true)
+![rf4-6](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF4-6.png?raw=true)
+![rf4-7](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF4-7.png?raw=true)
+![rf4-8](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF4-8.png?raw=true)
+![rf4-9](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF4-9.png?raw=true)
+![rf4-10](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF4-10.png?raw=true)
+![rf4-11](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF4-11.png?raw=true)
+![rf4-12](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF4-12.png?raw=true)
+
+### 内建变量
+![rf4-13](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF4-13.png?raw=true)
+![rf4-14](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF4-14.png?raw=true)
+
+

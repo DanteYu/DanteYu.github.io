@@ -1,0 +1,30 @@
+---
+layout:     post
+title:      RobotFramework学习笔记
+subtitle:   测试执行
+date:       2014-01-10 12:00:00
+author:     DanteYu
+tags:
+    - RF
+---
+
+本文主要记录我对**RobotFramework**的学习笔记，采用mindmap的形式来记录
+
+### 测试用例执行
+
+![exec1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF3execution1.png?raw=true)
+![exec2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF3execution2.png?raw=true)
+![exec3](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF3execution3.png?raw=true)
+![exec4](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF3execution4.png?raw=true)
+![exec5](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF3execution5.png?raw=true)
+![exec6](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF3execution6.png?raw=true)
+![exec7](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF3execution7.png?raw=true)
+![exec8](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF3execution8.png?raw=true)
+![exec9](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF3execution9.png?raw=true)
+![exec10](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF3execution10.png?raw=true)
+![exec11](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF3execution11.png?raw=true)
+![exec12](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF3execution12.png?raw=true)
+![exec13](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF3execution13.png?raw=true)
+![exec14](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF3execution14.png?raw=true)
+
+

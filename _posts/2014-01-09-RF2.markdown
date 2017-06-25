@@ -10,41 +10,32 @@ tags:
 
 本文主要记录我对**RobotFramework**的学习笔记，采用mindmap的形式来记录
 
-### 基本介绍
+### 变量文件
 
-![介绍](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1intro.png?raw=true)
+![variablefile1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF2variablefile1.png?raw=true)
+![variablefile2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF2variablefile2.png?raw=true)
+![variablefile3](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF2variablefile3.png?raw=true)
 
-### Test Data
+### 资源文件
 
-![testdata1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testdata.png?raw=true)
-![testdata2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testdata1.png?raw=true)
-
-### Test Case
-
-![testcase1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testcase1.png?raw=true)
-![testcase2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testcase2.png?raw=true)
-![testcase3](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testcase3.png?raw=true)
-
-### Test Suite
-
-![testsuite](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testsuite.png?raw=true)
+![resourcefile](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF2resourcefile.png?raw=true)
 
 
-### Test Library
+### 处理同名关键字
 
-![testlib](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testlibrary.png?raw=true)
-
-### Test Variable
-
-![testvar1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testvariable1.png?raw=true)
-![testvar2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testvariable2.png?raw=true)
-![testvar3](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testvariable3.png?raw=true)
+![samekeyword](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF2samekeyword.png?raw=true)
 
 
-### User Keyword
+### Timeout
 
-![keyword1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1userkeyword1.png?raw=true)
-![keyword2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1userkeyword2.png?raw=true)
-![keyword2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1userkeyword2.png?raw=true)
+![timeout](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF2timeout.png?raw=true)
 
 
+### Loop
+
+![loop1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF2loop1.png?raw=true)
+![loop2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF2loop2.png?raw=true)
+
+### 逻辑条件执行
+
+![logic1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF2logic.png?raw=true)
