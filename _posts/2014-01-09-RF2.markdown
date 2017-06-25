@@ -10,35 +10,41 @@ tags:
 
 本文主要记录我对**RobotFramework**的学习笔记，采用mindmap的形式来记录
 
-### 总览
-图片可在新标签页中打开进行放大查看
-![总览](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/unittest_mindmap.png?raw=false)
+### 基本介绍
 
-### 概念
+![介绍](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1intro.png?raw=true)
 
-![概念](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/unittest1.png?raw=true)
+### Test Data
 
-### 命令行接口
+![testdata1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testdata.png?raw=true)
+![testdata2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testdata1.png?raw=true)
 
-![命令行接口2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/unittest2.png?raw=true)
-![命令行接口3](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/unittest3.png?raw=true)
+### Test Case
 
-### 重用老的测试代码
+![testcase1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testcase1.png?raw=true)
+![testcase2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testcase2.png?raw=true)
+![testcase3](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testcase3.png?raw=true)
 
-![重用老的测试代码](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/unittest4.png?raw=true)
+### Test Suite
 
-### 组织测试代码
+![testsuite](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testsuite.png?raw=true)
 
-![组织测试代码5](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/unittest5.png?raw=true)
-![组织测试代码6](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/unittest6.png?raw=true)
 
-### 跳过测试和期待失败结果
+### Test Library
 
-![跳过测试和期待失败结果](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/unittest7.png?raw=true)
+![testlib](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testlibrary.png?raw=true)
 
-### API
-![API8](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/unittest8.png?raw=true)
-![API8](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/unittest9.png?raw=true)
+### Test Variable
 
+![testvar1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testvariable1.png?raw=true)
+![testvar2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testvariable2.png?raw=true)
+![testvar3](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testvariable3.png?raw=true)
+
+
+### User Keyword
+
+![keyword1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1userkeyword1.png?raw=true)
+![keyword2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1userkeyword2.png?raw=true)
+![keyword2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1userkeyword2.png?raw=true)
 
 

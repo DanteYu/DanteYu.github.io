@@ -2,7 +2,7 @@
 layout:     post
 title:      RobotFramework学习笔记
 subtitle:   基本概念
-date:       2014-04-21 12:00:00
+date:       2014-01-08 12:00:00
 author:     DanteYu
 tags:
     - RF
