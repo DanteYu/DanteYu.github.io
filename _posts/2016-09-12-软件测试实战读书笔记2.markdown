@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      软件测试实战读书笔记 - 测试开发
-subtitle:   ""
+title:      软件测试实战读书笔记
+subtitle:   测试开发
 date:       2016-09-12 12:00:00
 author:     DanteYu
 tags:

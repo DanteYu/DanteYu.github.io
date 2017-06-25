@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      python behave之基本教程
-subtitle:   ""
+title:      python behave
+subtitle:   基本教程
 date:       2016-10-13 12:00:00
 author:     DanteYu
 tags:

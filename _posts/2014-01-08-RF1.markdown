@@ -1,0 +1,50 @@
+---
+layout:     post
+title:      RobotFramework学习笔记
+subtitle:   基本概念
+date:       2014-04-21 12:00:00
+author:     DanteYu
+tags:
+    - RF
+---
+
+本文主要记录我对**RobotFramework**的学习笔记，采用mindmap的形式来记录
+
+### 基本介绍
+
+![介绍](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1intro.png?raw=true)
+
+### Test Data
+
+![testdata1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testdata.png?raw=true)
+![testdata2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testdata1.png?raw=true)
+
+### Test Case
+
+![testcase1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testcase1.png?raw=true)
+![testcase2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testcase2.png?raw=true)
+![testcase3](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testcase3.png?raw=true)
+
+### Test Suite
+
+![testsuite](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testsuite.png?raw=true)
+
+
+### Test Library
+
+![testlib](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testlibrary.png?raw=true)
+
+### Test Variable
+
+![testvar1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testvariable1.png?raw=true)
+![testvar2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testvariable2.png?raw=true)
+![testvar3](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1testvariable3.png?raw=true)
+
+
+### User Keyword
+
+![keyword1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1userkeyword1.png?raw=true)
+![keyword2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1userkeyword2.png?raw=true)
+![keyword2](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF1userkeyword2.png?raw=true)
+
+

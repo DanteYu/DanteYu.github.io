@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      python behave之feature setup testing
-subtitle:   ""
+title:      python behave
+subtitle:   feature setup testing
 date:       2016-10-20 12:00:00
 author:     DanteYu
 tags:

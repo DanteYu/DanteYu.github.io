@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      软件测试实战读书笔记 - 缺陷报告和测试文档
-subtitle:   ""
+title:      软件测试实战读书笔记
+subtitle:   缺陷报告和测试文档
 date:       2017-02-17 12:00:00
 author:     DanteYu
 tags:
