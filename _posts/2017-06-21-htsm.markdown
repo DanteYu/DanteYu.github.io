@@ -179,10 +179,10 @@ HTSM主要目的的通过提供大量关键词和启发式问题，帮助测试�
 
 ### 怎么运用HTSM
 通过HTSM先得出一个适用于自己项目的定制的HTSM
-在项目启动阶段
-在测试分析阶段
-> 在测试设计时，质量标准启发测试先知（Oracles），项目环境启发测试过程（Procedures），产品元素启发测试覆盖（Coverage），观察到的质量启发测试报告（Reporting）
-在测试执行阶段
+ - 在项目启动阶段
+ - 在测试分析阶段
+ - 在测试执行阶段
+ - 在测试报告阶段
 
 #### 参考资料  
 * [测试建模: 启发式测试策略模型 Heuristic Test Strategy Model](http://www.cnblogs.com/liangshi/archive/2012/02/23/2364947.html)
