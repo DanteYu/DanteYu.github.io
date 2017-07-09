@@ -205,7 +205,38 @@ HTSM主要目的的通过提供大量关键词和启发式问题，帮助测试�
 
 #### 质量标准(Quality Criteria)
 
-质量标准就是帮助测试人员判断产品是否有问题的规则和来源。
+质量标准就是帮助测试人员判断产品是否有问题的规则和来源。质量标准定义了产品应该做什么。通过不同类型的标准，你可以更好的计划测试来快速挖掘重要的问题。下面列出的维度都可以被当做潜在的风险区域。
+
+对于下面的维度，请先决定它是否对你所在项目的重要性，然后思考怎么识别产品是正确地的在工作。
+
+* **能力 Capability**
+	* 描述: Can it perform the required functions?
+* **可靠性 Reliability**
+	* 描述: Will it work and resist failure in all requried situations?
+	* 思考维度
+		* 健壮性 Robustness: 在合理的情况下，产品能够持续的超时工作，不出现退化
+		* 错误处理 Error handling：产品在出现错误的情况下能够应付失败，优雅地处理错误，稳定地恢复
+		* 数据完整性 Data integrity： 产品中的数据能够不被丢失或被污染
+		* 安全性 Safty：产品不能由于失败而对人生财产造成损害
+		
+* **可用性 Usability**
+	* 描述：How easy is it for a real user to use the product?
+	* 典型维度
+		* 易学性 Learnability: 产品的操作能够被有意的用户快速掌握
+		* 可操作性 Operability: 产品的操作不需要太多努力适应，也不会让人忙乱
+		* 可达性 Accessibility: 产品达到先关的可达性的标准
+
+* **魅力 Charisma**
+	* 描述：How appealing is the product?
+	* 典型维度
+		* 美学 Aesthetics
+		* 独特性 Uniqueness： 产品是新的或者在某一方面是独一无二的
+		* 必然性 Necessity： 产品拥有用户所期待的功能
+		* 有效性 Usefulness： 产品解决了一些重要的问题，并且处理得很好
+		* 狂喜 Entrancement： 用户在使用产品时被“套牢”，非常开心，完全沉浸在产品的使用当中
+		* 想象 image：产品表达了对质量要求的印象
+
+
 
 #### 感知质量(Perceived Quality)
 
