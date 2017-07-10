@@ -1,10 +1,7 @@
 
-# I am using below theme
+## 这是我的个人博客项目。
 
----
-
-# HuxBlog Boilerplate
-
+###我使用下面这个模板
 ##### This is the boilerplate of [Hux Blog](https://github.com/Huxpro/huxpro.github.io), all documents is over there!
 
 #### [View Boilerplate &rarr;](http://huangxuan.me/huxblog-boilerplate/)
