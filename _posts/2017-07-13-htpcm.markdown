@@ -1,0 +1,23 @@
+---
+layout:     post
+title:      启发式测试二部曲之HTPCM
+subtitle:   ""
+date:       2017-07-13 12:00:00
+author:     DanteYu
+tags:
+     - Test Plan
+---
+
+### 启发式测试二部曲
+
+**启发式测试计划语境模型 Heuristic Test Planning Context Model**和**启发式测试策略模型 Heuristic Test Strategy Model**都是来自于测试大师James Bach提出的框架模型用来指导测试计划和测试设计。
+* HTSM是测试设计的参考框架，提供了不同维度的指导词来启发测试人员的思维来帮助测试设计和测试策略的制定
+* HTPCM是测试计划的参考框架，提供了不同维度的语境关键词来启发测试计划制定人员决定测试过程和测试任务
+
+本文主要记录我对**HTPCM**的学习和理解。
+
+### 什么是HTPCM
+
+
+	
+#### 参考资料  

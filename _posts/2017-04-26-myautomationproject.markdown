@@ -16,7 +16,7 @@ tags:
 	- __UI testing__: webdriver+cucumber+Juint, protractor+jasmine, webdriver+concordion+Junit
 	- __API testing__: Pact(contract testing), RestAssured+Junit
 
-为了总结平时所学，下面的repo会有一些简单的demo。这些demo都是学习和实践过程中的产物。
+为了总结平时所学，下面的repo会有一些简单的demo。这些demo都是学习和实践过程中的产物。也希望这些测试项目能做到在新项目中“拿来即用”，减少自动化测试启动时间。
 
 repo地址： [MyDemo](https://github.com/DanteYu/Test_Automation_Demo)
 
