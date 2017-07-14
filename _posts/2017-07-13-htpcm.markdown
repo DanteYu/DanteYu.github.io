@@ -10,7 +10,7 @@ tags:
 
 ### 启发式测试二部曲
 
-**启发式测试计划语境模型 Heuristic Test Planning Context Model**和**启发式测试策略模型 Heuristic Test Strategy Model**都是来自于测试大师James Bach提出的框架模型用来指导测试计划和测试设计。
+**启发式测试计划语境模型 _Heuristic Test Planning Context Model_ **和**启发式测试策略模型 _Heuristic Test Strategy Model_ **都是来自于测试大师James Bach提出的框架模型用来指导测试计划和测试设计。
 * HTSM是测试设计的参考框架，提供了不同维度的指导词来启发测试人员的思维来帮助测试设计和测试策略的制定
 * HTPCM是测试计划的参考框架，提供了不同维度的语境关键词来启发测试计划制定人员决定测试过程和测试任务
 
@@ -18,6 +18,24 @@ tags:
 
 ### 什么是HTPCM
 
+为了保证测试过程的有效性和减少测试浪费，我们需要在着手开始测试前制定测试计划。这个测试计划需要结合项目情况，
 
-	
+在网上有很多test plan的模板，如果照搬这些千篇一律的模板，我们可能会失去对项目情况的深度思考，造成测试计划考虑不全从而影响测试过程。HTPCM提供了一些基于语境的关键词来启发测试人员对项目、产品和测试资源的深度思考和理解，从而制作出较好的测试计划。HTPCM的特征是测试计划者通盘考虑产品需求，项目环境，测试小组，测试资源，明确测试任务，并制定相应的测试过程。
+
+### HTPCM的内容
+
+![htpcm](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/htpcm.png?raw=true)
+
+上面展示了HTPCM的基本元素和结构。语境（开发&测试团队&测试实验室&需求）决定了测试过程和任务。任务又是测试过程的目标。
+
+
+
+
+### 语境如何影响测试计划
+
+
+好的测试计划是基于语境的，只有符合项目情况的测试方案才能有效地工作。 测试方法各有巧妙，无所谓好坏。讨论优秀，不应该只考虑测试方法本身，而是要考虑测试，实现和环境是否紧密联系，即优秀是对测试，实现和环境之间关系的描述。
+
 #### 参考资料  
+* [软件测试实战](https://book.douban.com/subject/25839003/)
+* [htpcm](http://www.satisfice.com/tools/satisfice-cm.pdf)
