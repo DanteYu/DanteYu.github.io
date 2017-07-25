@@ -25,7 +25,7 @@ features/everything.feature
 features/steps/
 features/steps/steps.py
 ```
-最小为一个features目录下面一个feature文件和一个steps目录。steps里面包含了测试代码。
+最小为一个features目录下面一个`feature`文件和一个`steps`目录。steps里面包含了测试代码。
 
 一个更复杂的目录为
 ```
@@ -113,9 +113,9 @@ background是由一些step组成，这些step和scenarios里面的一样。Backg
 使用background的好实践：
 
 - 不要用”Background’来设置较为复杂的状态除非客户要求
-- 保持”Background”短小精炼。如果background大于4行，我们就可以把一些无关的细节挪到high level的steps
+- 保持”Background”短小精炼。如果Background大于4行，我们就可以把一些无关的细节挪到high level的steps
 - 使得“Background”栩栩如生，通俗易懂。可以使用丰富的名称和描述来讲述一个故事。
-- 保持scenario不会很长，也不能太多。不然background会执行很多遍
+- 保持scenario不会很长，也不能太多。不然Background会执行很多遍
 
 #### Scenarios
 
@@ -125,7 +125,7 @@ scenario最简单的形式为
 ```
 Scenario: we have some stock when we open the store
   Given that the store has just opened
-   then we should have items for sale.
+  Then we should have items for sale.
 ```
 
 如果有需要的话，and或是but都可以加到scenario里面，放在given when then之后
@@ -318,8 +318,8 @@ For example:
 Feature: annual reporting
   Some description of a slow reporting system.
 ```
-
 or
+
 ```
 @wip
 @slow

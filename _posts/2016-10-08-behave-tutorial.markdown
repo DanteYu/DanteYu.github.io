@@ -29,7 +29,7 @@ features
 features/
 features/everything.feature
 features/steps/
-  features/steps/steps.py
+features/steps/steps.py
 ```
 
 最小为一个features目录 下面一个feature文件和一个steps目录。steps里面包含了测试代码。
@@ -42,8 +42,8 @@ features/login.feature
 features/account_details.feature
 features/environment.py
 features/steps/
-  features/steps/website.py
-  features/steps/utils.py
+features/steps/website.py
+features/steps/utils.py
 ```
 
 按照项目的不同模块有不同的feature files，也有environment.py这样的环境配置文件，在steps下面也有测试代码
@@ -62,36 +62,34 @@ Feature: Fight or flight
 
   Scenario: Weaker opponent
     Given the ninja has a third level black-belt
-     When attacked by a samurai
-     Then the ninja should engage the opponent
+    When attacked by a samurai
+    Then the ninja should engage the opponent
 
   Scenario: Stronger opponent
     Given the ninja has a third level black-belt
-     When attacked by Chuck Norris
-
-     Then the ninja should run for his life
+    When attacked by Chuck Norris
+    Then the ninja should run for his life
 ``` 
 使用Gherkin来描述，具有以下特点：
 
-- 结构是 feature下面有多个scenarios，scenarios下面是 GIVEN WHEN THEN的表述方法
+- 结构是 feature下面有多个scenarios，scenarios下面是 Given When Then的表述方法
 - feature的描述用的是 in order to ….. as a ….. I want …….
-- behave会采用 GIVEN WHEN THEN的步骤描述来map到测试代码中对应的相同步骤描述。GIVEN WHEN THEN是真实的执行步骤
-- GIVEN： 在用户或是外部系统对应用进行交互之前，我们要把系统处于一个已知的状态。这个更加明确测试执行的前提条件和所要求的系统状态。要避免在GIVEN中涉及到用户交互
-- WHEN：用户或是外部系统所采取的与待测试系统的交互步骤。这个交互能改变待测试系统的状态
-- THEN： 待观察的结果或是期望结果
-- 除了GIVEN WHEN THEN，我们还可以使用AND或是BUT来做为步骤从而进行步骤描述的扩展。
+- behave会采用 Given When Then的步骤描述来map到测试代码中对应的相同步骤描述。Given When Then是真实的执行步骤
+- Given： 在用户或是外部系统对应用进行交互之前，我们要把系统处于一个已知的状态。这个更加明确测试执行的前提条件和所要求的系统状态。要避免在GIVEN中涉及到用户交互
+- When：用户或是外部系统所采取的与待测试系统的交互步骤。这个交互能改变待测试系统的状态
+- Then： 待观察的结果或是期望结果
+- 除了Given When Then，我们还可以使用And或是But来做为步骤从而进行步骤描述的扩展。
 ```
 Scenario: Stronger opponent
   Given the ninja has a third level black-belt
    When attacked by Chuck Norris
    Then the ninja should run for his life
-
-    And fall off a cliff
+   And fall off a cliff
 ```
 
 #### Scenarios Outlines来实现数据驱动
 
-在behave实现数据驱动测试可以使用**Scenario Outline**这个关键字配合Examples这个关键字使用。 不同的数据会在相同的方法中执行。
+在behave实现数据驱动测试可以使用**Scenario Outline**这个关键字配合**Examples**这个关键字使用。 不同的数据会在相同的方法中执行。
 ```
 Scenario Outline: Blenders
    Given I put <thing> in a blender,
@@ -115,9 +113,9 @@ behave会运行表格中的每一行，每一行就代表着一个场景
 
 #### Step Data 步骤数据
 
-behave支持对feature文件中的step增加描述(Context.text)和表格(Context.table)来增加对feature的描述以及实现**数据驱动**
+behave支持对feature文件中的step增加描述(context.text)和表格(context.table)来增加对feature的描述以及实现**数据驱动**
 
-描述**Context.text**: 在step后用两个“”“包含的文本
+描述 **Context.text** : 在step后用两个“”“包含的文本
 ```
 Scenario: some scenario
   Given a sample text loaded into the frobulator
@@ -161,7 +159,7 @@ feature文件中描述如下
 ```
 Scenario: Search for an account
    Given I search for a valid account
-    Then I will see the account details
+  Then I will see the account details
 ```
 则测试代码文件中应该如下
 ```python
@@ -206,11 +204,11 @@ def step_impl(context):
 ```
 Scenario: look up a book
   Given I search for a valid book
-   Then the result page will include "success"
+  Then the result page will include "success"
 
 Scenario: look up an invalid book
   Given I search for a invalid book
-   Then the result page will include "failure"
+  Then the result page will include "failure"
 ```
 
 唯一的不同就是 “success” 和 “failure”。这个可以使用测试代码来处理
@@ -342,7 +340,7 @@ Feature: Fight or flight
 
 如果我们执行 `behave —tags=slow`，只有被tag为slow的scenario  Weaker opponent被执行
 
-如果我们执行 `b2have —tags=-slow`, 只有被tag为slow的scenario  Weaker opponent不被执行
+如果我们执行 `behave —tags=-slow`, 只有被tag为slow的scenario  Weaker opponent不被执行
 
 如果我们执行`behave —tags=slow,slow1` 只要被tag为slow或slow1的scenario被执行
 

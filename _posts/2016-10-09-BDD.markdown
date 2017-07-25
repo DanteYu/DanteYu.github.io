@@ -16,7 +16,7 @@ BDD聚焦在通过stakeholder的讨论，得出对期待的软件行为的一致
 
 BDD的开发人员通过结合开发本身的语言和domain语言来描述代码的目的和好处，这样的话可以使得开发人员更加专注于为什么代码要这样写而不是技术细节；也会减少代码和domain语言的translation。 
 
-### BDD的好处
+### BDD的好处
 - 活文档。测试文档也是规格文档(singe source of truth)，永远与最新系统保持同步
 - 实现自动化验收测试
 - 通过项目组和需求方紧密的合作，共同得出理解一致的需求。帮助整理出产品最大的用户价值是什么
@@ -38,6 +38,8 @@ BDD的开发人员通过结合开发本身的语言和domain语言来描述代�
 - 使用”ensure”来清晰定义软件的责任
 
 - 使用mocks来模拟还没有实现的模块
+
+- SBE和TDD是BDD的重要实践
 
 BDD是由business value来驱动的,一旦应用在了产品环境那么对于business的benefit就会产生。我们可以通过展示user interface (GUI)让这种benefit能够被realized
 

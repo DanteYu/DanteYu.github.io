@@ -10,6 +10,8 @@ tags:
 
 本文主要记录我对**RobotFramework**的学习笔记，采用mindmap的形式来记录
 
+放大页面可以查看高清大图。
+
 ### 变量文件
 
 ![variablefile1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/RF2variablefile1.png?raw=true)
