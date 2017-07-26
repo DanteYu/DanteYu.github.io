@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      python behave
+title:      python behave学习笔记
 subtitle:   基本教程
 date:       2016-10-13 12:00:00
 author:     DanteYu

@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      python behave
+title:      python behave学习笔记
 subtitle:   feature setup testing
 date:       2016-10-20 12:00:00
 author:     DanteYu
