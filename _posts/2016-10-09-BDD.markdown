@@ -3,7 +3,7 @@ layout:     post
 title:      BDD总结
 subtitle:   ""
 date:       2016-10-07 12:00:00
-author:     Dante
+author:     DanteYu
 tags:
     - BDD
 ---
