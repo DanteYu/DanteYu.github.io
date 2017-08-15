@@ -2,7 +2,7 @@
 layout:     post
 title:      测试设计思路总结
 subtitle:   ""
-date:       2017-08-27 12:00:00
+date:       2017-08-07 12:00:00
 author:     DanteYu
 tags:
     - Test Design
