@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      测试设计思路总结
-subtitle:   ""
+subtitle:   "如何在短时间内设计出覆盖率高的测试点 - 故事卡级别"
 date:       2017-08-07 12:00:00
 author:     DanteYu
 tags:
