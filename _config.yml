@@ -52,6 +52,7 @@ kramdown:
 # duoshuo_share: true                     # set to false if you want to use Comment without Sharing
 
 
+include: [sitemap.xml]
 
 
 # Analytics settings
