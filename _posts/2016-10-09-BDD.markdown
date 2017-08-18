@@ -9,17 +9,17 @@ tags:
 ---
 
 ### BDD是什么
-
 有定义说"BDD是一个敏捷软件开发技术，鼓励开发，测试，非技术人员，需求方在软件项目中的合作。"，也有定义说 “BDD是一系列实践，能够软件在较小的开发维护成本和缺陷更少的情况下快速上线，产生更多的价值。”
 
 BDD聚焦在通过与stakeholder的讨论，得出对期待的软件行为的一致理解。它是TDD的衍生，通过使用自然语言（领域特定语言DSL, domain specific language）来描述用户行为和业务需求(也可以当成测试用例)，使得非技术人员也能读懂。
 
 ### BDD的好处
 
+- **通过项目组和需求方紧密的合作，共同得出理解一致的需求**。不同stakeholder一起整理出产品最大的用户价值是什么，形成共同的理解和期望值
+- **持续交付着最有价值的功能**。每一个交付的功能都能满足business同意的用户场景和价值
+- **减少领域知识不同而导致的沟通障碍**。通过不断沟通协作得到的DSL，在项目内有了统一的俗语
+- **沟通和协作指导和驱动自动化验收测试**。这个多角色高度的沟通和协作会贯穿于整个开发生命周期
 - **活文档**。测试文档也是规格文档(single source of truth)，永远与最新系统保持同步
-- **沟通和协作指导自动化验收测试**
-- **通过项目组和需求方紧密的合作，共同得出理解一致的需求**。帮助整理出产品最大的用户价值是什么
-- **减少领域知识不同导致的沟通障碍**。BDD的开发人员通过结合开发本身的语言和domain语言来描述代码的目的和好处，这样的话可以使得开发人员更加专注于为什么代码要这样写而不是技术细节；也会减少代码和domain语言的translation。
 
 ### BDD的实践
 
@@ -31,23 +31,49 @@ BDD聚焦在通过与stakeholder的讨论，得出对期待的软件行为的一
 - 使用”should”来软件的行为来帮助划分责任和质疑软件的功能
 - 使用”ensure”来清晰定义软件的责任
 - 使用mocks来模拟还没有实现的模块
-- SBE和TDD是BDD的重要实践
-
-BDD是由business value来驱动的,一旦应用在了产品环境那么对于business的benefit就会产生。我们可以通过展示user interface (GUI)让这种benefit能够被realized
+- [SBE](https://www.thoughtworks.com/insights/blog/specification-example)和[TDD](https://en.wikipedia.org/wiki/Test-driven_development)是BDD的重要实践
 
 ### BDD的实现
 
-在BDD中，一个需求会被分解为多个example来进行，描述这个example使用的语言叫做Gherkin
+1. 确定沟通方式和协作方式
+  - 确保相关的stakeholder有时间来和BA/QA一起elaborate Specification文件
+  - 确定工作流程。比如什么阶段哪些角色一起写Specification文件，什么阶段得到Product Owner的对于Specification文件的official signoff, 什么阶段开始实现编写相应的测试代码等
 
-当讨论scenario的时候，参与者可以质问是否所描述的结果就只能来至于描述的事件行为。这种类似的质问可以帮助参与者确定需求的范围，帮助对实现需求所需要的effort的估计
+2. 选定工具
+  - 现在流行的BDD工具有[cucumber](https://cucumber.io/),[concordion](http://concordion.org/)和[guage](https://getgauge.io/)等
+  - 其实很多测试框架也是可以能支持declarative style的测试编写方式。比如[mocha](https://mochajs.org/)和[jasmine](https://jasmine.github.io/)都是可以通过description()的文本描述来说明场景行为和用户价值
 
-一个feature包含多个scenario，一个scenario就是一个列子，用来展示应用行为的一个特征
-```
-Scenario: xxxxxx
-Given xxxx (context)
-When xxxx (event)
-And xxxx
-Then xxxx (outcome)
-```
+3. 设计用户场景来填充Specification
+- 用户场景的设计应该来源于业务的角度而不是技术，这样才能真正体现业务价值
+- 用户场景不要写成测试用例那种特别详细，带有很多测试数据的形式，因为这样易读性就很差且不能直接体现用户价值。用户场景可以写成[declarative](https://www.thoughtworks.com/insights/blog/imperative-vs-declarative-style-writing-twist-scenarios)的方式。这样的好处是：
+  - 用户场景如果包含了很多详细的步骤和数据，由于系统业务的变化这个文件会经常性的更新，整个文件变得很脆弱
+  - 非技术人员可以很友好的阅读和理解
+- [SBE](https://www.thoughtworks.com/insights/blog/specification-example)是BDD的重要实践之一
+  - 关键信息采用实例需求
+  - 数据驱动
+- 用户场景可以和故事卡里面的AC对应起来。在编写故事卡AC的时候，BA就可以拉着QA一起写，然后再找business确认
+- 场景的划分可以参考测试用例的划分方法
+  - 独立性
+  - 按照不同角度进行的结构划分。比如项目功能模块，项目不同角色的用户体验流程等
+- 在BDD中，一个需求会被分解为多个example来进行，描述这个example使用的语言叫做Gherkin。当讨论scenario的时候，参与者可以质问是否所描述的结果就只能来至于描述的事件行为。这种类似的质问可以帮助参与者确定需求的范围，帮助对实现需求所需要的effort的估计
+    > 一个feature包含多个scenario，一个scenario就是一个列子，用来展示应用行为的一个特征
+      ```
+      Scenario: xxxxxx
+      Given xxxx (context)
+      When xxxx (event)
+      And xxxx
+      Then xxxx (outcome)
+      ```
 
-BDD developer应该最先开始进行UI code的编写，开发可以从UI得到写出来的代码是不是符合需求的快速反馈。然后基于UI写出其他代码。
+4. 测试代码编写
+- 根据对应的specification文件，写出对应的测试方法
+- BDD developer应该最先开始进行UI code的编写，开发可以从UI得到写出来的代码是不是符合需求的快速反馈。然后基于UI写出其他代码
+
+5. 持续执行和改进
+- 确保自动化测试每日都在执行
+- 确保因为业务变动而失败的测试用例得到更新
+  - 场景的重构
+  - 测试代码的更新
+
+6. 价值展现
+  - BDD是由business value来驱动的,一旦应用在了产品环境那么对于business的benefit就会产生。我们可以通过展示user interface (GUI)让这种benefit能够被realized
