@@ -45,8 +45,8 @@ BDD聚焦在通过与stakeholder的讨论，得出对期待的软件行为的一
 
 3. 设计用户场景来填充Specification
 - 用户场景的设计应该来源于业务的角度而不是技术，这样才能真正体现业务价值
-   - 确定User Journey。提炼体现最大用户价值的功能和业务流程
-   - 设计验证点
+  - 确定User Journey。提炼体现最大用户价值的功能和业务流程
+  - 设计验证点
 - 用户场景不要写成测试用例那种特别详细，带有很多测试数据的形式，因为这样易读性就很差且不能直接体现用户价值。用户场景可以写成[declarative](https://www.thoughtworks.com/insights/blog/imperative-vs-declarative-style-writing-twist-scenarios)的方式。这样的好处是：
   - 用户场景如果包含了很多详细的步骤和数据，由于系统业务的变化这个文件会经常性的更新，整个文件变得很脆弱
   - 非技术人员可以很友好的阅读和理解
