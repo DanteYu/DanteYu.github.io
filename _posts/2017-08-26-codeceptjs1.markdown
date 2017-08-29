@@ -6,7 +6,6 @@ date:       2017-08-26 12:00:00
 author:     DanteYu
 tags:
     - codeceptjs
-    - nodejs
 ---
 
 ### codeceptjs介绍
@@ -40,7 +39,7 @@ Scenario('check Welcome page on site', (I) => {
 });
 ```
 
-是不是可以基本当plain text来读？:smile:
+是不是可以基本当plain text来读？:)
 
 ### codeceptjs安装
 
@@ -119,7 +118,6 @@ List of test actions: --
  ..........
 ```
 
-
 ##### 安装selenium-standalone
 因为这些helper i.e. `webdriverio`, `protractor`都是需要selenium作为后端与browser通信的服务，所以我们也需要安装selenium。
 
@@ -191,7 +189,7 @@ Scenario('test something', (I) => {
 ```
 first_test.js 就是被创建的测试文件
 
-###### `codeceptjs run` 会运行测试。加上参数`--steps`会输出详细的过程
+###### `codeceptjs run` 会运行测试。加上参数`--steps`会输出详细的执行过程
 
 ```
 ➜  codeceptjs-init: codeceptjs run --steps
@@ -205,6 +203,167 @@ first demo --
   OK  | 1 passed   // 2s
 ```
 
-###### `codeceptjs gpo` 
+###### `codeceptjs gpo`会创建一个page object file。这个命令可以快速简单的帮助你实现page object设计模式
 
-#### 常用API解读
+```
+➜  codeceptjs-init codeceptjs gpo
+Creating a new page object
+--------------------------
+? Name of a page object landingPage
+? Where should it be stored ./pages/landingPage.js
+Updating configuration file...
+Page object for landingPage was created in /Users/diyu/workspace/codeceptjs_demo/codeceptjs-init/pages/landingPage.js
+Use landingPagePage as parameter in test scenarios to access it
+➜  codeceptjs-init ll
+total 24
+-rw-r--r--  1 diyu  staff   375B  8 29 21:30 codecept.json
+-rw-r--r--  1 diyu  staff    66B  8 27 23:50 first_test.js
+drwxr-xr-x  2 diyu  staff    68B  8 27 22:39 output
+drwxr-xr-x  3 diyu  staff   102B  8 29 21:30 pages
+-rw-r--r--  1 diyu  staff   281B  8 27 22:39 steps_file.js
+```
+landingPage.js被创建在pages目录下面，这个文件里面会有landingPage的元素定位和基本操作。一个简单的demo如下
+
+```javascript
+'use strict';
+
+let I;
+
+module.exports = {
+
+  _init() {
+    I = actor();
+  },
+
+  fields: {
+    email: '#user_basic_email',
+    password: '#user_basic_password'
+  },
+  submitButton: {css: '#new_user_basic input[type=submit]'},
+
+  sendForm(email, password) {
+    I.fillField(this.fields.email, email);
+    I.fillField(this.fields.password, password);
+    I.click(this.submitButton);
+  }
+}
+```
+通过参数传递的方式，我们可以在测试文件里面注入页面元素和操作
+```javascript
+Feature('CodeceptJS Demonstration');
+
+Before((I) => { // or Background
+  I.amOnPage('http://simple-form-bootstrap.plataformatec.com.br/documentation');
+});
+
+Scenario('test some forms', (I, docsPage) => {
+  docsPage.sendForm('hello@world.com','123456');
+  I.see('User is valid');
+  I.dontSeeInCurrentUrl('/documentation');
+});
+```
+这样的话，最简单的page object就可以用了
+
+#### Actions and Assertions
+
+下面通过一个简单的demo来看下codeceptjs测试文件长什么样子
+
+```javascript
+Feature('CodeceptJS Demonstration');
+
+Scenario('test some forms', (I) => {
+  I.amOnPage('http://simple-form-bootstrap.plataformatec.com.br/documentation');
+  I.fillField('Email', 'hello@world.com');
+  I.fillField('Password', '123456');
+  I.checkOption('Active');
+  I.checkOption('Male');
+  I.click('Create User');
+  I.see('User is valid');
+  I.dontSeeInCurrentUrl('/documentation');
+});
+```
+
+可以看出
+* 所有的页面操作都由对象`I`调用执行，而`I`的方法都来自于Helper
+* see()，dontSee()方法是用来做验证的。可以在页面上找到指定元素进行验证.如果第二个参数提供，可以缩小元素查找范围。`I.see('User is valid', '.alert-success');`
+* Feature和Scenario来源于mocha
+* fillField(), checkOption()和click()这些方法工作原理类似，都是通过name, css和xpath找到元素并与之交互
+
+#### Grabber
+当我们需要从页面中抓取元素然后用到后续测试的时候，我们可以使用带`grab`前缀的方法。它的用法如下
+```javascript
+var assert = require('assert');
+
+Feature('CodeceptJS Demonstration');
+
+Scenario('test page title', function*(I) {
+  I.amOnPage('http://simple-form-bootstrap.plataformatec.com.br/documentation');
+  var title = yield I.grabTitle();
+  assert.equal(title, 'Example application with SimpleForm and Twitter Bootstrap');
+});
+```
+grad()要被使用在generator里面，所以带有yield关键字
+
+#### Before/After
+codeceptjs也提供了测试框架必不可少的用作测试准备和清理的方法。
+
+下面的测试代码片段中Before()会在所有Scenario()方法之前执行。Before()也可以换成Background()。
+
+```javascript
+Feature('CodeceptJS Demonstration');
+
+Before((I) => { // or Background
+  I.amOnPage('http://simple-form-bootstrap.plataformatec.com.br/documentation');
+});
+
+Scenario('test some forms', (I) => {
+  I.click('Create User');
+  I.see('User is valid');
+  I.dontSeeInCurrentUrl('/documentation');
+});
+
+Scenario('test title', (I) => {
+  I.seeInTitle('Example application');
+});
+```
+
+#### debug
+codeceptjs可以通过两种方式进行测试代码开发中的调试
+* 在测试文件中使用`pause()`方法
+
+```
+➜  codeceptjs-init codeceptjs run --steps
+CodeceptJS v1.0.1
+Using test root "/Users/diyu/workspace/codeceptjs_demo/codeceptjs-init"
+
+CodeceptJS Demonstration --
+ test some forms
+ • I am on page "http://simple-form-bootstrap.plataformatec.com.br/documentation"
+ • I fill field "Email", "hello@world.com"
+ • I fill field "Password", "123456"
+ • I check option "Active"
+ Interative debug session started
+ Use JavaScript syntax to try steps in action
+ Press ENTER to continue
+ I.
+Exiting interactive shell....
+ • I check option "Male"
+ • I click "Create User"
+ • I see "User is valid"
+ • I dont see in current url "/documentation"
+ ✓ OK in 12581ms
+```
+注意到中间突然出现了交互式的debug session，这就是pause()的作用
+
+* 下面这种`codeceptjs shell`来进行调试
+
+```
+➜  codeceptjs-init codeceptjs shell
+String interactive shell for current suite...
+ Interative debug session started
+ Use JavaScript syntax to try steps in action
+ Press ENTER to continue
+ I.amOnPage('www.hupu.com')
+ I.
+```
+通过这个互动的debug session，我们可以一步步的输入不同的action来观察浏览器的行为
