@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      软件测试实战读书笔记
-subtitle:   测试建模
+subtitle:   测试建模(In Progress)
 date:       2017-08-20 12:00:00
 author:     DanteYu
 tags:
