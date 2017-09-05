@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      codeceptjs学习笔记
-subtitle:   安装和基本知识 (In Progress)
+subtitle:   安装和基本知识
 date:       2017-08-26 12:00:00
 author:     DanteYu
 tags:
@@ -13,8 +13,8 @@ tags:
 [codeceptjs](https://github.com/Codeception/CodeceptJS)是[Codeception](http://codeception.com/)测试框架下的一个项目，是运行在nodejs的UI测试框架, 能使场景驱动的验收测试简单化。
 
 "Modern Era Acceptance Testing Framework for NodeJS"是codeceptjs[官网](http://codecept.io/)最显著的标语，那作为一个UI测试框架，究竟有哪些特点：
-* **从用户角度编写**。codeceptjs提供的API具有[declarative testing](https://support.saucelabs.com/hc/en-us/articles/115009283587-Imperative-v-Declarative-Testing)的特点，从用户行为的角度抽象出了许多与浏览器的交互动作，非常易读易懂
-* **所有的交互动作来自于对象`I`**。易读易写易维护，对非技术人员也很友好
+* **从用户角度编写**。codeceptjs提供的API具有[declarative testing](https://support.saucelabs.com/hc/en-us/articles/115009283587-Imperative-v-Declarative-Testing)的特点，从用户行为的角度抽象出了许多与浏览器的交互动作，测试代码非常易读易懂。codeceptjs提供的API由于其易读性也可以当成DSL来使用，这些DSL隐藏了后端webdriver服务的复杂性，可以让使用者更加专注到测试场景的编写中
+* **所有的交互动作来自于对象`I`**。对象`I`的方法都被描述为用户访问网站可能产生的行为，易读易写易维护，对非技术人员也很友好
 * **对多个后端API兼容**。codeceptjs支持多个webdriver实现 i.e. webdriverio, protractor and phantomjs, 我们可以很简单在他们之间切换。这些不同的webdriver实现在codeceptjs里面叫做*Helper*，正是下面这些Helper给对象`I`提供了actions
   * [Webdriverio](http://webdriver.io/)
   * [Protractor](http://www.protractortest.org/)
@@ -22,12 +22,13 @@ tags:
   * [Nigntmare](http://www.nightmarejs.org/)
   * [Appium](http://appium.io/)
   * [Selenium Webdriver](https://www.npmjs.com/package/selenium-webdriver)
-* **同步**。我们不用关心js中的异步问题 i.e。 promises & callback。测试场景是线性的
+* **同步**。我们不用关心js中的异步问题 i.e. promises & callback。测试场景是线性的
 * **基于[Mocha](http://mochajs.org/)测试框架**。
 * **可以编写出易读易懂的场景驱动的验收测试**。可以写成BDD style
 * **Smart locator**。Smart locators: use names, labels, matching text, CSS or XPath to locate elements
-* **互动式debug shell**。可以在测试执行时随时暂停然后尝试不同的命令
+* **互动式debug shell**。可以在测试执行时随时暂停然后尝试codeceptjs提供地不同的API
 * **提供了方便的命令行工具帮助创建测试**。可以通过命令一步创建tests, pageobjects, stepobjects
+* **支持web和mobile端的测试**
 
 说了这么多特点，它长什么样子呢？一个简单的demo如下：
 ```javascript
@@ -78,6 +79,25 @@ v8.3.0
 
 本地安装nightmare
 `npm install nightmare nightmare-upload --save-dev`
+
+全局安装codeceptjs+webdriverio
+`[sudo] npm install -g codeceptjs-webdriverio`
+
+本地安装codeceptjs+webdriverio
+`[sudo] npm install codeceptjs-webdriverio --save-dev`
+
+全局安装codeceptjs+nightmare
+`[sudo] npm install -g codeceptjs-nightmare`
+
+本地安装codeceptjs+nightmare
+`[sudo] npm install codeceptjs-nightmare --save-dev`
+
+全局安装codeceptjs+protractor
+`[sudo] npm install -g codeceptjs-protractor`
+
+本地安装codeceptjs+protractor
+`[sudo] npm install codeceptjs-protractor --save-dev`
+
 
 安装完之后你可以通过`codeceptjs`命令查看codeceptjs的版本和常用命令参数介绍
 ```
