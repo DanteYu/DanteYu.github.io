@@ -395,7 +395,7 @@ Scenario('test title', (I) => {
 });
 ```
 
-### BeforeSuite()/AfterSuite()
+#### BeforeSuite()/AfterSuite()
 
 当你需要在所有的测试Scenario()之前进行复杂的setup和teardown，BeforeSuite()/AfterSuite()会是好的选择。BeforeSuite()会在所有的Scenario(), Before()之前调用运行；同理，AfterSuite()会在所有的Scenario(), Before()之后调用运行；这两个方法有且只运行一次。
 
@@ -412,7 +412,7 @@ AfterSuite((I) => {
 });
 ```
 
-### within('section', ()=>{})
+#### within('section', ()=>{})
 
 使用within('section', ()=>{})可以让一系列`I`对象的方法在页面某个特定区域执行.这样可以锁定具体的执行范围。
 
@@ -431,7 +431,7 @@ Scenario('login github', (I)=>{
 });
 ```
 
-### Comments I.say()
+#### Comments I.say()
 
 给测试场景添加注释，可以使用`I.say()`。
 
@@ -443,7 +443,7 @@ Scenario('login github', (I)=>{
 	I.say('Above is the link for baidu search engine');
 });
 ```
-### Reporter
+#### Reporter
 
 之前提到codeceptjs是基于mocha的，所有mocha的--reporter也对codeceptjs有效。我们可以用下面命令指定report的格式
 
@@ -453,7 +453,7 @@ codeceptjs run --steps --reporter spec （这是default的report格式）
 
 `spec`可以替换为`dot`, `nyan`, `tap`等。详细内容请参考[这里](https://mochajs.org/#reporters)。
 
-### Test Options
+#### Test Options
 
 Feature()和Scenario()的第二个参数可以是一对键值对，这个参数的作用是为测试场景提供一些选项比如timeout和retry
 ```javascript
@@ -462,7 +462,7 @@ Feature('My feature', {key: val});
 Scenario('My scenario', {key: val}, (I) => {});
 ```
 
-#### Timeout
+##### Timeout
 
 默认状态下，测试场景是没有timeout的，我们可以通过传递下面的键值对来设置feature级别或是scenario级别的timeout
 
@@ -477,7 +477,7 @@ Scenario("Stop me faster", {timeout: 1000}, (I) => {});
 Scenario("Don't stop me", {timeout: 0}, (I) => {});
 ```
 
-#### Retries
+##### Retries
 
 UI测试是不稳定的，有些时候我们需要rerun来让相应的测试场景通过。我们可以通过在Feature()和Scenario()中传递retries键值对来实现。
 
