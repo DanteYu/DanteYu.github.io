@@ -324,29 +324,6 @@ Scenario('test page title', function*(I) {
 ```
 grad()要被使用在generator里面，所以带有yield关键字
 
-#### Before/After
-codeceptjs也提供了测试框架必不可少的用作测试准备和清理的方法。
-
-下面的测试代码片段中Before()会在所有Scenario()方法之前执行。Before()也可以换成Background()。
-
-```javascript
-Feature('CodeceptJS Demonstration');
-
-Before((I) => { // or Background
-  I.amOnPage('http://simple-form-bootstrap.plataformatec.com.br/documentation');
-});
-
-Scenario('test some forms', (I) => {
-  I.click('Create User');
-  I.see('User is valid');
-  I.dontSeeInCurrentUrl('/documentation');
-});
-
-Scenario('test title', (I) => {
-  I.seeInTitle('Example application');
-});
-```
-
 #### debug
 codeceptjs可以通过两种方式进行测试代码开发中的调试
 * 在测试文件中使用`pause()`方法
@@ -387,3 +364,134 @@ String interactive shell for current suite...
  I.
 ```
 通过这个互动的debug session，我们可以一步步的输入不同的action来观察浏览器的行为
+
+#### Before()/After()
+
+codeceptjs也提供了测试框架必不可少的用作测试准备setup和清理teardown的方法。Before()和Background()可以用于抽取公共方法或做测试准备工作，After()可以用于测试收尾清理工作。
+
+Before()和Background()会在所有Scenario()之前执行一样，After()会在所有Scenario()之后执行。
+
+下面的测试代码片段中Before()会在所有Scenario()方法之前执行。Before()也可以换成Background()。
+
+```javascript
+Feature('CodeceptJS Demonstration');
+
+Before((I) => { // or Background
+  I.amOnPage('http://simple-form-bootstrap.plataformatec.com.br/documentation');
+});
+
+After((I) => {
+  I.clearCookie();
+});
+
+Scenario('test some forms', (I) => {
+  I.click('Create User');
+  I.see('User is valid');
+  I.dontSeeInCurrentUrl('/documentation');
+});
+
+Scenario('test title', (I) => {
+  I.seeInTitle('Example application');
+});
+```
+
+### BeforeSuite()/AfterSuite()
+
+当你需要在所有的测试Scenario()之前进行复杂的setup和teardown，BeforeSuite()/AfterSuite()会是好的选择。BeforeSuite()会在所有的Scenario(), Before()之前调用运行；同理，AfterSuite()会在所有的Scenario(), Before()之后调用运行；这两个方法有且只运行一次。
+
+由于BeforeSuite()/AfterSuite()有可能是在浏览器打开之前运行，所有BeforeSuite()/AfterSuite()只能访问到`I`对象。BeforeSuite()/AfterSuite()只会在声明的文件中生效，所以不同的文件就可以有不同的BeforeSuite()/AfterSuite()了。
+
+```javascript
+BeforeSuite((I) => {
+  I.syncDown('testfolder');
+});
+
+AfterSuite((I) => {
+  I.syncUp('testfolder');
+  I.clearDir('testfolder');
+});
+```
+
+### within('section', ()=>{})
+
+使用within('section', ()=>{})可以让一系列`I`对象的方法在页面某个特定区域执行.这样可以锁定具体的执行范围。
+
+```javascript
+Feature('within demo')
+
+Scenario('login github', (I)=>{
+	I.amOnPage('https://github.com');
+	within('.form-signup-home', () => {
+	  I.fillField('user[login]', 'User');
+	  I.fillField('user[email]', 'user@user.com');
+	  I.fillField('user[password]', 'user@user.com');
+	  I.click('button');
+	});
+	I.see('There were problems creating your account.');
+});
+```
+
+### Comments I.say()
+
+给测试场景添加注释，可以使用`I.say()`。
+
+```javascript
+Feature('within demo')
+
+Scenario('login github', (I)=>{
+	I.amOnPage('http://www.baidu.com');
+	I.say('Above is the link for baidu search engine');
+});
+```
+### Reporter
+
+之前提到codeceptjs是基于mocha的，所有mocha的--reporter也对codeceptjs有效。我们可以用下面命令指定report的格式
+
+```
+codeceptjs run --steps --reporter spec （这是default的report格式）
+```
+
+`spec`可以替换为`dot`, `nyan`, `tap`等。详细内容请参考[这里](https://mochajs.org/#reporters)。
+
+### Test Options
+
+Feature()和Scenario()的第二个参数可以是一对键值对，这个参数的作用是为测试场景提供一些选项比如timeout和retry
+```javascript
+Feature('My feature', {key: val});
+
+Scenario('My scenario', {key: val}, (I) => {});
+```
+
+#### Timeout
+
+默认状态下，测试场景是没有timeout的，我们可以通过传递下面的键值对来设置feature级别或是scenario级别的timeout
+
+```javascript
+// set timeout to 5s
+Feature('Stop me', {timeout: 5000});
+
+// set timeout to 1s
+Scenario("Stop me faster", {timeout: 1000}, (I) => {});
+
+// disable timeout for this scenario
+Scenario("Don't stop me", {timeout: 0}, (I) => {});
+```
+
+#### Retries
+
+UI测试是不稳定的，有些时候我们需要rerun来让相应的测试场景通过。我们可以通过在Feature()和Scenario()中传递retries键值对来实现。
+
+```javascript
+
+//所有scenario失败后都会retry3次
+Feature('Complex JS Stuff', {retries: 3})
+
+//这个scenario失败后只会retry1次
+Scenario('Not that complex', {retries: 1}, (I) => {
+  // test goes here
+});
+//这个scenario失败后会retry3次
+Scenario('Really complex', (I) => {
+  // test goes here
+});
+```
