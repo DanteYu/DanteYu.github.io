@@ -443,6 +443,13 @@ Scenario('login github', (I)=>{
 	I.say('Above is the link for baidu search engine');
 });
 ```
+
+#### Skip test
+使用xScenario()可以跳过测试的执行。
+
+#### 只执行一个测试场景
+使用Scenario.only()可以只运行该测试。
+
 #### Reporter
 
 之前提到codeceptjs是基于mocha的，所有mocha的--reporter也对codeceptjs有效。我们可以用下面命令指定report的格式

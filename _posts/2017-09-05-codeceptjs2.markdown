@@ -93,11 +93,14 @@ I.see('Hello', '.msg');
 // opposite
 I.dontSee('Bye');
 ```
+
 `I.seeElement()`和`I.dontSeeElement()`可以判断元素的出现与否
+
 ```javascript
 I.seeElement('.notice');
 I.dontSeeElement('.error');
 ```
+
 除此之外，页面的URL,title和文本框里面的值都是可以验证的。更多的方法请参考[这里](http://codecept.io/helpers/WebDriverIO/)。
 ```javascript
 I.seeInCurrentUrl('/user/miles');
@@ -106,9 +109,73 @@ I.seeInTitle('My Website');
 ```
 
 #### 抓取元素
+某些时候你需要从页面获取一些数据来做验证或是下一个测试步骤的输入，比如页面显示出来的文本。所有已`grab*`开头的方法可以满足这个需求。
+
+```javascript
+I.fillField('email', 'miles@davis.com')
+I.click('Generate Password');
+let password = yield I.grabTextFrom('#password');
+I.click('Login');
+I.fillField('email', 'miles@davis.com');
+I.fillField('password', password);
+I.click('Log in!');
+```
+
+上面的`grabTextFrom()`方法用于取出元素的文本。所有的`grab*()`方法都要用于生成器里面。
+```javascript
+Scenario('use page title', function*(I) {
+  // ...
+  var password = yield I.grabTextFrom('#password');
+  I.fillField('password', password);
+});
+```
 
 #### 等待wait
+在日常造成UI测试失败的原因中，render太慢造成元素在页面显示不出来然后操作无法完成十分常见。于是在各大的测试框架中`wait*()`相关方法的出现就用来解决这个问题。
 
-#### Smart Wait
+```javascript
+I.waitForElement('#agree_button', 30); // secs
+// clicks a button only when it is visible
+I.click('#agree_button');
+```
+
+#### SmartWait
+
+Selenium Webdriver提供了两种不同类型的waits:
+  * **implicit wait** -> 让webdriver在当定位元素的时候，如果元素没有立即出现，需要等待一段时间。这个作用域是DOM全局的。
+  * **explicit wait** -> 让webdriver在继续执行操作之前，等待某个特定的情况发生。比如在点击某一个link之前，需要等待link加载完成
+
+codeceptjs的SmartWait就是implicit wait的实现。如果需要定位的元素还没有出现，codeceptjs会在失败之前等待一段时间。
+
+SmartWait是配置在Helper里面的，比如下面的`smartWait: 5000`
+
+```javascript
+"helpers": {
+  "WebDriverIO": {
+    "url": "http://simple-form-bootstrap.plataformatec.com.br",
+    "browser": "chrome",
+    "smartWait": 5000
+  }
+},
+```
+
+注意到SmartWait只在strict locator和标识了type的locator的方法中起作用
+```javascript
+I.click('Login'); // DISABLED, not a locator
+I.fillField('user', 'davert'); // DISABLED, not a specific locator
+I.fillField({name: 'password'}, '123456'); // ENABLED, strict locator
+I.click('#login'); // ENABLED, locator is CSS ID
+I.see('Hello, Davert'); // DISABLED, Not a locator
+I.seeElement('#userbar'); // ENABLED
+I.dontSeeElement('#login'); // DISABLED, can't wait for element to hide
+I.seeNumberOfElements('button.link', 5); // DISABLED, can wait only for one element
+```
 
 #### IFrames
+`within()`方法可以用于IFrame的定位，在`within()`内部的方法就会在IFrame中执行。
+
+```javascript
+within({frame: "#editor"}, () => {
+  I.see('Page');
+});
+```
