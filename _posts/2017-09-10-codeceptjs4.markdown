@@ -35,7 +35,7 @@ Data(accounts).Scenario('Test Login', (I, current) => {
 
 我们也可以在单独的测试文件中定义，然后在测试文件中引入。
 
-```js
+```javascript
 'use strict';
 
 var dataset1 = function(){
@@ -211,4 +211,77 @@ codeceptjs能够并行的执行多个测试套件。这就意味着我们可以�
 drwxr-xr-x  2 diyu  staff    68B  9 10 22:46 smoke_browser_chrome_1
 drwxr-xr-x  2 diyu  staff    68B  9 10 22:47 smoke_browser_firefox_1
 drwxr-xr-x  2 diyu  staff    68B  9 10 22:46 smoke_browser_firefox_2
+```
+
+### Bootstrap & Teardown
+
+Codeceptjs提供了机制来让定制代码在测试运行前和运行后分别执行，比如启动和停止webdriver服务。`Bootstrap` & `Teardown` 配置就可以帮我们实现这个机制。
+
+下面几种方式都可以实现`Bootstrap` & `Teardown`功能
+* JS file executed as is (synchronously).
+* JS file exporting function with optional callback for async execution.
+* JS file exporting an object with bootstrap and teardown methods.
+* Inside JS config file
+
+下面是一个实例
+
+codeceptjs是依赖于selenium-standalone的，所以在执行codeceptjs之前，`selenium-standalone start`需要被执行。但是在实际应用场景中，比如持续集成中的自动化测试执行，我们不能保证每次执行测试的服务器都是安装好此模块和启动这个服务的；自动化安装和启动服务就变为必不可少。
+
+
+
+首先，我们要先定义两个脚本分别代表start webdriver和stop webdriver
+
+`selenium-standalone-start.js`
+
+```js
+const selenium = require('selenium-standalone');
+
+module.exports = function(done) {
+  selenium.install({
+    baseURL: 'https://selenium-release.storage.googleapis.com',
+    version: '3.5.3',
+    drivers: {
+      chrome: {
+        version: '2.32',
+        arch: process.arch,
+        baseURL: 'https://chromedriver.storage.googleapis.com'
+      },
+      ie: {
+        version: '3.5.1',
+        arch: process.arch,
+        baseURL: 'https://selenium-release.storage.googleapis.com'
+      },
+      firefox: {
+        version: '0.18.0',
+        arch: process.arch,
+        baseURL: 'https://github.com/mozilla/geckodriver/releases/download'
+      }
+    }
+}, function (err) {
+    if (err) return done(err);
+    selenium.start(function (err, child) {
+      if (err) return done(err);
+      selenium.child = child;
+      done();
+    });
+  })
+}
+```
+
+`selenium-standalone-stop.js`
+
+```js
+var selenium = require('selenium-standalone');
+
+module.exports = function(done) {
+  selenium.child.kill();
+  done();
+}
+```
+
+接着我们在codecept.json中配置`bootstrap`和`teardown`即可。配置完后即可在没有使用`selenium-standalone start`的情况下，自动开启selenium服务，运行测试和关闭selenium服务。
+
+```
+"bootstrap": "./util/selenium-standalone-start.js",
+"teardown": "./util/selenium-standalone-stop.js",
 ```
