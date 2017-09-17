@@ -460,6 +460,49 @@ codeceptjs run --steps --reporter spec （这是default的report格式）
 
 `spec`可以替换为`dot`, `nyan`, `tap`等。详细内容请参考[这里](https://mochajs.org/#reporters)。
 
+###### XML report
+使用[mocha-junit-reporter](https://www.npmjs.com/package/mocha-junit-reporter)可以产生一个xml报告，这对jenkins非常友好。
+
+安装 `npm i mocha-junit-reporter`
+
+把报告放到output目录下
+```
+"mocha": {
+  "reporterOptions": {
+      "mochaFile": "output/result.xml"
+  }
+},
+```
+
+使用`codeceptjs run --reporter mocha-junit-reporter` 来执行测试产生xml报告，最终的报告会被放在 output/result.xml。
+
+###### HTML report
+因为codeceptjs是基于mocha的，所以我们可以使用[mochawesome](https://www.npmjs.com/package/mochawesome)来产生好看的HTML报告。
+
+安装 `npm i mochawesome`
+
+把报告放到output目录下
+```
+"mocha": {
+  "reporterOptions": {
+      "reportDir": "output"
+  }
+},
+```
+
+使用`codeceptjs run --reporter mochawesome` 来执行测试产生xml报告，最终的报告会被放在 output/mochawesome.html。
+
+对于失败的测试，我们需要有截图，我们可以使用下面的配置来实现
+
+```
+"helpers": {
+    "Mochawesome": {
+        "uniqueScreenshotNames": "true"
+    }
+  },
+```
+
+
 #### Test Options
 
 Feature()和Scenario()的第二个参数可以是一对键值对，这个参数的作用是为测试场景提供一些选项比如timeout和retry
