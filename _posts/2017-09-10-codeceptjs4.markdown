@@ -213,7 +213,7 @@ drwxr-xr-x  2 diyu  staff    68B  9 10 22:47 smoke_browser_firefox_1
 drwxr-xr-x  2 diyu  staff    68B  9 10 22:46 smoke_browser_firefox_2
 ```
 
-### Bootstrap & Teardown
+#### Bootstrap & Teardown
 
 Codeceptjs提供了机制来让定制代码在测试运行前和运行后分别执行，比如启动和停止webdriver服务。`Bootstrap` & `Teardown` 配置就可以帮我们实现这个机制。
 
@@ -284,4 +284,228 @@ module.exports = function(done) {
 ```
 "bootstrap": "./util/selenium-standalone-start.js",
 "teardown": "./util/selenium-standalone-stop.js",
+```
+
+#### Helpers
+
+Helper是一个封装类，封装了多个libraries并且提供了统一的接口。Helper类给`I`对象提供了不同的方法。
+
+当然，我们也可以自己定义Helper，定制化的Helper能够提供更多的方法。
+
+Helper的创建可以通过命令 `codeceptjs gh`
+
+```
+➜  codeceptjs-init codeceptjs gh
+Creating a new helper
+--------------------------
+? Name of a Helper MyHelper
+? Where should it be stored ./custom_helpers.js
+Updating configuration file...
+Helper for MyHelper was created in /Users/diyu/workspace/codeceptjs_demo/codeceptjs-init/custom_helpers
+```
+
+这个命令会创建下列文件。这个文件中除了以underscore开始的方法，都会被加入到`I`对象中当做一个test actions。
+
+```js
+'use strict';
+
+class MyHelper extends Helper {
+
+  // before/after hooks
+  _before() {
+    // remove if not used
+  }
+
+  _after() {
+    // remove if not used
+  }
+
+  // add custom methods here
+  // If you need to access other helpers
+  // use: this.helpers['helperName']
+
+}
+```
+
+除了自定义的方法，定制Helper还可以通过`this.helpers['drivername']`来获取Helper的API以及通过`this.config`来获取Conf文件的信息。
+
+Helpers里面的Hooks可以由下面方法实现。当定制的Helper被加到项目中后，定义的Hooks会作用于每一个测试文件。
+
+* _init - before all tests。在所有测试文件执行前执行
+* _before - before a test。在一个Sceanrio()之前执行
+* _after - after a test。在一个Scenario()之后执行
+* _beforeStep - before each step。在一个step之前执行
+* _afterStep - after each step。在一个step之后执行
+* _beforeSuite - before each suite。在一个Feature()之前执行
+* _afterSuite - after each suite。在一个Feature()之后执行
+
+当测试文件定义Before()和After()，这个两个方法会在_before()和_after()之中执行。
+> _before() --> Before() --> After() --> _after()
+
+```js
+'use strict';
+
+class MyHelper extends Helper {
+
+  _init(){
+    console.log('this is the _init method from MyHelper');
+    return;
+  };
+
+  _before(){
+    console.log('this is the _before method from MyHelper');
+    return;
+  };
+
+  _after(){
+    console.log('this is the _after method from MyHelper');
+    return;
+  };
+
+  _beforeSuite(){
+    console.log('this is the _beforeSuite method from MyHelper');
+    return;
+  };
+
+  _afterSuite(){
+    console.log('this is the _afterSuite method from MyHelper');
+    return;
+  };
+
+  _beforeStep(){
+    console.log('this is the _beforeStep method from MyHelper');
+    return;
+  };
+
+  _afterStep(){
+    console.log('this is the _afterStep method from MyHelper');
+    return;
+  };
+
+sayHelloWorld(){
+  console.log('Hello world in MyHelper');
+  return;
+};
+
+openBaiduByWebdriver(){
+  let client = this.helpers['WebDriverIO'].browser;
+  client.url('https://www.baidu.com/');
+  console.log(client.getUrl());
+  return;
+};
+
+getConf(){
+  let defaulthost = this.config.defaultHost;
+  console.log(defaulthost);
+  return;
+}
+
+}
+
+module.exports = MyHelper;
+```
+
+以及在codeceptjs配置文件中加入下面选项
+
+```
+"helpers": {
+  "WebDriverIO": {
+    "url": "http://simple-form-bootstrap.plataformatec.com.br",
+    "browser": "chrome"
+  },
+  "MyHelper": {
+    "require": "./custom_helpers.js"
+  }
+}
+```
+
+#### Custom Hooks
+
+我们可以通过Hooks来扩展codeceptjs的功能，codeceptjs提供了API来暴露了自己的内部机制，让我们可以创建自己的定制化功能。
+
+当codeceptjs在本地安装成功后，我们可以通过`require(‘codeceptjs’)`去访问codeceptjs的下面这些内部对象.
+
+* codecept: test runner class
+* config: current codecept config
+* event: event listener
+* recorder: global promise chain
+* output: internal printer
+* container: dependency injection container for tests, includes current helpers and support objects
+* helper: basic helper class
+* actor: basic actor (I) class
+
+为了让这些hooks生效，我们需要在配置文件中加入相应的hooks文件，可如下配置
+
+```js
+"hooks": [
+  "./server.js",
+  "./data_builder.js",
+  "./report_notification.js"
+]
+```
+
+下面是一些简单的列子
+
+##### config: current codecept config
+
+我们可以在测试文件中直接访问配置文件
+
+```js
+let config = require('codeceptjs').config.get();
+
+Scenario.only('access config', {retries: 2}, (I)=>{
+
+	console.log(config.timeout);
+
+  if(config.tests = "./spec/s*_test.js"){
+    console.log("yes, it is s*test.js")
+  };
+});
+```
+
+##### event: event listener
+
+通过event listener我们可以监听事件和触发行为。
+
+用`event.test.before`来举例，类似下面的文件会被创建
+
+```js
+const event = require('codeceptjs').event;
+
+module.exports = function() {
+
+  event.dispatcher.on(event.test.before, function (test) {
+
+    console.log('--- I am before test --');
+
+  });
+}
+```
+
+然后我们在配置文件里面加上这个文件
+```js
+"hooks": ["./util/custom_hooks/event_listener.js"],
+```
+
+这样在执行测试的时候，这个event listener定义的方法就会被自动触发。
+
+##### output: internal printer
+
+output模块提供了四种级别的信息显示模式
+* **default**：使用`output.print()`显示基本信息
+* **steps**：使用`--steps`显示执行的step
+* **debug**： 使用`--debug`显示执行的step，以及`output.debug()`带来的debug信息
+* **verbose**：使用`--verbose`显示debug的信息，以及`output.log()`带来的log信息
+
+```js
+Scenario.only('access config', {retries: 2}, (I)=>{
+
+	output.print(config.timeout);
+	output.print('This is basic information');
+	output.debug('This is debug information');
+	output.log('This is verbose logging information');
+  if(config.tests = "./spec/s*_test.js"){
+    output.print("yes, it is s*test.js")
+  };
+});
 ```
