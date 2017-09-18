@@ -25,7 +25,12 @@ tags:
     - python+webdriver+unittest
     - python+requests
 
-为了总结平时所学，下面的repo会有一些简单的demo。这些demo都是学习和实践过程中的产物。也希望这些测试项目能做到在新项目中“拿来即用”，减少自动化测试启动时间。
+为了总结平时所学，下面的repo会有一些简单(hello world级别)的demo。这些demo都是学习和实践过程中的产物。也希望这些测试项目能做到在新项目中“拿来即用”，减少自动化测试启动时间。
+
+目前已经完成
+* [python + behave + requests](https://github.com/DanteYu/Test_Automation_Demo/tree/master/APITesting/python_behave_requests)
+* [python + webdriver + unittest](https://github.com/DanteYu/Test_Automation_Demo/tree/master/UITesting/python_webdriver_unittest)
+* [js + jasmine + protractor](https://github.com/DanteYu/Test_Automation_Demo/tree/master/UITesting/js_jasmine_protractor)
 
 repo地址： [MyDemo](https://github.com/DanteYu/Test_Automation_Demo)
 
