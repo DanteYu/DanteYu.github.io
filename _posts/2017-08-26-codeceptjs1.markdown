@@ -496,7 +496,7 @@ codeceptjs run --steps --reporter spec （这是default的report格式）
 
 ```
 "helpers": {
-    "Mochawesome": {
+    "Mochawesome": { 
         "uniqueScreenshotNames": "true"
     }
   },
