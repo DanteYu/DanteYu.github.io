@@ -8,7 +8,11 @@ tags:
     - codeceptjs
 ---
 
-这篇文章会介绍codeceptjs配置文件的基本用法
+这篇文章会介绍codeceptjs配置文件的基本用法。
+
+`codeceptjs init`创建的文件`codecept.json`就是整个codeceptjs项目的配置文件。这个文件处于整个项目的根目录下。
+
+其大概的内容如下：
 
 ```xml
 {
@@ -26,6 +30,10 @@ tags:
       "keepCookies": false, //optional, 当restart设置为false的时候，配置是否在测试之间保持cookies,默认值是false
       "windowSize": "maximize", //optional, 设置浏览器窗口大小。值可以为"maximize"或格式为"640*480"的尺寸
       "waitForTimeout": 5000, //optional, 给所有wait*()方法设定的默认等待时间. 默认值是1000
+      "timeouts": {   // 配置超时时间。webdriverio的timeouts为键值对形式
+      "script": 60000,
+      "page load": 10000
+      },
       "manualStart": false, //optional, 如果设置为true，则在测试之前不会启动浏览器，而需要在helper中加上方法`this.helpers["WebDriverIO"]._startBrowser()`来人工启动。默认值是false
       "url": "YOUR_DESIRED_HOST", //需要连接到cloud provider上去进行测试 比如browserstack或sauce lab
       "user": "YOUR_BROWSERSTACK_USER",
@@ -56,14 +64,14 @@ tags:
     }
   },
 
-  "include": {
+  "include": {  //配置actor和pageobject。这样才能在测试文件中进行引用
     "I": "./steps_file.js",
     "landingPage": "./pages/landingPage.js",   //配置Page Object的文件，可以让测试文件直接调用
     "landingPageStep": "./steps/LandingPage.js", //配置Step Object的文件，可以让测试文件直接调用
     "landingPageFragment": "./fragments/LandingPage.js" //配置Page Fragment的文件，可以让测试文件直接调用
   },
 
-  "mocha": {
+  "mocha": {   //mocha选项，可以配置reporter
   "reporterOptions": {
       "reportDir": "output",  //配置产生的测试报告文件放到output目录下，比如Mochawesome产生的文件
       "mochaFile": "output/result.xml"  //配置mocha-junit-reporter产生的xml文件放到output目录下
@@ -77,12 +85,9 @@ tags:
 
   "tests": "./spec/s*_test.js",   //配置需要运行的测试
 
-  "timeouts": {   // 配置超时时间。webdriverio的timeouts为键值对形式
-  "script": 60000,
-  "page load": 10000
-  },
+  "timeout": 10000, //默认的测试超时时间
 
-  "name": "codeceptjs-init",  //项目名称
+  "name": "codeceptjs-init",  //项目名称，not used
 
   "multiple": {    //配置run-multiple 并发多个测试套件的执行
     "smoke": {     //配置一个测试套件 smoke
@@ -94,4 +99,65 @@ tags:
     }
   }
 }
+```
+
+#### 动态配置
+
+###### override选项
+
+通过选项`--override`或`-o`我们可以在运行测试的时候，修改相应的配置，做到运行时的动态配置。
+
+`codeceptjs run -o '{ "helpers": {"WebDriverIO": {"browser": "firefox"}}}'`
+
+###### config选项
+
+通过选项`--config`或`-c`，我们可以运行指定的配置文件；这些文件可以是不同名字的或是在项目不同的目录下
+
+`codeceptjs run --config=./path/to/my/config.json`
+
+###### 使用codecept.conf.js
+
+我们可以创建`codecept.conf.js`来包含更多动态的配置项。只需要export config属性即可。
+
+```js
+exports.config = {
+  helpers: {
+    WebDriverIO: {
+      // load variables from the environment and provide defaults
+      url: process.env.CODECEPT_URL || 'http://localhost:3000',
+
+      user: process.env.CLOUDSERVICE_USER,
+      key: process.env.CLOUDSERVICE_KEY,
+
+      coloredLogs: true,
+      waitForTimeout: 10000
+    }
+  },
+
+  // don't build monolithic configs
+  mocha: require('./mocha.conf.js') || {},
+
+  // here goes config as it was in codecept.json
+  // ....
+};
+```
+###### process.profile and  --profile选项
+
+通过在`codecept.conf.js`中配置`process.profile`，我们可以在运行测试时通过`--profile`制定相关的值写入配置文件，做到动态配置。
+
+比如下面的列子中，`--profile firefox`会被作为`process.profile`的值写入配置文件.
+
+`codeceptjs run --profile firefox`
+
+```js
+exports.config = {
+  helpers: {
+    WebDriverIO: {
+      url: 'http://localhost:3000',
+      // load value from `profile`
+      browser: process.profile || 'firefox'
+
+    }
+  }
+};
 ```
