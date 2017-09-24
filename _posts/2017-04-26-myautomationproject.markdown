@@ -31,6 +31,7 @@ tags:
 * [python + behave + requests](https://github.com/DanteYu/Test_Automation_Demo/tree/master/APITesting/python_behave_requests)
 * [python + webdriver + unittest](https://github.com/DanteYu/Test_Automation_Demo/tree/master/UITesting/python_webdriver_unittest)
 * [js + jasmine + protractor](https://github.com/DanteYu/Test_Automation_Demo/tree/master/UITesting/js_jasmine_protractor)
+* [js + codeceptjs + webdriverio](https://github.com/DanteYu/Test_Automation_Demo/tree/master/UITesting/js_codeceptjs_webdriverio)
 
 repo地址： [MyDemo](https://github.com/DanteYu/Test_Automation_Demo)
 

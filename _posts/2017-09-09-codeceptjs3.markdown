@@ -231,9 +231,9 @@ module.exports = {
 
 #### Actor
 
-在我们刚开始初始化的时候  `codeceptjs init`，有一个步骤会问你需要custom step files不。这个文件的目的是可以让你通过`custom_steps.js`来扩展`I`对象的方法。
+在我们刚开始初始化的时候  `codeceptjs init`，有一个步骤会问你需要custom step files不。这个文件的目的是可以让你通过`steps_file.js`来扩展`I`对象的方法。
 
-我们在`custom_steps.js`中加入新的一个方法foo()
+我们在`steps_file.js`中加入新的一个方法foo()
 
 ```js
 'use strict';
@@ -267,7 +267,7 @@ Scenario('login github', {retries: 2}, (I, landingPage)=>{
 });
 ```
 
-要想在`custom_steps.js`中使用`I`对象，需要使用`self`代替
+要想在`steps_file.js`中使用`I`对象，需要使用`self`代替
 
 ```js
 'use strict';
