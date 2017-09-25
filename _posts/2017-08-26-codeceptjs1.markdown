@@ -490,13 +490,13 @@ codeceptjs run --steps --reporter spec （这是default的report格式）
 },
 ```
 
-使用`codeceptjs run --reporter mochawesome` 来执行测试产生xml报告，最终的报告会被放在 output/mochawesome.html。
+使用`codeceptjs run --reporter mochawesome` 来执行测试产生html报告，最终的报告会被放在 output/mochawesome.html。
 
 对于失败的测试，我们需要有截图，我们可以使用下面的配置来实现
 
 ```
 "helpers": {
-    "Mochawesome": { 
+    "Mochawesome": {
         "uniqueScreenshotNames": "true"
     }
   },
