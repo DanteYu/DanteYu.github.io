@@ -10,7 +10,7 @@ tags:
 
 ### 测试开发有着下面两种含义
 1. 自动执行的测试用例
-  2. 辅助测试活动的工具
+2. 辅助测试活动的工具
 
 ### 一个的测试框架应该做的事情：
 
@@ -91,7 +91,7 @@ tags:
 - jasmine
 - supertest
 
-##### Python 
+##### Python
 - python + web driver + unittest
 - python + behave
 - python + request
