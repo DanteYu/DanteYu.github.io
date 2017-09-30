@@ -5,8 +5,8 @@ subtitle:   ""
 date:       2017-06-21 12:00:00
 author:     DanteYu
 tags:
-    - Test Design
-    - Test Strategy
+    - TestDesign
+    - TestStrategy
 ---
 
 ### 启发式测试二部曲
@@ -232,7 +232,7 @@ HTSM主要目的的通过提供大量关键词和启发式问题，帮助测试�
 		* 错误处理 Error handling：产品在出现错误的情况下能够应付失败，优雅地处理错误，稳定地恢复
 		* 数据完整性 Data integrity： 产品中的数据能够不被丢失或被污染
 		* 安全性 Safty：产品不能由于失败而对人生财产造成损害
-		
+
 * **可用性 Usability**
 	* 描述：真实用户能否顺利的使用产品。How easy is it for a real user to use the product?
 	* 典型维度
@@ -324,7 +324,7 @@ HTSM由一组指导词组成，从四个不同的角度出发形成了一个模�
 	* 在回归测试中，它可以帮助测试人员确定测试范围，制定测试方案
 5. 在测试报告阶段
 	* 每个测试技术实施后观察到的质量就是很好的测试报告
-	
+
 #### 参考资料  
 * [测试建模: 启发式测试策略模型 Heuristic Test Strategy Model](http://www.cnblogs.com/liangshi/archive/2012/02/23/2364947.html)
 * [HTSM PDF](http://www.satisfice.com/tools/htsm.pdf)
