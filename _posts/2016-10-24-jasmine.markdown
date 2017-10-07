@@ -37,7 +37,7 @@ Global installation `npm install -g jasmine`
 }
 ```
 
-通过设置环境变量也可以自定义`jasmine.json`. 
+通过设置环境变量也可以自定义`jasmine.json`.
 
 `jasmine JASMINE_CONFIG_PATH=relative/path/to/your/jasmine.json`
 

@@ -1,0 +1,433 @@
+---
+layout:     post
+title:      mocha学习笔记
+subtitle:   第一部分
+date:       2017-09-26 12:00:00
+author:     DanteYu
+tags:
+    - mocha
+---
+
+#### Mocha是什么
+Mocha是一个Javascript测试框架。只要是Javascript能运行的地方，都可以运行mocha。其主要特征是能够使得异步测试更加简单以及提供了精确的报告。
+
+#### 安装方法
+使用`npm`全局安装 `npm install -g mocha`；
+
+作为开发依赖本地安装 `npm install --save-dev mocha`
+
+#### 一个简单的例子
+
+```js
+var assert = require('assert');
+
+describe('Array', function() {
+  describe('#indexOf()', function() {
+    it('should return -1 when the value is not present', function() {
+      assert.equal(-1, [1,2,3].indexOf(4)); // pass
+      assert.equal(0, [1,2,3].indexOf(2)); // fail. index should be 1
+    });
+  });
+});
+
+```
+上面的例子使用了测试集定义函数`describe()`和测试用例定义函数`it()`，还使用了node的assert模块来做验证来检查数组索引的值是否匹配。很明显第一个验证可以通过，而第二个不行。可以使用命令`mocha`来执行测试，也可以在`package.json`里面配置了`test`命令使用`npm test`执行，无论哪种方式，运行效果都如下
+
+```
+➜  mocha_demo mocha test.js
+
+
+  Array
+    #indexOf()
+      1) should return -1 when the value is not present
+
+
+  0 passing (9ms)
+  1 failing
+
+  1) Array
+       #indexOf()
+         should return -1 when the value is not present:
+
+      AssertionError [ERR_ASSERTION]: 0 == 1
+      + expected - actual
+
+      -0
+      +1
+
+      at Context.<anonymous> (test.js:8:14)
+```
+把第二个测试用例期待值修改正确后，执行通过的效果如下
+
+```
+➜  mocha_demo mocha test.js
+
+
+  Array
+    #indexOf()
+      ✓ should return -1 when the value is not present
+
+
+  1 passing (7ms)
+
+➜  mocha_demo
+```
+
+#### 验证 assertions
+
+mocha不像jasmine那样自身内建具有验证功能的方法，但是我们可以在测试用例中使用诸如 [should.js](http://shouldjs.github.io/)、[expect.js](https://github.com/Automattic/expect.js) 和[chai](http://chaijs.com/)等验证库来完成验证功能。推荐使用[chai](http://chaijs.com/)。
+
+
+#### 异步代码测试
+当测试异步的代码时，通过给`it()`加一个回调函数（通常命名为done()）即可让`mocha`知道异步代码执行之后需要调用`done()`来表示测试完成
+
+```js
+describe('User', function() {
+  describe('#save()', function() {
+    it('should save without error', function(done) {
+      var user = new User('Luna');
+      user.save(function(err) {
+        if (err) done(err);
+        else done();
+      });
+    });
+  });
+});
+```
+
+当`done()`可以接受异步代码错误的时候，上面代码还可以简化为
+
+```js
+describe('User', function() {
+  describe('#save()', function() {
+    it('should save without error', function(done) {
+      var user = new User('Luna');
+      user.save(done);
+    });
+  });
+});
+```
+
+#### promises代码测试
+
+当异步代码返回的是`promise`而不是`callback`的时候，用例也可以返回`promise`
+
+```js
+beforeEach(function() {
+  return db.clear()
+    .then(function() {
+      return db.save([tobi, loki, jane]);
+    });
+});
+
+describe('#find()', function() {
+  it('respond with matching records', function() {
+    return db.find({ type: 'User' }).should.eventually.have.length(3); // https://www.npmjs.com/package/chai-as-promised
+  });
+});
+```
+
+#### 同步代码测试
+当测试同步的代码时，`mocha`会自动的执行下一个测试用例，所以`mocha`会连续地执行所有的测试
+
+```js
+'use strict';
+
+const assert = require('assert');
+
+describe('Array', function() {
+  describe('#indexOf()', function() {
+    it('should return -1 when the value is not present', function() {
+      assert.equal(-1, [1,2,3].indexOf(5));
+      assert.equal(-1, [1,2,3].indexOf(0));
+    });
+    it('should not return -1 when the value is present', function() {
+      assert.equal(0, [1,2,3].indexOf(1));
+      assert.equal(1, [1,2,3].indexOf(2));
+      assert.equal(2, [1,2,3].indexOf(3));
+    });
+  });
+  describe('#length()', function() {
+    it('should have length 3', function() {
+      assert.equal(3, [1,2,3].length);
+    });
+  });
+});
+```
+上面的测试代码执行效果如下
+
+```
+➜  mocha_demo mocha test.js
+
+  Array
+    #indexOf()
+      ✓ should return -1 when the value is not present
+      ✓ should not return -1 when the value is present
+    #length()
+      ✓ should have length 3
+
+  3 passing (7ms)
+```
+#### 箭头函数
+
+不建议在`mocha`中使用箭头函数，因为箭头函数对`this`的绑定会使测试用例无法访问`Mocha`上下文中的一些方法。
+
+比如下面代码`this.timeout(1000)`就会执行失败
+
+```js
+'use strict';
+
+const assert = require('assert');
+
+describe('my suite', () => {
+  it('my test', () => {
+    // should set the timeout of this test to 1000 ms; instead will fail
+    this.timeout(1000);
+    assert.ok(true);
+  });
+});
+```
+
+```
+➜  mocha_demo mocha test.js
+
+  my suite
+    1) my test
+
+  0 passing (7ms)
+  1 failing
+
+  1) my suite
+       my test:
+     TypeError: this.timeout is not a function
+      at Context.it (test.js:8:10)
+```
+
+把箭头函数删除后，就可以运行成功
+
+```js
+'use strict';
+
+const assert = require('assert');
+
+describe('my suite', function() {
+  it('my test', function() {
+    // should set the timeout of this test to 1000 ms; instead will fail
+    this.timeout(1000);
+    assert.ok(true);
+  });
+});
+
+```
+
+```
+➜  mocha_demo mocha test.js
+
+  my suite
+    ✓ my test
+
+  1 passing (6ms)
+```
+
+#### Hooks
+
+`Mocha`提供了四种hooks用来做测试准备和清理工作
+  * before() - 在所有测试套件运行之前执行
+  * after() - 在所有测试套件运行之后执行
+  * beforeEach() - 在每个测试用例运行之前执行
+  * afterEach() - 在每个测试用例运行之后执行
+
+下面是一个简单的例子
+
+```js
+'use strict';
+
+const assert = require('assert');
+
+
+describe('my suite', function() {
+
+  before('This is before method description', function(){
+    console.log('this is before(), runs before all tests in this block');
+  });
+
+  after(function aftername(){
+    console.log('this is after(), runs after all tests in this block');
+  });
+
+  beforeEach(function(){
+    console.log('this is beforeEach(), runs before each test in this block');
+  });
+
+  afterEach(function(){
+    console.log('this is afterEach(), runs after each test in this block');
+  });
+
+  it('my test case 1', function() {
+    assert.ok(true);
+  });
+  it('my test case 2', function(){
+    assert.equal(1, 1);
+  })
+});
+
+describe('my suite 2', function(){
+  it('my test case 3', function(){
+    assert.equal('bar', 'bar')
+  })
+});
+
+```
+
+```
+➜  mocha_demo mocha test.js
+
+
+  my suite
+this is before(), runs before all tests in this block
+this is beforeEach(), runs before each test in this block
+    ✓ my test case 1
+this is afterEach(), runs after each test in this block
+this is beforeEach(), runs before each test in this block
+    ✓ my test case 2
+this is afterEach(), runs after each test in this block
+this is after(), runs after all tests in this block
+
+  my suite 2
+    ✓ my test case 3
+
+
+  3 passing (11ms)
+```
+
+hooks也能用于异步代码的处理
+
+```js
+describe('Connection', function() {
+  var db = new Connection,
+    tobi = new User('tobi'),
+    loki = new User('loki'),
+    jane = new User('jane');
+
+  beforeEach(function(done) {
+    db.clear(function(err) {
+      if (err) return done(err);
+      db.save([tobi, loki, jane], done);
+    });
+  });
+
+  describe('#find()', function() {
+    it('respond with matching records', function(done) {
+      db.find({type: 'User'}, function(err, res) {
+        if (err) return done(err);
+        res.should.have.length(3);
+        done();
+      });
+    });
+  });
+});
+```
+#### 全局hooks
+
+刚才提到的`hooks`都是定义在`describe()`里面，如果`hooks`定义在了`describe()`外面，那么这个`hooks`的作用域就是整个文件的全部测试套件。这是因为`mocha`有一个implied describe()，称之为"root suite"。
+
+```js
+'use strict';
+
+const assert = require('assert');
+
+before('This is before method description', function(){
+  console.log('this is before(), runs before all tests in this block');
+});
+
+after(function aftername(){
+  console.log('this is after(), runs after all tests in this block');
+});
+
+beforeEach(function(){
+  console.log('this is beforeEach(), runs before each test in this block');
+});
+
+afterEach(function(){
+  console.log('this is afterEach(), runs after each test in this block');
+});
+
+
+describe('my suite', function() {
+  it('my test case 1', function() {
+    assert.ok(true);
+  });
+  it('my test case 2', function(){
+    assert.equal(1, 1);
+  })
+});
+
+describe('my suite 2', function(){
+  it('my test case 3', function(){
+    assert.equal('bar', 'bar')
+  })
+});
+```
+
+```
+➜  mocha_demo mocha test.js
+
+this is before(), runs before all tests in this block
+  my suite
+this is beforeEach(), runs before each test in this block
+    ✓ my test case 1
+this is afterEach(), runs after each test in this block
+this is beforeEach(), runs before each test in this block
+    ✓ my test case 2
+this is afterEach(), runs after each test in this block
+
+  my suite 2
+this is beforeEach(), runs before each test in this block
+    ✓ my test case 3
+this is afterEach(), runs after each test in this block
+
+this is after(), runs after all tests in this block
+
+  3 passing (13ms)
+```
+
+#### 延迟测试
+
+如果想要通过延迟测试执行，而在测试之前完成某些特定的工作，我们需要命令`mocha --delay`来实现。这个命令会把`run()`函数加上全局环境中，等特定工作完成后调用`run()`即可启动测试执行。
+
+```js
+setTimeout(function() {
+  // do some setup
+
+  describe('my suite', function() {
+    // ...
+  });
+
+  run();
+}, 5000);
+```
+
+
+#### 待定测试
+
+当一个测试没有完成，需要以后来继续完成的时候，这个测试就进入了pending待定状态。为了测试执行不被未完成的用例影响，我们只需要简单地不添加回调函数callback即可。
+
+```js
+'use strict';
+
+const assert = require('assert');
+
+describe('my suite 2', function(){
+  it('my test case 3')
+});
+```
+
+上面的`it()`没有加上回调函数，于是执行结果中 `pending`就会+1
+
+```
+  my suite 2
+    - my test case 3
+
+  0 passing (6ms)
+  1 pending
+```
