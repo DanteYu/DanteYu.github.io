@@ -12,7 +12,7 @@ tags:
 
 在测试报告里面，测试时间会被展示出来；如果时间过长，也会被标记出来。
 
-使用`this.slow(time)`可以告诉`Mocha`该测试执行了多少时间才会被认为是一个耗时过长(slow)的测试。
+使用`this.slow(time)`可以告诉`Mocha`该测试执行了多少时间才会被认为是一个耗时过长(slow)的测试，从而需要高亮这个测试。
 
 ```js
 describe('something slow', function() {
@@ -132,6 +132,8 @@ describe('this is suite 1', function() {
 
 #### Mocha命令和参数使用
 
+`mocha --help`会显示下面的内容，包含了`mocha`的全部命令以及简单介绍
+
 ```
 Usage: mocha [debug] [options] [files]
 
@@ -202,14 +204,14 @@ Commands:
 可以看见`Mocha`提供了非常多有用的功能。下面介绍一些主要使用的选项
 
 * `mocha -w`/`mocha --watch`用来监测测试文件的变化，一旦变化被监测到，立即执行测试
-* `mocha -b`/`mocha --bail` 只对第一个抛出的异常进行处理
+* `mocha -b`/`mocha --bail` 只对第一个抛出的异常进行处理。只要有一个测试用例没有通过，后面的测试用例也不会执行了
 * `mocha -d`/`mocha --debug` 开启node的debug模式，能够对标记了debugger语句的代码进行调试
 * `mocha -R`/`mocha --reporter` 指定mocha提供的reporter形式或第三方reporter。默认是“spec”
 * `mocha -u`/`mocha --ui`指定使用的测试接口。默认是“bdd”
 * `mocha -t`/`mocha --timeout`指定测试用例的超时时间。默认是2s。 `--timeout 2s`或是`--timeout 2000`
 * `mocha -s`/`mocha --slow`指定测试用例执行时间为慢的阈值。默认是75毫秒。`Mocha`使用这个设置来标识那些运行时间很长的测试
 * `mocha -g <pattern>`/`mocha --global <pattern>`指定`mocha`去跑匹配描述和`<pattern>`一样的测试用例。类似于给测试用例打标签的作用
-* `mocha --recursive` test目录下面素有的测试用例都会执行，不止是第一层
+* `mocha --recursive` test目录下面所有的测试用例都会执行，不止是第一层
 
 #### 接口风格类型
 
@@ -259,3 +261,9 @@ Commands:
 --reporter dot
 --ui bdd
 ```
+如果写为
+```
+dir-test
+--recursive
+```
+表明指定运行`dir-test`目录及其子目录之中的测试脚本
