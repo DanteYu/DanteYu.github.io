@@ -73,6 +73,14 @@ describe('Array', function() {
 ➜  mocha_demo
 ```
 
+`Mocha`的执行会找到当前命令执行目录下的`test`目录。`./test/*.js`是`Mocha`寻找的目标。
+
+`Mocha`提供了多种便利的执行方式
+  * 多个文件 `mocha file1 file2 file3`
+  * 指定目录 `mocha ./test/dir1/*.js`
+  * 通配符 `mocha ./spec/test*.js`, `mocha ./spec/{my, awesome}.js`
+  * node通配符 `mocha './spec/**/*.@(js|jsx)'`
+
 #### 验证 assertions
 
 mocha不像jasmine那样自身内建具有验证功能的方法，但是我们可以在测试用例中使用诸如 [should.js](http://shouldjs.github.io/)、[expect.js](https://github.com/Automattic/expect.js) 和[chai](http://chaijs.com/)等验证库来完成验证功能。推荐使用[chai](http://chaijs.com/)。
@@ -430,4 +438,427 @@ describe('my suite 2', function(){
 
   0 passing (6ms)
   1 pending
+```
+
+#### 单独执行某一个测试套件或是测试用例
+
+通过给`describe()`和`it()`加上`.only()`，我们可以指定执行只加上了`.only()`的测试套件或是测试用例
+
+下面这个列子是只执行内嵌的测试套件
+
+```js
+'use strict';
+
+const assert = require('assert');
+
+describe('my suite 1', function(){
+
+  describe('my nested suite 1', function(){
+
+    it('my test case 1', function(){
+      console.log('this is test case 1');
+    });
+
+    it('my test case 2', function(){
+      console.log('this is test case 2');
+    });
+  });
+
+  describe.only('my nested suite 2', function(){
+
+    it('my test case 3', function(){
+      console.log('this is test case 3');
+    });
+  });
+});
+
+describe('my suite 2', function(){
+  it('my test case 4', function(){
+    console.log('this is test case 4');
+  });
+
+  it('my test case 5', function(){
+    console.log('this is test case 5');
+  });
+});
+```
+
+```
+➜  mocha_demo mocha test.js
+
+  my suite 1
+    my nested suite 2
+this is test case 3
+      ✓ my test case 3
+
+  1 passing (6ms)
+```
+
+下面列子指定了只执行两个测试用例，所以`.only()`是可以使用多次来定义测试套件或是测试用例的子集
+
+```js
+'use strict';
+
+const assert = require('assert');
+
+describe('my suite 1', function(){
+
+  describe('my nested suite 1', function(){
+
+    it('my test case 1', function(){
+      console.log('this is test case 1');
+    });
+
+    it.only('my test case 2', function(){
+      console.log('this is test case 2');
+    });
+
+  });
+
+  describe('my nested suite 2', function(){
+
+    it('my test case 3', function(){
+      console.log('this is test case 3');
+    });
+
+  });
+});
+
+describe('my suite 2', function(){
+  it('my test case 4', function(){
+    console.log('this is test case 4');
+  });
+
+  it.only('my test case 5', function(){
+    console.log('this is test case 5');
+  });
+});
+```
+```
+➜  mocha_demo mocha test.js
+
+
+  my suite 1
+    my nested suite 1
+this is test case 2
+      ✓ my test case 2
+
+  my suite 2
+this is test case 5
+    ✓ my test case 5
+
+  2 passing (8ms)
+```
+
+当测试套件和测试用例同时都加上了`.only()`的时候，测试用例的执行是优先的。下面这个列子只会执行`it.only()`
+
+```js
+'use strict';
+
+const assert = require('assert');
+
+describe('my suite 1', function(){
+
+  describe.only('my nested suite 1', function(){
+
+    it.only('my test case 1', function(){
+      console.log('this is test case 1');
+    });
+
+    it('my test case 2', function(){
+      console.log('this is test case 2');
+    });
+  });
+
+  describe('my nested suite 2', function(){
+
+    it('my test case 3', function(){
+      console.log('this is test case 3');
+    });
+  });
+});
+```
+
+```
+➜  mocha_demo mocha test.js
+
+  my suite 1
+    my nested suite 1
+this is test case 1
+      ✓ my test case 1
+
+  1 passing (11ms)
+```
+如果有Hooks的话，Hooks会一直被执行的
+
+
+#### 跳过测试
+既然有指定执行某几个测试，当然`Mocha`也提供不执行某些测试，也就是跳过测试。通过给`describe()`和`it()`加上`.skip()`，我们可以跳过只加上了`.skip()`的测试套件或是测试用例。任何被跳过没有执行的测试用例都会被在结果中标记为`pending`。
+
+下面的例子中，两个测试套件都被跳过了，所有结果里面被标记为`pending`
+
+```js
+'use strict';
+
+const assert = require('assert');
+
+describe('my suite 1', function(){
+
+  describe.skip('my nested suite 1', function(){
+
+    it('my test case 1', function(){
+      console.log('this is test case 1');
+    });
+
+    it('my test case 2', function(){
+      console.log('this is test case 2');
+    });
+  });
+
+  describe('my nested suite 2', function(){
+
+    it('my test case 3', function(){
+      console.log('this is test case 3');
+    });
+  });
+});
+
+describe.skip('my suite 2', function(){
+  it('my test case 4', function(){
+    console.log('this is test case 4');
+  });
+
+  it('my test case 5', function(){
+    console.log('this is test case 5');
+  });
+});
+
+```
+
+```
+➜  mocha_demo mocha test.js
+
+  my suite 1
+    my nested suite 1
+      - my test case 1
+      - my test case 2
+    my nested suite 2
+this is test case 3
+      ✓ my test case 3
+
+  my suite 2
+    - my test case 4
+    - my test case 5
+
+  1 passing (8ms)
+  4 pending
+```
+
+下面这个例子中，有两个测试用例被跳过了
+
+```js
+'use strict';
+
+const assert = require('assert');
+
+describe('my suite 1', function(){
+
+  describe('my nested suite 1', function(){
+
+    it('my test case 1', function(){
+      console.log('this is test case 1');
+    });
+
+    it.skip('my test case 2', function(){
+      console.log('this is test case 2');
+    });
+  });
+
+  describe('my nested suite 2', function(){
+
+    it('my test case 3', function(){
+      console.log('this is test case 3');
+    });
+  });
+});
+
+describe('my suite 2', function(){
+  it('my test case 4', function(){
+    console.log('this is test case 4');
+  });
+
+  it.skip('my test case 5', function(){
+    console.log('this is test case 5');
+  });
+});
+
+```
+
+```
+➜  mocha_demo mocha test.js
+
+  my suite 1
+    my nested suite 1
+this is test case 1
+      ✓ my test case 1
+      - my test case 2
+    my nested suite 2
+this is test case 3
+      ✓ my test case 3
+
+  my suite 2
+this is test case 4
+    ✓ my test case 4
+    - my test case 5
+
+  3 passing (8ms)
+  2 pending
+```
+使用`.skip()`是比注释更好的能够不执行指定测试的方法。
+
+使用`this.skip()`可以在运行时动态的跳过测试。比如一个测试需要在运行前检查运行环境是否准备好了，如果没有准备好，那我们可以直接使用`this.skip()`来跳过。
+
+下面的例子表明正是由于环境有问题，需要跳过测试，最后跳过的测试会被标记为`pending`。
+```js
+'use strict';
+
+const assert = require('assert');
+let checkEnv = false;
+
+describe('my suite 2', function(){
+  it('my test case 4', function(){
+    console.log('this is test case 4');
+    if (checkEnv === true){
+      console.log('Env is ready, lets do sth');
+    } else {
+      this.skip();
+    };
+  });
+
+  it('my test case 5', function(){
+    console.log('this is test case 5');
+  });
+});
+```
+
+```
+➜  mocha_demo mocha test.js
+
+  my suite 2
+this is test case 4
+    - my test case 4
+this is test case 5
+    ✓ my test case 5
+
+
+  1 passing (8ms)
+  1 pending
+```
+
+`this.skip()`后面一般不会有其他代码。
+
+一次性跳过多个测试的话，我们可以在'before' hook里使用`this.skip()`
+
+下面例子中的`beforeEach()`就使用了`this.skip()`来跳过测试
+
+```js
+'use strict';
+
+const assert = require('assert');
+let checkEnv = false;
+
+describe('my suite 2', function(){
+
+  beforeEach(function(){
+    if (checkEnv === true){
+      console.log('Env is ready, lets do sth');
+    } else {
+      this.skip();
+    };
+  });
+
+  it('my test case 4', function(){
+    console.log('this is test case 4');
+  });
+
+  it('my test case 5', function(){
+    console.log('this is test case 5');
+  });
+});
+
+```
+```
+➜  mocha_demo mocha test.js
+
+  my suite 2
+    - my test case 4
+    - my test case 5
+
+  0 passing (6ms)
+  2 pending
+```
+
+#### 重跑测试
+
+当一个测试失败的时候，我们可以使用`this.retries(number)`来重新执行失败的测试。这个功能是为了处理E2E功能测试失败而设计的，所以不推荐在单元测试里面使用。
+
+下面例子表明在`describe()`里面使用`this.retries(number)`会作用于全部的测试用例，对于Hooks，只会作用于`beforeEach()`和`afterEach()`
+
+```js
+describe('retries', function() {
+  // Retry all tests in this suite up to 4 times
+  this.retries(4);
+
+  beforeEach(function () {
+    browser.get('http://www.yahoo.com');
+  });
+
+  it('should succeed on the 3rd try', function () {
+    // Specify this test to only retry up to 2 times
+    this.retries(2);
+    expect($('.foo').isDisplayed()).to.eventually.be.true;
+  });
+});
+```
+
+#### 动态生成测试
+
+`Mocha`使用`Function.prototype.call`和函数表达式来定义测试套件和测试用例，这样能够很方便的动态生成测试用例。不需要特别的语法，只需要js就可以实现类似参数化测试的功能。
+
+```js
+var assert = require('chai').assert;
+
+function add() {
+  return Array.prototype.slice.call(arguments).reduce(function(prev, curr) {
+    return prev + curr;
+  }, 0);
+}
+
+describe('add()', function() {
+  var tests = [
+    {args: [1, 2],       expected: 3},
+    {args: [1, 2, 3],    expected: 6},
+    {args: [1, 2, 3, 4], expected: 10}
+  ];
+
+  tests.forEach(function(test) {
+    it('correctly adds ' + test.args.length + ' args', function() {
+      var res = add.apply(null, test.args);
+      assert.equal(res, test.expected);
+    });
+  });
+});
+```
+上面代码会产生三个测试用例
+
+```
+➜  mocha_demo mocha test.js
+
+
+  add()
+    ✓ correctly adds 2 args
+    ✓ correctly adds 3 args
+    ✓ correctly adds 4 args
+
+  3 passing (7ms)
 ```

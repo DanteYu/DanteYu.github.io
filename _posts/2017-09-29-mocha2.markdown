@@ -7,3 +7,255 @@ author:     DanteYu
 tags:
     - mocha
 ---
+
+#### 测试持续时间
+
+在测试报告里面，测试时间会被展示出来；如果时间过长，也会被标记出来。
+
+使用`this.slow(time)`可以告诉`Mocha`该测试执行了多少时间才会被认为是一个耗时过长(slow)的测试。
+
+```js
+describe('something slow', function() {
+  this.slow(10000);
+
+  it('should take long enough for me to go make a sandwich', function() {
+    // ...
+  });
+});
+```
+
+#### 测试超时
+
+通过在`describe()`级别定义`this.timeout(time_number)`，这个超时时间将会作用于该测试套件下的子测试套件和测试用例。
+
+```js
+describe('a suite of tests', function() {
+  this.timeout(500);
+
+  it('should take less than 500ms', function(done){
+    setTimeout(done, 300);
+  });
+
+  it('should take less than 500ms as well', function(done){
+    setTimeout(done, 250);
+  });
+})
+```
+
+上面的代码定义了超时时间是500ms，然后测试执行时间都没有超过，所以测试可以通过
+
+
+```
+➜  mocha_demo mocha test.js
+
+  a suite of tests
+    ✓ should take less than 500ms (304ms)
+    ✓ should take less than 500ms as well (255ms)
+
+  2 passing (568ms)
+```
+如果我们试着把第一个用例的时间从300改为550，我们就会得到下面这种超时错误
+
+```
+➜  mocha_demo mocha test.js
+
+  a suite of tests
+    1) should take less than 500ms
+    ✓ should take less than 500ms as well (256ms)
+
+  1 passing (771ms)
+  1 failing
+
+  1) a suite of tests
+       should take less than 500ms:
+     Error: Timeout of 500ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves.
+```
+在`it()`中使用`this.timeout(0)`可以重载/消除测试套件定义的超时时间。
+
+同理，在测试用例使用方法一样
+
+```js
+it('should take less than 500ms', function(done){
+  this.timeout(500);
+  setTimeout(done, 300);
+});
+```
+在Hooks中使用如下
+
+```js
+describe('a suite of tests', function() {
+  beforeEach(function(done) {
+    this.timeout(3000); // A very long environment setup.
+    setTimeout(done, 2500);
+  });
+});
+```
+
+#### DIFF差异比较
+当`Mocha`捕捉到AssertionError且有`err.expected`和`err.actual`属性的时候，`Mocha`会自动化在console显示出期望值和实际值的对比区别。
+
+```js
+const assert = require('assert');
+
+describe('this is suite 1', function() {
+  it('this is test case 1', function(){
+    assert.equal(-1, [1,2,3].indexOf(0));
+  });
+
+  it('this is test case 2', function(){
+    assert.equal('test', [1,2,3].toString());
+  });
+})
+```
+
+```
+➜  mocha_demo mocha test.js
+
+  this is suite 1
+    ✓ this is test case 1
+    1) this is test case 2
+
+  1 passing (12ms)
+  1 failing
+
+  1) this is suite 1
+       this is test case 2:
+
+      AssertionError [ERR_ASSERTION]: 'test' == '1,2,3'
+      + expected - actual
+
+      -test
+      +1,2,3
+
+      at Context.<anonymous> (test.js:9:12)
+```
+
+#### Mocha命令和参数使用
+
+```
+Usage: mocha [debug] [options] [files]
+
+
+Options:
+
+  -V, --version                           output the version number
+  -A, --async-only                        force all tests to take a callback (async) or return a promise
+  -c, --colors                            force enabling of colors
+  -C, --no-colors                         force disabling of colors
+  -G, --growl                             enable growl notification support
+  -O, --reporter-options <k=v,k2=v2,...>  reporter-specific options
+  -R, --reporter <name>                   specify the reporter to use
+  -S, --sort                              sort test files
+  -b, --bail                              bail after first test failure
+  -d, --debug                             enable node's debugger, synonym for node --debug
+  -g, --grep <pattern>                    only run tests matching <pattern>
+  -f, --fgrep <string>                    only run tests containing <string>
+  -gc, --expose-gc                        expose gc extension
+  -i, --invert                            inverts --grep and --fgrep matches
+  -r, --require <name>                    require the given module
+  -s, --slow <ms>                         "slow" test threshold in milliseconds [75]
+  -t, --timeout <ms>                      set test-case timeout in milliseconds [2000]
+  -u, --ui <name>                         specify user-interface (bdd|tdd|qunit|exports)
+  -w, --watch                             watch files for changes
+  --check-leaks                           check for global variable leaks
+  --full-trace                            display the full stack trace
+  --compilers <ext>:<module>,...          use the given module(s) to compile files
+  --debug-brk                             enable node's debugger breaking on the first line
+  --globals <names>                       allow the given comma-delimited global [names]
+  --es_staging                            enable all staged features
+  --harmony<_classes,_generators,...>     all node --harmony* flags are available
+  --preserve-symlinks                     Instructs the module loader to preserve symbolic links when resolving and caching modules
+  --icu-data-dir                          include ICU data
+  --inline-diffs                          display actual/expected differences inline within each string
+  --inspect                               activate devtools in chrome
+  --inspect-brk                           activate devtools in chrome and break on the first line
+  --interfaces                            display available interfaces
+  --no-deprecation                        silence deprecation warnings
+  --exit                                  force shutdown of the event loop after test run: mocha will call process.exit
+  --no-timeouts                           disables timeouts, given implicitly with --debug
+  --no-warnings                           silence all node process warnings
+  --opts <path>                           specify opts path
+  --perf-basic-prof                       enable perf linux profiler (basic support)
+  --napi-modules                          enable experimental NAPI modules
+  --prof                                  log statistical profiling information
+  --log-timer-events                      Time events including external callbacks
+  --recursive                             include sub directories
+  --reporters                             display available reporters
+  --retries <times>                       set numbers of time to retry a failed test case
+  --throw-deprecation                     throw an exception anytime a deprecated function is used
+  --trace                                 trace function calls
+  --trace-deprecation                     show stack traces on deprecations
+  --trace-warnings                        show stack traces on node process warnings
+  --use_strict                            enforce strict mode
+  --watch-extensions <ext>,...            additional extensions to monitor with --watch
+  --delay                                 wait for async suite definition
+  --allow-uncaught                        enable uncaught errors to propagate
+  --forbid-only                           causes test marked with only to fail the suite
+  --forbid-pending                        causes pending tests and test marked with skip to fail the suite
+  -h, --help                              output usage information
+
+
+Commands:
+
+  init <path>  initialize a client-side mocha setup at <path>
+```
+可以看见`Mocha`提供了非常多有用的功能。下面介绍一些主要使用的选项
+
+* `mocha -w`/`mocha --watch`用来监测测试文件的变化，一旦变化被监测到，立即执行测试
+* `mocha -b`/`mocha --bail` 只对第一个抛出的异常进行处理
+* `mocha -d`/`mocha --debug` 开启node的debug模式，能够对标记了debugger语句的代码进行调试
+* `mocha -R`/`mocha --reporter` 指定mocha提供的reporter形式或第三方reporter。默认是“spec”
+* `mocha -u`/`mocha --ui`指定使用的测试接口。默认是“bdd”
+* `mocha -t`/`mocha --timeout`指定测试用例的超时时间。默认是2s。 `--timeout 2s`或是`--timeout 2000`
+* `mocha -s`/`mocha --slow`指定测试用例执行时间为慢的阈值。默认是75毫秒。`Mocha`使用这个设置来标识那些运行时间很长的测试
+* `mocha -g <pattern>`/`mocha --global <pattern>`指定`mocha`去跑匹配描述和`<pattern>`一样的测试用例。类似于给测试用例打标签的作用
+* `mocha --recursive` test目录下面素有的测试用例都会执行，不止是第一层
+
+#### 接口风格类型
+
+`Mocha`的接口风格可以让开发人员选择DSL的不同风格。现在有下面五种风格：
+* BDD
+  * 提供 describe(), context(), it(), specify(), before(), after(), beforeEach()和afterEach()
+  * describe() = context(), it() = specify()
+* TDD
+  * 提供suite(), test(), suiteSetup(), suiteTeardown(), setup()和teardown()
+* Exports
+  * 类似于`mocha`前身`expresso`
+  * 测试套件是对象，函数是测试用例
+* QUnit
+  * 类似[QUnit](http://qunitjs.com/)。测试套件单独定义在测试用例之前
+  * 像TDD一样支持`suite()`和`test()`
+  * 像BDD一样支持hooks
+* Require
+  * 允许通过`require()`来导入`describe()`和`it()`的方法
+  * 可以自己定义别名
+  * 只能用`mocha`命令执行，`node`不行
+
+
+#### 报告
+`Mocha`提供了多种console端报告模式
+* `mocha --reporter spec`这是默认模式。是一个按照测试套件和用例分层次的视图
+* `mocha --reporter dot`显示一个由点组成的矩阵。点的颜色代表着不同的测试结果
+* `mocha --reporter nyan`显示了一个图。。。。。
+* `mocha --reporter tap` 基于Test Anything Protocol (TAP)
+* `mocha --reporter landing` 模拟飞机降落
+* `mocha --reporter list` 以列表的形式显示每一个测试用例
+* `mocha --reporter progress` 以进度条的形式显示
+* `mocha --reporter json` 输出json格式的报告
+* `mocha --reporter min` 只输出summary。可以与`mocha -w`一起使用
+* `mocha --reporter doc` 输出HTML格式的报告
+* `mocha --reporter markdown` 输出HTML格式的报告
+
+除了console端的报告，[mochawesome](https://www.npmjs.com/package/mochawesome)会输出一个漂亮的HTML文件。
+
+#### mocha.opts
+
+`Mocha`允许在配置文件`./test/mocha.opts`中写入`mocha`的选项参数，做到简化选项配置管理。注意是要在`test`目录下面。如果命令行也有参数的话，此命令行参数优先。
+
+文件的内容可如下所示
+
+```
+--require should
+--reporter dot
+--ui bdd
+```
