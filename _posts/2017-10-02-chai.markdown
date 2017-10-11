@@ -1,0 +1,29 @@
+---
+layout:     post
+title:      chai学习笔记
+subtitle:   
+date:       2017-10-02 12:00:00
+author:     DanteYu
+tags:
+    - chai
+---
+
+`Chai`是具有BDD/TDD风格的验证库，可以运行在node和浏览器环境中，一般和各类JavaScript框架一起使用。本文主要介绍在node环境中的使用。
+
+为什么说`Chai`同时具有BDD或者TDD风格呢？因为`Chai`提供了不同风格的接口
+* `should`和`expect`接口提供了BDD链式风格，是一种更加易读的风格
+  * `tea.should.have.property('flavors').with.lengthOf(3);`
+  * `expect(tea).to.have.property('flavors').with.lengthOf(3)`
+* `assert`提供了更加经典的TDD验证风格
+  * `assert.lengthOf(tea.flavors, 3);`
+
+#### 安装
+
+安装可以使用`npm install chai`。更加推荐的做法是在`package.json`里面添加chai，然后使用`npm install`去安装。
+
+```
+"devDependencies": {
+  "chai": "*"
+}
+```
+使用`*`可以让每一次执行`npm install`的时候都去下载安装`Chai`的最新版本，这在持续集成里面能发挥很大的作用。
