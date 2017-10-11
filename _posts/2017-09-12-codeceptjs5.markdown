@@ -22,7 +22,7 @@ tags:
     "WebDriverIO": {   //配置webdriverio作为helpers
       "url": "http://simple-form-bootstrap.plataformatec.com.br", //配置base url
       "browser": "chrome",  //配置运行的浏览器
-      "smartWait": 5000，   //optional，配置Smart Wait时间
+      "smartWait": 5000,   //optional，配置Smart Wait时间
       "restart": false,  //optional，配置是否在测试场景之间重启浏览器，默认值是true
       "keepBrowserState": false, //optional, 当restart设置为false的时候，配置是否在测试之间保持浏览器的状态， 默认值是false
       “disableScreenshots”: false, //optional, 配置是否在测试失败时存储截图，默认值是false
