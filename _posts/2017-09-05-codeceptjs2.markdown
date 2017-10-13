@@ -7,6 +7,7 @@ author:     DanteYu
 tags:
     - codeceptjs
 ---
+本文章基于codeceptjs@1.0.1
 
 这篇文章会介绍一些与页面交互最常用的actions及其用法。
 

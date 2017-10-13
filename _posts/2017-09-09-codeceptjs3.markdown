@@ -7,6 +7,7 @@ author:     DanteYu
 tags:
     - codeceptjs
 ---
+本文章基于codeceptjs@1.0.1
 
 这篇文章会介绍UI测试最常用的设计模式在codeceptjs的应用 - **Page Object**
 

@@ -7,6 +7,7 @@ author:     DanteYu
 tags:
     - codeceptjs
 ---
+本文章基于codeceptjs@1.0.1
 
 ### codeceptjs介绍
 
