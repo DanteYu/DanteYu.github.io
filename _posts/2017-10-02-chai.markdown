@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      chai学习笔记
-subtitle:   expect使用方法
+subtitle:   expect API学习
 date:       2017-10-02 12:00:00
 author:     DanteYu
 tags:
@@ -17,7 +17,7 @@ tags:
 * `assert`提供了更加经典的TDD验证风格
   * `assert.lengthOf(tea.flavors, 3);`
 
-#### 安装
+### 安装
 
 安装可以使用`npm install chai`。更加推荐的做法是在`package.json`里面添加chai，然后使用`npm install`去安装。
 
@@ -29,11 +29,11 @@ tags:
 
 使用`*`可以让每一次执行`npm install`的时候都去下载安装`Chai`的最新版本，这在持续集成里面能发挥很大的作用。
 
-#### chai.expect
+### chai.expect
 
 让我们一起来看下如何使用`chai.expect`。
 
-##### Chains Getter
+#### Chains Getter
 
 下面所有的chains都可以用来增加验证表达式的可读性，读起来更接近自然语言。
 
@@ -53,7 +53,7 @@ tags:
 * but
 * does
 
-###### .equal
+#### .equal
 `.equal`应该算是验证里面用得最多的方法了，用来验证两个对象是否相等，本质是用了strictly equal (===)。`.equal(val[,msg])`接受两个参数，第一个是期望值，第二个值是可选的当验证失败时会返回的错误消息。也可以使用`.eq`
 
 典型用法
@@ -70,18 +70,17 @@ expect({a: 1}).to.equal({a: 1}); // fail
 expect({a: 1}).to.deep.equal({a: 1}); //pass
 ```
 
-###### .property
+#### .property
 `.property(name[,val[,msg]])`用来判断对象里面的key是否存在，以及在提供第二个参数`val`的情况下验证该key对应的value值
 
-```
+```js
 expect({a: 1}).to.have.property('a');
 expect({a: 1}).to.have.property('a', 1);
-
 ```
 
 当`.property`与`.deep`一起使用的时候，使用的是[deep-eql](https://github.com/chaijs/deep-eql)而不是strictly equal (===)
 
-```
+```js
 expect({x: {a: 1}}).to.have.deep.property('x', {a: 1}); //pass
 expect({x: {a: 1}}).to.have.property('x', {a: 1}); //fail
 ```
@@ -108,12 +107,11 @@ expect({x: {a: 1}}).to.have.deep.own.property('x', {a: 1});
 expect({a: {b: [{c: 3}]}}).to.have.deep.nested.property('a.b[0]', {c: 3});
 ```
 
-###### .include
-###### .members
-###### .keys
-###### .throw
-
-###### .not
+#### .include
+#### .members
+#### .keys
+#### .throw
+#### .not
 
 `.not`可以会进行否定式验证。
 
@@ -125,11 +123,11 @@ expect([1, 2]).to.be.an('array').that.does.not.include(3);
 
 不过这种方法不是特别推荐，验证应该直指具体特定的单一目标行为而不是否定式验证，因为否定式验证只是验证多个无效行为中的一个，并不能保证正确性。
 
-```
+```js
 expect(2).to.equal(2);
 expect(2).to.not.equal(1);
 ```
 很明显，上面第二种方式不是好的验证方式
 
-###### .deep
+#### .deep
 上面有很多例子
