@@ -108,9 +108,82 @@ expect({a: {b: [{c: 3}]}}).to.have.deep.nested.property('a.b[0]', {c: 3});
 ```
 
 #### .include
+
+`.include(val[,msg])`用来验证某种对象子集的包含关系
+
+当对象是字符串的时候，用来判断参数`val`是否是目标字符串的子集 `expect('foobar').to.include('foo');`
+
+当对象是数组的时候，用来判断参数`val`是否是数组的一员 `expect([1, 2, 3]).to.include(2);`
+
+当对象是字典的时候，用来判断参数`val`是否是目标对象的子集 `expect({a: 1, b: 2, c: 3}).to.include({a: 1, b: 2});`
+
+当对象是集合的时候，用来判断参数`val`是否是集合的一员 `expect([1, 2, 3]).to.include(2);`
+
+当对象是`Map`的时候，用来判断参数`val`是某一对象的值 `expect(new Map([['a', 1], ['b', 2]])).to.include(2);`
+
+一般来讲，因为`.include`会根据目标对象类型的不同而表现出不同的行为，我们通常在使用`.include`之前都会检查对象类型 `expect([1, 2, 3]).to.be.an('array').that.includes(2);`
+
+默认情况下，strict (===) equality用来比较数组元素和对象属性，如果在链式结构里面加上`.deep`，使用的是[deep-eql](https://github.com/chaijs/deep-eql)
+```js
+expect([{a: 1}]).to.include({a: 1}); \\fail
+expect([{a: 1}]).to.deep.include({a: 1}); \\pass
+expect({x: {a: 1}}).to.include({x: {a: 1}}); \\fail
+expect({x: {a: 1}}).to.deep.include({x: {a: 1}}) \\pass
+```
+`.include`可以与`.own`一起使用来排除继承的属性
+
+```js
+Object.prototype.b = 2;
+
+expect({a: 1}).to.own.include({a: 1});
+expect({a: 1}).to.include({a: 1}).but.not.own.include({b: 2});
+```
+`.deep`和`.own`可以一起使用 `expect({a: {b: 2}}).to.deep.own.include({a: {b: 2}});`
+
+`.include`可以与`.nested`一起使用来验证多层内嵌属性 `expect({a: {b: ['x', 'y']}}).to.nested.include({'a.b[1]': 'y'});`
+
+`.deep`和`.nested`可以一起使用 `expect({a: {b: [{c:3}]}}).to.deep.nested.include({'a.b[0]': {c: 3}});`
+
+如果`.`和`[]`是真实的属性名称，可以通过双反斜杠来进行转义`expect({'.a': {'[b]': 2}}).to.nested.include({'\\.a.\\[b\\]': 2});`
+
+当目标对象是去验证参数`val`的key的时候，通常我们最好带上value一起做验证`expect({a: 3, b: 4}).to.include({a: 3, b: 4});`
+
+`.include`的第二个可选参数msg是当验证失败时会显示的定制错误消息
+```js
+expect([1, 2, 3]).to.include(4, 'nooo why fail??');
+expect([1, 2, 3], 'nooo why fail??').to.include(4);
+```
+
+当`.include`用作链式属性且与`.members`和`.keys`一起使用时，会去验证目标是不是期待对象的子集。
+
+```js
+// Target object's keys are a superset of ['a', 'b'] but not identical
+expect({a: 1, b: 2, c: 3}).to.include.all.keys('a', 'b');
+expect({a: 1, b: 2, c: 3}).to.not.have.all.keys('a', 'b');
+
+// Target array is a superset of [1, 2] but not identical
+expect([1, 2, 3]).to.include.members([1, 2]);
+expect([1, 2, 3]).to.not.have.members([1, 2]);
+
+// Duplicates in the subset are ignored
+expect([1, 2, 3]).to.include.members([1, 2, 2, 2]);
+```
+
+如果在`.key`之前加上`.any`就会抵消`.include`的作用
+
+```js
+// Both assertions are identical
+expect({a: 1}).to.include.any.keys('a', 'b');
+expect({a: 1}).to.have.any.keys('a', 'b');
+```
+
 #### .members
 #### .keys
+#### .any
+#### .all
 #### .throw
+
+
 #### .not
 
 `.not`可以会进行否定式验证。
@@ -129,5 +202,5 @@ expect(2).to.not.equal(1);
 ```
 很明显，上面第二种方式不是好的验证方式
 
-#### .deep
+#### .deep .own .nested
 上面有很多例子
