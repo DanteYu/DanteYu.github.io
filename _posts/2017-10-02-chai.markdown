@@ -179,8 +179,14 @@ expect({a: 1}).to.have.any.keys('a', 'b');
 
 #### .members
 #### .keys
+####. a
 #### .any
+`.any`使得所有`.keys`验证只要求期待对象包含至少一个指定的keys。与`.all`的作用相反。`  expect({a: 1, b: 2}).to.have.any.keys('a', 'd');`
 #### .all
+`.all`使得所有`.keys`验证只要求期待对象包含所有指定的keys。与`.any`的作用相反。`    expect({a: 1, b: 2}).to.have.any.keys('a', 'd');`
+
+这是`.keys`默认地匹配方式，可以不显示地加上，但是一般加上的话易读性会更好。
+
 #### .throw
 
 
