@@ -31,7 +31,7 @@ tags:
 
 ### chai.expect
 
-让我们一起来看下如何使用`chai.expect`。
+让我们通过常用方法的实例来看下如何使用`chai.expect`。
 
 #### Chains Getter
 
@@ -154,7 +154,7 @@ expect([1, 2, 3]).to.include(4, 'nooo why fail??');
 expect([1, 2, 3], 'nooo why fail??').to.include(4);
 ```
 
-当`.include`用作链式属性且与`.members`和`.keys`一起使用时，会去验证目标是不是期待对象的子集。
+当`.include`用作链式属性且与`.members`和`.keys`一起使用时，会去验证目标是不是目标对象的子集。
 
 ```js
 // Target object's keys are a superset of ['a', 'b'] but not identical
@@ -169,7 +169,137 @@ expect([1, 2, 3]).to.not.have.members([1, 2]);
 expect([1, 2, 3]).to.include.members([1, 2, 2, 2]);
 ```
 
-如果在`.key`之前加上`.any`就会抵消`.include`的作用
+#### .members
+`.members(set[,msg])`用来验证目标数组是不是和参数`set`数组的成员完全一致。
+```js
+expect([1, 2, 3]).to.have.members([2, 1, 3]);
+expect([1, 2, 2]).to.have.members([2, 1, 2]);
+```
+由上可知，`.members`是完全匹配且忽略数组元素的顺序。
+
+默认情况下，strict (===) equality用来比较数组成员，如果在链式结构里面加上`.deep`，使用的是[deep-eql](https://github.com/chaijs/deep-eql)
+```js
+expect([{a: 1}]).to.have.deep.members([{a: 1}]); //pass
+expect([{a: 1}]).to.have.members([{a: 1}]); //fail
+```
+
+如果成员的顺序也是验证点，那需要用上`.ordered`
+
+```js
+expect([1, 2, 3]).to.have.ordered.members([2, 1, 3]); //fail
+expect([1, 2, 3]).to.have.ordered.members([1, 2, 3]); //pass
+expect([1, 2, 3]).to.have.members([2, 1, 3]).but.not.ordered.members([2, 1, 3]); //pass
+```
+
+默认情况下`.members`会去验证数组的长度是一致的。加上`.include`会去验证目标是不是目标对象的子集而不要求数组长度一致。
+
+```js
+// Target array is a superset of [1, 2] but not identical
+expect([1, 2, 3]).to.include.members([1, 2]);
+expect([1, 2, 3]).to.not.have.members([1, 2]);
+
+// Duplicates in the subset are ignored
+expect([1, 2, 3]).to.include.members([1, 2, 2, 2]);
+```
+
+`.deep` & `.include` & `ordered`可以和`.members`一起使用。
+
+```js
+expect([{a: 1}, {b: 2}, {c: 3}]).to.include.deep.ordered.members([{a: 1}, {b: 2}]); //pass
+expect([{a: 1}, {b: 2}, {c: 3}]).to.include.deep.ordered.members([{b: 2}, {c: 3}]); //fail
+```
+
+第二个参数`msg`是自定义的错误消息，在验证出错时输出。
+```js
+expect([1, 2]).to.have.members([1, 2, 3], 'nooo why fail??');
+expect([1, 2], 'nooo why fail??').to.have.members([1, 2, 3]);
+```
+
+#### .a
+
+`.a(type[, msg])`用于验证目标对象与给出的对象的类型是否一致。关于目标对象类型也是就是参数`type`，实际上是全小写的字符串。更多信息请参考[这里]( https://github.com/chaijs/type-detect)。
+
+来看几个列子
+
+```js
+expect('foo').to.be.a('string');
+expect({a: 1}).to.be.an('object');
+expect(null).to.be.a('null');
+expect(undefined).to.be.an('undefined');
+expect(new Error).to.be.an('error');
+expect(Promise.resolve()).to.be.a('promise');
+expect(new Float32Array).to.be.a('float32array');
+expect(Symbol()).to.be.a('symbol');
+```
+通过`Symbol.toStringTag`自定义的类型能够被`.a`支持。
+
+```js
+var myObj = {
+  [Symbol.toStringTag]: 'myCustomType'
+};
+
+expect(myObj).to.be.a('myCustomType').but.not.an('object');
+```
+
+`.a`的通常用在验证前检测目标对象的类型，这样可以避免那些根据目标类型不同而展示出不同行为的方法的不正常使用
+
+```js
+expect([1, 2, 3]).to.be.an('array').that.includes(2);
+expect([]).to.be.an('array').that.is.empty;
+```
+
+第二个参数`msg`是自定义的错误消息，在验证出错时输出。
+```js
+expect(1).to.be.a('string', 'nooo why fail??');
+expect(1, 'nooo why fail??').to.be.a('string');
+```
+
+`.a`除了验证数据类型之外，在链式结构中也可以增强阅读性。
+`expect({b: 2}).to.have.a.property('b');`
+
+`.an`与`.a`作用相同，可交换使用。
+
+#### .keys
+
+`.keys(key1[, key2[, …]])`用于某一个key是否存在于目标对象(object, array, map, set)中。
+
+当目标对象是字典或是数组的时候，参数`key`可以是
+* 一个或多个字符串参数
+* 一个数组
+* 一个对象
+
+```js
+expect({a: 1, b: 2}).to.have.all.keys('a', 'b');
+expect(['x', 'y']).to.have.all.keys(0, 1);
+
+expect({a: 1, b: 2}).to.have.all.keys(['a', 'b']);
+expect(['x', 'y']).to.have.all.keys([0, 1]);
+
+expect({a: 1, b: 2}).to.have.all.keys({a: 4, b: 5}); // ignore 4 and 5
+expect(['x', 'y']).to.have.all.keys({0: 4, 1: 5}); // ignore 4 and 5
+```
+
+当目标对象是map或set的时候，只能是分隔的参数
+
+```js
+expect(new Map([['a', 1], ['b', 2]])).to.have.all.keys('a', 'b');
+expect(new Set(['a', 'b'])).to.have.all.keys('a', 'b');
+```
+
+由上所知，`.keys`根据目标对象的不同而有不同的处理，所以`.a`可以用在`.keys`之前来检测目标对象的数据类型。`expect({a: 1, b: 2}).to.be.an('object').that.has.all.keys('a', 'b');`
+
+默认情况下，strict (===) equality用来比较数组成员，如果在链式结构里面加上`.deep`，使用的是[deep-eql](https://github.com/chaijs/deep-eql)
+
+```js
+expect(new Set([{a: 1}])).to.have.all.deep.keys([{a: 1}]); //pass
+expect(new Set([{a: 1}])).to.have.all.keys([{a: 1}]); //fail
+```
+
+当给`keys`加上了`.not`，通常会使用`any`来搭配。`.not.any.keys`可以验证到给出的key每一个都不在目标对象中，然而`not.any.all`做不到。
+
+比如测试目的是验证c和d都不在目标对象中，然后`expect({a: 1, b: 2, c: 3}).to.not.have.all.keys('c', 'd');`能通过因为目标对象并没有have all keys也就是c,d同时存在，在取反就会返回true。使用`expect({a: 1, b: 2}).to.not.have.any.keys('c', 'd');`可以达到目的，能够验证目标对象没有任意其中一个key。
+
+如果在`.keys`之前加上`.any`就会抵消`.include`的作用
 
 ```js
 // Both assertions are identical
@@ -177,21 +307,19 @@ expect({a: 1}).to.include.any.keys('a', 'b');
 expect({a: 1}).to.have.any.keys('a', 'b');
 ```
 
-#### .members
-#### .keys
-####. a
+自定义的错误消息以`expect`第二个参数给出。`expect({a: 1}, 'nooo why fail??').to.have.key('b');`
+
+`.key`与`.keys`作用相同，可交换使用。
+
 #### .any
-`.any`使得所有`.keys`验证只要求期待对象包含至少一个指定的keys。与`.all`的作用相反。`  expect({a: 1, b: 2}).to.have.any.keys('a', 'd');`
+`.any`使得所有`.keys`验证只要求目标对象包含至少一个指定的keys。与`.all`的作用相反。`  expect({a: 1, b: 2}).to.have.any.keys('a', 'd');`
+
 #### .all
-`.all`使得所有`.keys`验证只要求期待对象包含所有指定的keys。与`.any`的作用相反。`    expect({a: 1, b: 2}).to.have.any.keys('a', 'd');`
+`.all`使得所有`.keys`验证只要求目标对象包含所有指定的keys。与`.any`的作用相反。`    expect({a: 1, b: 2}).to.have.all.keys('a', 'b');`
 
 这是`.keys`默认地匹配方式，可以不显示地加上，但是一般加上的话易读性会更好。
 
-#### .throw
-
-
 #### .not
-
 `.not`可以会进行否定式验证。
 
 ```js
@@ -208,5 +336,113 @@ expect(2).to.not.equal(1);
 ```
 很明显，上面第二种方式不是好的验证方式
 
-#### .deep .own .nested
-上面有很多例子
+#### .throw
+`.throw([errorLike], [errMsgMatcher], [msg])`用来验证方法是否抛出期待的异常错误。
+
+当没有参数的时候，`.throw`会触发目标方法而验证错误已经抛出
+```js
+var badFn = function () { throw new TypeError('Illegal salmon!'); };
+
+expect(badFn).to.throw();
+```
+
+当参数被提供并且是错误构造函数，`.throw`会触发目标方法而验证错误已经抛出一个错误实例
+
+```js
+var badFn = function () { throw new TypeError('Illegal salmon!'); };
+
+expect(badFn).to.throw(TypeError);
+```
+
+当参数被提供并且是错误实例，`.throw`会触发目标方法而且验证被抛出的错误实例strictly equality(===)提供的错误实例
+
+```js
+var err = new TypeError('Illegal salmon!');
+var badFn = function () { throw err; };
+
+expect(badFn).to.throw(err);
+```
+
+当参数被提供并且是字符串，`.throw`会触发目标方法而且验证被抛出的错误消息中包含提供字符串参数
+
+```js
+var badFn = function () { throw new TypeError('Illegal salmon!'); };
+
+expect(badFn).to.throw('salmon');
+```
+
+当参数被提供并且是正则表达式，`.throw`会触发目标方法而且验证被抛出的错误消息中匹配提供的正则表达式。
+
+```js
+var badFn = function () { throw new TypeError('Illegal salmon!'); };
+
+expect(badFn).to.throw(/salmon/);
+```
+
+当两个参数被提供，第一个是错误实例或构造函数，第二个是正则表达式或是字符串；`.throw`会触发目标方法，然后像上面描述的那样组合起来工作
+```js
+var err = new TypeError('Illegal salmon!');
+var badFn = function () { throw err; };
+
+expect(badFn).to.throw(TypeError, 'salmon');
+expect(badFn).to.throw(TypeError, /salmon/);
+expect(badFn).to.throw(err, 'salmon');
+expect(badFn).to.throw(err, /salmon/);
+```
+
+#### .ok
+
+`.ok`用来验证目标对象loosely(==) equal与true相等。通常还是推荐使用strictly(===) equal来进行判断
+
+```js
+expect(1).to.equal(1); // Recommended
+expect(1).to.be.ok; // Not recommended
+
+expect(true).to.be.true; // Recommended
+expect(true).to.be.ok; // Not recommended
+```
+
+`expect`的第二个参数可以提供自定义的错误消息。`expect(false, 'nooo why fail??').to.be.ok;`
+
+#### .true
+`.true`用来验证目标对象strictly(===) equal与true相等
+`expect(true).to.be.true;`
+
+`expect`的第二个参数可以提供自定义的错误消息。`expect(false, 'nooo why fail??').to.be.true;`
+
+#### .false
+`.false`用来验证目标对象strictly(===) equal与false相等
+`expect(false).to.be.false;`
+
+`expect`的第二个参数可以提供自定义的错误消息。`expect(true, 'nooo why fail??').to.be.false;`
+
+#### .null
+`.null`用来验证目标对象strictly(===) equal与null相等
+`expect(null).to.be.null;`
+
+`expect`的第二个参数可以提供自定义的错误消息。`expect(11, 'nooo why fail??').to.be.null;`
+
+#### .undefined
+`.undefined`用来验证目标对象strictly(===) equal与undefined相等
+`expect(undefined).to.be.undefined;`
+
+`expect`的第二个参数可以提供自定义的错误消息。`expect(11, 'nooo why fail??').to.be.null;`
+
+#### .NaN
+`.NaN`用来验证目标对象strictly(===) equal与NaN相等
+`expect(NaN).to.be.NaN;`
+
+`expect`的第二个参数可以提供自定义的错误消息。`expect(11, 'nooo why fail??').to.be.NaN;`
+
+#### .exist
+
+`.exist`用来验证目标对象不等于strictly (===) equal `null`或是`undefined`来证明目标对象是存在。然后一般会推荐验证目标对象为某一个特定的值。
+
+```js
+expect(1).to.equal(1); // Recommended
+expect(1).to.exist; // Not recommended
+
+expect(0).to.equal(0); // Recommended
+expect(0).to.exist; // Not recommended
+```
+`expect`的第二个参数可以提供自定义的错误消息。`expect(null, 'nooo why fail??').to.exist;`
