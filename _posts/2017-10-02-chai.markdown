@@ -70,6 +70,27 @@ expect({a: 1}).to.equal({a: 1}); // fail
 expect({a: 1}).to.deep.equal({a: 1}); //pass
 ```
 
+#### .eql
+
+`.eql(obj[, msg])`验证目标对象与给出的参数`obj`deeply equal。效果和`.equal`与`.deep`一起使用一样，不过`.deep.equal`对chain的影响更大
+
+```js
+// Target object is deeply (but not strictly) equal to {a: 1}
+expect({a: 1}).to.eql({a: 1}).but.not.equal({a: 1});
+
+// Target array is deeply (but not strictly) equal to [1, 2]
+expect([1, 2]).to.eql([1, 2]).but.not.equal([1, 2]);
+```
+
+`.eql`的自定义错误消息可以通过`expect`的第二个参数和`.eql`的第二个参数实现
+```js
+expect({a: 1}).to.eql({b: 2}, 'nooo why fail??');
+expect({a: 1}, 'nooo why fail??').to.eql({b: 2});
+```
+
+`.eqls`与`.eql`作用相同，可交换使用。
+
+
 #### .property
 `.property(name[,val[,msg]])`用来判断对象里面的key是否存在，以及在提供第二个参数`val`的情况下验证该key对应的value值
 
@@ -446,3 +467,107 @@ expect(0).to.equal(0); // Recommended
 expect(0).to.exist; // Not recommended
 ```
 `expect`的第二个参数可以提供自定义的错误消息。`expect(null, 'nooo why fail??').to.exist;`
+
+#### .empty
+
+当目标对象是字符串或是数组的时候，`.empty`验证其长度(length属性)是否等于(strictly equal ===)0。
+
+```js
+expect([]).to.be.empty;
+expect('').to.be.empty;
+```
+
+当目标对象是set或map的时候，`.empty`验证其大小(size属性)是否等于(strictly equal ===)0。
+
+```js
+expect(new Set()).to.be.empty;
+expect(new Map()).to.be.empty;
+```
+当目标对象是非方法的对象，`.empty`验证对象没有任何可枚举的属性。`expect({}).to.be.empty;`
+
+因为`.empty`根据目标对象不同而表现出不同的行为，所以可以在使用`.empty`之前使用`.a`来检测目标对象类型。`expect([]).to.be.an('array').that.is.empty;`
+
+`expect`的第二个参数可以提供自定义的错误消息。`expect([1, 2, 3], 'nooo why fail??').to.be.empty;`
+
+#### .arguments
+
+`.arguments`验证目标对象是一个`arguments`对象。
+
+```js
+function test () {
+  expect(arguments).to.be.arguments;
+}
+
+test();
+```
+
+`expect`的第二个参数可以提供自定义的错误消息。`expect({}, 'nooo why fail??').to.be.arguments;`
+
+`.Arguments`与`.arguments`作用相同，可交换使用。
+
+#### .above
+
+`.above(n[, msg])`验证目标对象大于给定的数值或日期。`expect(2).to.equal(2);`
+
+`.gt`, `.greaterThan`与`.above`作用相同，可交换使用。
+
+#### .least
+`.least(n[, msg])`验证目标对象至少是(大于或等于)给定的数值或日期 `expect(2).to.be.at.least(1);`, `expect(2).to.be.at.least(2);`
+
+#### .below
+
+`.below(n[, msg])`验证目标对象小于给定的数值或日期。`expect(1).to.be.below(2);`
+`.lt`, `.lessThan`与`.below`作用相同，可交换使用。
+
+#### .most
+`.most(n[, msg])`验证目标对象最多是(小于或等于)给定的数值或日期 `expect(1).to.be.at.most(2);`, `expect(1).to.be.at.least(1);`
+
+#### .within
+`.within(start, finish[, msg])`验证目标是某一个闭区间内，也就是大于或等于`start`参数，小于或等于`finish`参数。
+
+```js
+expect(2).to.be.within(1, 3);
+expect(2).to.be.within(2, 3);
+expect(2).to.be.within(1, 2);
+```
+
+#### .instanceof
+
+`.instanceof(constructor[, msg])`验证目标函数是给定构造函数的实例。
+
+```js
+function Cat () { }
+
+expect(new Cat()).to.be.an.instanceof(Cat);
+expect([1, 2]).to.be.an.instanceof(Array);
+```
+
+#### .lengthOf
+`.lengthOf(n[, msg])`验证目标对象的length属性是否等于给定的数值。
+
+```js
+expect([1, 2, 3]).to.have.lengthOf(3);
+expect('foo').to.have.lengthOf(3);
+```
+
+`.lengthOf`也可以用于语句链式结构中，和`.above`, `.below`, `.least`, `.most`和`.within`一起使用时，会让这些方法去验证目标对象的length属性。不过，并不推荐这种写法，因为我们应该直接验证期待的具体数值而不是范围。
+
+```js
+// Recommended
+expect([1, 2, 3]).to.have.lengthOf(3);
+
+// Not recommended
+expect([1, 2, 3]).to.have.lengthOf.above(2);
+expect([1, 2, 3]).to.have.lengthOf.below(4);
+expect([1, 2, 3]).to.have.lengthOf.at.least(3);
+expect([1, 2, 3]).to.have.lengthOf.at.most(3);
+expect([1, 2, 3]).to.have.lengthOf.within(2,4);
+``
+
+#### .match
+`.match(re[, msg])`验证目标函数匹配给定的正则表达式。`expect('foobar').to.match(/^foo/);`
+
+####. .string
+`.string(str[, msg])`验证目标函数包含给定的子字符串`str`。`expect('foobar').to.have.string('bar');`
+
+####
