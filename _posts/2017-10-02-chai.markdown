@@ -567,7 +567,110 @@ expect([1, 2, 3]).to.have.lengthOf.within(2,4);
 #### .match
 `.match(re[, msg])`验证目标函数匹配给定的正则表达式。`expect('foobar').to.match(/^foo/);`
 
-####. .string
+#### .string
 `.string(str[, msg])`验证目标函数包含给定的子字符串`str`。`expect('foobar').to.have.string('bar');`
+
+#### .respondTo
+当目标对象不是函数时，`.respondTo(method[, msg])`验证目标对象包含一个给定的函数，这个函数的名字就是参数`method`.下面的例子表明了Cat实例中包含了一个函数叫做meow。这个函数可以是继承的。
+
+```js
+function Cat () {}
+Cat.prototype.meow = function () {};
+
+expect(new Cat()).to.respondTo('meow');
+```
+
+当目标对象是函数的时候，`.respondTo`验证目标函数的`prototype`属性包含一个名称为参数`method`的函数。这个函数可以是继承的。
+
+```js
+function Cat () {}
+Cat.prototype.meow = function () {};
+
+expect(Cat).to.respondTo('meow');
+```
+在链接结构中加入`.itself`会使得`.respondTo`把目标对象不当成函数来处理，所以是去验证目标对象有一个给定名称的函数而不是去验证目标函数的`prototype`属性包含一个名称为参数`method`的函数，即使传入的目标对象是函数本身。下面例子表明加入`.itself`之后，在`prototype`属性加上的函数meow就不会被验证到。
+
+```js
+function Cat () {}
+Cat.prototype.meow = function () {};
+Cat.hiss = function () {};
+
+expect(Cat).itself.to.respondTo('hiss').but.not.respondTo('meow');
+```
+
+在验证方法是否存在之前，我们也可以先验证下目标对象的类型。
+```js
+function Cat () {}
+Cat.prototype.meow = function () {};
+
+expect(new Cat()).to.be.an('object').that.respondsTo('meow');
+```
+加上`.not`进行negative的判断
+
+```js
+function Dog () {}
+Dog.prototype.bark = function () {};
+
+expect(new Dog()).to.not.respondTo('meow');
+```
+
+`.respondTo`接受第二个可选参数`msg`来自定义错误消息，也可以加上第二个参数给`expect()`。
+
+```js
+expect({}).to.respondTo('meow', 'nooo why fail??');
+expect({}, 'nooo why fail??').to.respondTo('meow');
+```
+
+#### .satisfy
+
+`.satisfy(matcher[, msg])`的参数`matcher`是一个方法，这个方法会接受目标对象当做第一个参数，并且进行验证且返回true。
+
+下面这个例子中`1`作为目标对象传给了`matcher`方法，进行了判断，返回了true
+```js
+expect(1).to.satisfy(function(num) {
+  return num > 0;
+});
+```
+
+`.satisfy`接受第二个可选参数`msg`来自定义错误消息，也可以加上第二个参数给`expect()`。
+
+```js
+expect(1).to.satisfy(function(num) {
+  return num > 2;
+}, 'nooo why fail??');
+
+expect(1, 'nooo why fail??').to.satisfy(function(num) {
+  return num > 2;
+});
+```
+`.satisfies`与`.satisfy`作用相同，可以交换使用。
+
+#### .closeTo
+
+`.closeTo(expected, delta[, msg])`验证目标对象与参数`expected`的正负差距在参数`delta`之内。不过不是很推荐这种不精准的验证。
+```js
+// Recommended
+expect(1.5).to.equal(1.5);
+
+// Not recommended
+expect(1.5).to.be.closeTo(1, 0.5);
+expect(1.5).to.be.closeTo(2, 0.5);
+expect(1.5).to.be.closeTo(1, 1);
+```
+
+`.closeTo`接受第三个可选参数`msg`来自定义错误消息，也可以加上第二个参数给`expect()`。
+
+```js
+expect(1.5).to.be.closeTo(3, 1, 'nooo why fail??');
+expect(1.5, 'nooo why fail??').to.be.closeTo(3, 1);
+```
+`.approximately`与`.closeTo`作用相同，可以交换使用。
+
+
+
+
+
+
+
 
 ####
