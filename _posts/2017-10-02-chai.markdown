@@ -664,13 +664,89 @@ expect(1.5).to.be.closeTo(1, 1);
 expect(1.5).to.be.closeTo(3, 1, 'nooo why fail??');
 expect(1.5, 'nooo why fail??').to.be.closeTo(3, 1);
 ```
+
 `.approximately`与`.closeTo`作用相同，可以交换使用。
 
+#### .oneOf
 
+`.oneOf(list[, msg])`验证目标对象是参数数组`list`的一员。
+```js
+expect(1).to.equal(1); // Recommended
+expect(1).to.be.oneOf([1, 2, 3]); // Not recommended
+```
+`.oneOf`接受第三个可选参数`msg`来自定义错误消息，也可以加上第二个参数给`expect()`。
 
+```js
+expect(1).to.be.oneOf([2, 3, 4], 'nooo why fail??');
+expect(1, 'nooo why fail??').to.be.oneOf([2, 3, 4]);
+```
 
+#### .increase
 
+当一个参数`subject`被给出的时候，`.increase(subject[, prop[, msg]])`验证参数方法`subject`返回的值比目标函数返回的数值大。目标函数会先于参数函数调用。使用`.by`可以验证具体数值。
 
+```js
+var val = 1
+  , addTwo = function () { val += 2; }
+  , getVal = function () { return val; };
 
+expect(addTwo).to.increase(getVal).by(2); // Recommended
+expect(addTwo).to.increase(getVal); // Not recommended
+```
 
-####
+当两个参数`subject`和`prop`被给出的时候，`.increase(subject[, prop[, msg]])`验证目标对象`subject`的`prop`属性值比目标函数返回的数值大。
+
+```js
+var myObj = {val: 1}
+  , addTwo = function () { myObj.val += 2; };
+
+expect(addTwo).to.increase(myObj, 'val').by(2); // Recommended
+expect(addTwo).to.increase(myObj, 'val'); // Not recommended
+```
+
+`.increase`接受第三个可选参数`msg`来自定义错误消息，也可以加上第二个参数给`expect()`。
+
+```js
+var myObj = {val: 1}
+  , noop = function () {};
+
+expect(noop).to.increase(myObj, 'val', 'nooo why fail??');
+
+var val = 1
+  , noop = function () {}
+  , getVal = function () { return val; };
+
+expect(noop, 'nooo why fail??').to.increase(getVal);
+```
+
+`.increases`和`.increase`作用相同，可以交换使用。
+
+`.decrease(subject[, prop[, msg]])`作用与`.increase`恰好相反。
+
+#### .extensible
+`.extensible`验证目标对象可以加入新的属性。`expect({a: 1}).to.be.extensible;`
+
+#### .sealed
+`.sealed`验证目标对象是sealed Object，意思就是不能加入新的属性，已经存在的属性不能被删除或reconfigured，但是已经存在的属性可以被assign新的值。
+
+```js
+var sealedObject = Object.seal({});
+var frozenObject = Object.freeze({});
+
+expect(sealedObject).to.be.sealed;
+expect(frozenObject).to.be.sealed;
+expect(1).to.be.sealed;
+```
+
+#### .frozen
+`/frozen`验证目标对象被frozen Object，意思就是不能加入新的属性，已经存在的属性不能被删除或reconfigured或被assign新的值。
+
+```js
+var frozenObject = Object.freeze({});
+
+expect(frozenObject).to.be.frozen;
+expect(1).to.be.frozen;
+```
+
+#### .finite
+`.finite`验证目标对象是一个数值并且不是`NaN`和`Infinity`。`expect().to.be.finite`
