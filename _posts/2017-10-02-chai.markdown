@@ -739,7 +739,7 @@ expect(1).to.be.sealed;
 ```
 
 #### .frozen
-`/frozen`验证目标对象被frozen Object，意思就是不能加入新的属性，已经存在的属性不能被删除或reconfigured或被assign新的值。
+`.frozen`验证目标对象被frozen Object，意思就是不能加入新的属性，已经存在的属性不能被删除或reconfigured或被assign新的值。
 
 ```js
 var frozenObject = Object.freeze({});
