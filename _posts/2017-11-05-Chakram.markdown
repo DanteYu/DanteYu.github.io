@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Chakram学习笔记 (in progress)
-subtitle:   
+subtitle:   基本概念和用法
 date:       2017-11-05 12:00:00
 author:     DanteYu
 tags:
@@ -13,8 +13,11 @@ tags:
 
 [Chakram](http://dareid.github.io/chakram/)可以让API testing更简单，它可以让你写出直接易懂的测试，保证JSON REST endpoints工作的正确性。暂不支持非JSON的数据格式。
 
-
 `Chakram`是基于`node.js`、`mocha`和`chai`打造的，所以`Chakram`可以提供BDD式的测试风格和处理promises。
+
+整个`Chakram`有两大模块组成：
+1. `chakram` - 包含了很多HTTP操作，用于API Testing
+2. `chakram-expectation` - 扩展了`chai.expect`，加上了HTTP matcher，用于判断HTTP相关内容
 
 ### Chakram的安装运行
 
@@ -29,10 +32,18 @@ tags:
 `Chakram`使用[request library](https://github.com/request/request)作为请求处理的库，基于这个库(as a helper)提供了很多简单好用的方法来覆盖常用的HTTP request方法。
 
 ##### 发起请求 HTTP GET
-`chakram.get(url, params)`发起了一个HTTP请求。返回值是一个由promise得来的[ChakramResponse](http://dareid.github.io/chakram/jsdoc/global.html#ChakramResponse)对象，这个对象封装了一次HTTP请求的结果。
+`chakram.get(url, params)`发起了一个HTTP请求。返回值是一个[ChakramResponse](http://dareid.github.io/chakram/jsdoc/global.html#ChakramResponse)对象，这个对象封装了一次HTTP请求的结果。
 
 ##### 验证response
 `Chakram`提供了很多验证response的方法，类似于`chai`，`Chakram`的`expect`接口提供了BDD风格的验证方法。我们只需要把response作为参数传给`chakram.expect`，然后接着使用`Chakram`提供的验证方法就可以了。还可以使用`Chai`提供的`chains getter`来提供可读性。一旦response被接受到了，验证就立即开始。
+
+此外，`Chakram.expect`继承了`Chai`所有的属性和验证方法，可以任意使用。
+
+##### Waiting
+
+由于语言和库的特殊性，API testing在此时都是异步执行的。由于`Chakram`是基于`Mocha`的，所以支持异步模式和promise都不在话下。在`Mocha`中，通过在`it()`中加上回调函数，可以让`it()`等到这个回调函数被执行才结束测试；对于promise，需要在`it()`中直接返回即可. 在`Chakram`中，通过在`it()`中返回的promise对象，会保证测试等待请求和验证的完成。
+
+`chakram.wait`就用来保证测试会等到所有的请求和验证完成后才结束。`Chakram`也会让所有没有等待验证结束的测试失败。`chakram.wait()`返回值是一个promise对象，当所有验证都完成的时候，这个promise对象就会被生成实现。
 
 下面来看一个最简单的发出请求和验证response的例子
 
@@ -43,20 +54,17 @@ var chakram = require('../node_modules/chakram/lib/chakram.js'),
 const testURL = "https://api.douban.com/v2/movie/subject/26363254";
 
 describe("I can get movie information from douban", function () {
-  it("should have make HTTP assertions easy", function () {
+  it("should have year 2017 for movie Wolf Warrior 2", function () {
     let response = chakram.get(testURL); //发送请求，得到response
     expect(response).to.have.status(200); //response作为参数，BDD式验证风格
+    expect(response).to.have.header('content-type', 'application/json; charset=utf-8');
     expect(response).to.comprise.of.json({  //验证json
       "year": "2017";
   });
-    return chakram.wait();
+    return chakram.wait(); //wait for all requests and assertions to be completed
   });
 });
 ```
-此外，`Chakram.expect`继承了`Chai`所有的属性和验证方法，可以任意使用。
-
-##### Waiting
-
 
 * 状态码验证 status code
 * Cookie验证 Cookie presence and value
