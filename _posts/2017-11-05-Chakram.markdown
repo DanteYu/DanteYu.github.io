@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      Chakram学习笔记 (in progress)
-subtitle:   基本概念和用法
+title:      Chakram学习笔记
+subtitle:   基本概念
 date:       2017-11-05 12:00:00
 author:     DanteYu
 tags:
@@ -45,7 +45,11 @@ tags:
 
 `chakram.wait`就用来保证测试会等到所有的请求和验证完成后才结束。`Chakram`也会让所有没有等待验证结束的测试失败。`chakram.wait()`返回值是一个promise对象，当所有验证都完成的时候，这个promise对象就会被生成实现。
 
-下面来看一个最简单的发出请求和验证response的例子
+##### Complex Promise Use
+因为chakram大量使用了promises作为return value，所以我们可以使用`（new Promise()）.then()` 这样的chains方法来描述请求和验证。
+
+##### Example
+综上所述，下面来看一个最简单的发出请求和验证response的例子
 
 ```js
 var chakram = require('../node_modules/chakram/lib/chakram.js'),
@@ -55,31 +59,20 @@ const testURL = "https://api.douban.com/v2/movie/subject/26363254";
 
 describe("I can get movie information from douban", function () {
   it("should have year 2017 for movie Wolf Warrior 2", function () {
-    let response = chakram.get(testURL); //发送请求，得到response
-    expect(response).to.have.status(200); //response作为参数，BDD式验证风格
+    let response = chakram.get(testURL);
+    expect(response).to.have.status(200);
     expect(response).to.have.header('content-type', 'application/json; charset=utf-8');
-    expect(response).to.comprise.of.json({  //验证json
-      "year": "2017";
+    expect(response).to.comprise.of.json({
+      "year": "2017"
   });
-    return chakram.wait(); //wait for all requests and assertions to be completed
+    return chakram.wait();
+  });
+
+  it('should have Wu Jing Starring', function(){
+    return chakram.get(testURL).then(function(response){
+      let expected_id = response.body.casts[0].id;
+      expect(expected_id).to.equal("1000525");
+    })
   });
 });
 ```
-
-* 状态码验证 status code
-* Cookie验证 Cookie presence and value
-* Header验证 Header presence and value
-* JSON结构和值的验证 JSON values and structure (JSON schema)
-* Compression
-* 相应时间 Response times
-
-#### BDD式风格和hooks
-#### promises
-#### 支持插件
-#### 自定义的验证assertion
-#### 多种输出结果
-#### 支持调试
-
-
-
-####

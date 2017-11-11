@@ -1,0 +1,54 @@
+
+---
+layout:     post
+title:      Chakram学习笔记
+subtitle:   chakram-expectation模块基本用法
+date:       2017-11-11 12:00:00
+author:     DanteYu
+tags:
+    - chakram
+    - APITesting
+---
+
+这篇文章会通过具体例子介绍`chakram-expectation`的常用方法。
+
+#### 状态码验证 status code
+使用`chakram-expectation.status`检查response的状态码
+```js
+it("should allow checking of the response's status code", function () {
+    return chakram.get("https://www.hupu.com/").then(function(response){
+      return expect(response).to.have.status(200);
+    });
+});
+```
+
+#### 相应时间验证 Response times
+使用`chakram-expectation.responsetime`检查响应时间是小于或等于给出的millisecond value
+
+```js
+it("should response time less than or equal to 900", function () {
+    return chakram.get("https://api.douban.com/v2/movie/subject/26363254").then(function(response){
+      expect(response).to.have.responsetime(900);
+    });
+```
+
+#### JSON内容验证
+
+#### JSON Schema验证
+
+
+
+* Cookie验证 Cookie presence and value
+* Header验证 Header presence and value
+* Compression
+
+#### BDD式风格和hooks
+#### promises
+#### 支持插件
+#### 自定义的验证assertion
+#### 多种输出结果
+#### 支持调试
+
+
+
+####
