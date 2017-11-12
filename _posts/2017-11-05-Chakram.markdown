@@ -25,30 +25,29 @@ tags:
 
 `Mocha`用来运行`Chakram`测试，所以`Mocha`的各种功能都可以和`Chakram`一起使用。本质上讲，我们可以把`Chakram`看成一个API Testing的库，测试框架本质还是`Mocha`。
 
-### 功能介绍  
-#### HTTP specific assertion
+### 功能介绍 HTTP specific assertion
 `Chakram`提供API Testing中最常用的功能 - HTTP request和response验证。
 
 `Chakram`使用[request library](https://github.com/request/request)作为请求处理的库，基于这个库(as a helper)提供了很多简单好用的方法来覆盖常用的HTTP request方法。
 
-##### 发起请求 HTTP GET
+#### 发起请求 HTTP GET
 `chakram.get(url, params)`发起了一个HTTP请求。返回值是一个[ChakramResponse](http://dareid.github.io/chakram/jsdoc/global.html#ChakramResponse)对象，这个对象封装了一次HTTP请求的结果。
 
-##### 验证response
+#### 验证response
 `Chakram`提供了很多验证response的方法，类似于`chai`，`Chakram`的`expect`接口提供了BDD风格的验证方法。我们只需要把response作为参数传给`chakram.expect`，然后接着使用`Chakram`提供的验证方法就可以了。还可以使用`Chai`提供的`chains getter`来提供可读性。一旦response被接受到了，验证就立即开始。
 
 此外，`Chakram.expect`继承了`Chai`所有的属性和验证方法，可以任意使用。
 
-##### Waiting
+#### Waiting
 
 由于语言和库的特殊性，API testing在此时都是异步执行的。由于`Chakram`是基于`Mocha`的，所以支持异步模式和promise都不在话下。在`Mocha`中，通过在`it()`中加上回调函数，可以让`it()`等到这个回调函数被执行才结束测试；对于promise，需要在`it()`中直接返回即可. 在`Chakram`中，通过在`it()`中返回的promise对象，会保证测试等待请求和验证的完成。
 
 `chakram.wait`就用来保证测试会等到所有的请求和验证完成后才结束。`Chakram`也会让所有没有等待验证结束的测试失败。`chakram.wait()`返回值是一个promise对象，当所有验证都完成的时候，这个promise对象就会被生成实现。
 
-##### Complex Promise Use
+#### Complex Promise Use
 因为chakram大量使用了promises作为return value，所以我们可以使用`（new Promise()）.then()` 这样的chains方法来描述请求和验证。
 
-##### Example
+#### Example
 综上所述，下面来看一个最简单的发出请求和验证response的例子
 
 ```js
