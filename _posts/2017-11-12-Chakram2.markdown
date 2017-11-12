@@ -1,0 +1,86 @@
+---
+layout:     post
+title:      Chakram学习笔记（in progress）
+subtitle:   chakram模块基本用法
+date:       2017-11-12 12:00:00
+author:     DanteYu
+tags:
+    - chakram
+    - APITesting
+---
+
+这篇文章会通过具体例子介绍`chakram`模块的常用验证方法。
+
+#### HTTP GET
+使用`chakram.get(url, params)`完成一次HTTP GET请求。此方法返回的promise对象最终会被resolve成一个`ChakramResponse`对象。
+
+`Chakram`把HTTP请求的结果封装到了一个`ChakramResponse`对象里面。这个对象常用的属性有
+* *body* - The response body
+* *url* - The request's original URL
+* *responseTime* - The time taken to make the request (including redirects) at millisecond resolution
+* *response* - An [http.IncomingMessage](http://nodejs.org/api/http.html#http_http_incomingmessage) object
+
+```js
+const chakram = require('../node_modules/chakram/lib/chakram.js'),
+    expect = chakram.expect;
+
+describe("Simple Request", function(){
+
+let testURL = "https://api.douban.com/v2/movie/subject/26794215";
+
+  it("should allow checking of HTTP headers", function () {
+     return chakram.get(testURL).then(function(response){
+       console.log(response.body);
+       console.log(response.url);
+       console.log(response.responseTime);
+       console.log(response.response);
+     });
+      });
+})
+```
+#### Three Promises Related Methods
+##### chakram.all
+`chakram.all(promiseArray)`接受promises数组作为参数，返回一个promise，并且要在数组中所有promises被完成之后，promise状态才会变为fulfilled，表示异步操作成功。可以用于对多个promises一起处理。
+
+```js
+it("should return a different username on each request", function () {
+        this.timeout(10000);
+        var multipleResponses = [];
+        for(var ct = 0; ct < 5; ct++) {
+            multipleResponses.push(chakram.get("http://api.randomuser.me/0.6?gender=female"));
+        }
+        return chakram.all(multipleResponses).then(function(responses) {
+            var returnedUsernames = responses.map(function(response) {
+                return response.body.results[0].user.username;
+            });
+            while (returnedUsernames.length > 0) {
+                var username = returnedUsernames.pop();
+                expect(returnedUsernames.indexOf(username)).to.equal(-1);
+            }
+        });
+    });
+```
+
+##### chakram.wait
+`chakram.wait()`返回一个promise，并且要在所有chakram expectations被完成之后，promise状态才会变为fulfilled，表示异步操作成功。这个方法通过记录在`it()`中所有chakram expectations的调用情况以及等待所有的expectation的完成，之后才使得返回的promise fulfilled，达到自动等待异步测试完成的效果。
+```js
+it("should support auto waiting for tests", function() {
+    var response = chakram.get("http://httpbin.org/get");
+    expect(response).to.have.status(200);
+    expect(response).not.to.have.status(404);
+    return chakram.wait();
+});
+```
+
+##### chakram.waitFor
+`chakram.waitFor(promiseArray)`接受promises数组作为参数，返回一个promise，并且要在数组中所有promises被完成之后，promise状态才会变为fulfilled，表示异步操作成功。这个方法和`chakram.all`很类似，除了这个返回的promise状态变为fulfilled的条件是数组中最后一个promise的状态变为fulfilled，而不是全部数组的promise。
+
+```js
+it("should support grouping multiple tests", function () {
+    var response = chakram.get("http://httpbin.org/get");
+    return chakram.waitFor([
+        expect(response).to.have.status(200),
+        expect(response).not.to.have.status(404)
+    ]);
+});
+```
