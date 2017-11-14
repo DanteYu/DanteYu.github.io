@@ -15,10 +15,10 @@ tags:
 使用`chakram.get(url, params)`完成一次HTTP GET请求。此方法返回的promise对象最终会被resolve成一个`ChakramResponse`对象。
 
 `Chakram`把HTTP请求的结果封装到了一个`ChakramResponse`对象里面。这个对象常用的属性有
-* *body* - The response body
-* *url* - The request's original URL
-* *responseTime* - The time taken to make the request (including redirects) at millisecond resolution
-* *response* - An [http.IncomingMessage](http://nodejs.org/api/http.html#http_http_incomingmessage) object
+* **body** - The response body
+* **url** - The request's original URL
+* **responseTime** - The time taken to make the request (including redirects) at millisecond resolution
+* **response** - An [http.IncomingMessage](http://nodejs.org/api/http.html#http_http_incomingmessage) object
 
 ```js
 const chakram = require('../node_modules/chakram/lib/chakram.js'),
