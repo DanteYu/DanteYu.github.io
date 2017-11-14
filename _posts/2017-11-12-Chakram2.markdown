@@ -84,3 +84,52 @@ it("should support grouping multiple tests", function () {
     ]);
 });
 ```
+
+#### 两种自定义assertion方法
+##### chakram.addProperty
+使用`chakram.addProperty(name, plugin)`可以给`Chakram`添加不带参数的验证方法。
+第二个参数`plugin`的类型是function，这个function接受一个`ChakramResponse`对象作为参数，这样就可以在方法体内对这个对象进行处理判断。
+##### chakram.addMethod
+使用`chakram.addMethod(name, plugin)`可以给`Chakram`添加带参数的验证方法。第二个参数`plugin`的类型是function，这个function接受一个或多个参数，且第一个参数必须是`ChakramResponse`对象，这样就可以在方法体内对这个对象进行处理判断。
+
+下面是这两个方法使用的例子
+```js
+const chakram = require('../node_modules/chakram/lib/chakram.js'),
+    expect = chakram.expect;
+
+describe("Check Wolf Warrir 2", function(){
+
+  before(function(){
+
+    chakram.addProperty("WJisDirector", function (respObj) {
+        let hostMatches = /1000525/.test(respObj.body.directors[0].id);
+        this.assert(hostMatches,
+            'expected director of this movie is: '+respObj.body.directors[0].id,
+            'expected director of this movie is: '+respObj.body.directors[0].id
+          );
+    });
+
+    chakram.addMethod("haveHighAverageRating", function (respObj, average) {
+      let ratingRangeResult = respObj.body.rating.average >= average;
+      this.assert(ratingRangeResult,
+          'expected average rating of this movie is: '+ respObj.body.rating.average
+        );
+     });
+
+     chakram.addMethod("BeOnYearAt", function (respObj, year) {
+          expect(respObj).to.have.json("year", year);
+      });
+
+  });
+
+  it("should be a movie directed by WuJing", function () {
+    let response = chakram.get("https://api.douban.com/v2/movie/subject/26363254");
+    return chakram.waitFor([
+      expect(response).to.be.WJisDirector,
+      expect(response).to.be.BeOnYearAt("2017"),
+      expect(response).to.have.haveHighAverageRating(7)
+    ])
+  });
+
+})
+```
