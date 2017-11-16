@@ -61,6 +61,20 @@ it("should return a different username on each request", function () {
     });
 ```
 
+可以实现两个response的值比对
+```js
+it("should support an offset parameter", function () {
+    var first = chakram.get("https://api.spotify.com/v1/search?q=random&type=artist&limit=1");
+    var second = chakram.get("https://api.spotify.com/v1/search?q=random&type=artist&limit=1&offset=1");
+    expect(first).to.have.json("artists.offset", 0);
+    expect(second).to.have.json("artists.offset", 1);
+    return chakram.all([first,second]).then(function(responses) {
+        expect(responses[0].body.artists.items[0].id).not.to.equal(responses[1].body.artists.items[0].id);
+        return chakram.wait();
+    });
+});
+```
+
 ##### chakram.wait
 `chakram.wait()`返回一个promise，并且要在所有chakram expectations被完成之后，promise状态才会变为fulfilled，表示异步操作成功。这个方法通过记录在`it()`中所有chakram expectations的调用情况以及等待所有的expectation的完成，之后才使得返回的promise fulfilled，达到自动等待异步测试完成的效果。
 ```js
