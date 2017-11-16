@@ -38,11 +38,33 @@ tags:
 
 Test plan | Test strategy
 ------------ | -------------
-测试策略详细描述了QA使用什么样的具体测试方法来达成测试目标，给测试流程和活动设置了标准，主要关注“测什么”和“怎么测”。 | 测试计划的主要目标是包含所有关于测试的信息，比如“”测什么”、“什么时候测”、“怎么测”以及由“谁来测”。
+测试策略详细描述了QA使用什么样的具体测试方法来达成测试目标，给测试流程和活动设置了标准，主要关注“测什么”和“怎么测”。 | 测试计划的主要目标是包含所有关于测试的信息，比如“为什么测”、测什么”、“什么时候测”、“怎么测”以及由“谁来测”。
 
 由上可见，其实测试策略的内容已经被包含在测试计划里面了。测试策略定义应该做什么样的测试而测试计划包含所有关于测试策略该如何执行的信息，这些信息在测试计划里面被很好的组织起来。
 
 一个公式可以进一步说明他们的关系 `test plan = test strategy + test logistics`。所以test strategy可以被看做是test plan的一部分。`Test logistics`是指测试环境设置以及人力资源等等。
+
+在James Bach的博客[A Question About Test Strategy](http://www.satisfice.com/blog/archives/63)中，他把三者描述如下
+
+> **Test Plan**: the set of ideas that guide a test project
+> **Test Strategy**: the set of ideas that guide test design
+> **Test Logistics**: the set of ideas that guide the application of resources to fulfill a test strategy
+> I find these ideas to be a useful jumping off point. Here are some implications:
+> The test plan is the sum of test strategy and test logistics.
+> The test plan document does not necessarily contain a test plan. This is because many test plan documents are created by people who are following templates without understanding them, or writing things to please their bosses, without knowing how to fulfill their promises, or simply because it once was a genuine test plan but now is obsolete.
+> Conversely, a genuine test plan is not necessarily documented. This is because new ideas may occur to you each day that change how you test. In my career, I have mostly operated without written test plans.
+
+![test_strategy](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/test_strategy.PNG?raw=true)
+
+### 敏捷团队需要测试策略吗
+
+让我们先来看下QA在敏捷项目中的主要工作，如下图所示
+![iteration1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/iteration.png?raw=true)
+那你可能问“咦，怎么没有测试策略相关内容呢”。其实，整个开发测试流程就体现了测试策略的内容。上图所示的迭代开发流程里面包含了"Automated Acceptance Tests" & “Story Testing” & “System Testing”这些测试活动，那么为什么项目需要这些测试活动？这些活动如何具体如何开展？分别在哪一个项目阶段进行？这些问题都属于测试策略的范畴，是由测试策略定义和落地的。
+
+敏捷开发模型下，迭代式的开发具有周期短和交付压力大的特点，对于如何快速响应新需求，保障新需求的质量以及已实现需求的回归测试都将是测试的挑战。如果没有一个匹配项目上下文，合理规划了测试活动的测试策略，这些挑战就会持续困扰着团队，所以标题的答案是当然需要。测试策略在敏捷开发模型下，通过详细定义项目的测试活动，能够更加合理地利用测试资源和统一项目对测试的认知。
+
+此外，测试策略也是敏捷项目质量保障体系中重要的一节。
 
 ### 敏捷团队需要测试计划吗
 
@@ -57,24 +79,11 @@ Test plan | Test strategy
 
 综上所述，在敏捷项目中因为时间紧迫和避免重复劳动，价值不高的测试计划不是一个must have，个人甚至认为也不是一个nice to have。
 
-然而我们还是需要一个“计划”来指导sprint中的测试流程和方法，这就是测试策略是一个must have的原因。在敏捷项目中，“小而精”的测试策略比起“大而全”的测试计划而言，最大的优势就是测试策略定义的内容(“怎么测”)是不会轻易受影响改变的，并且在迭代中没有类似的重复活动。
-
-### 敏捷团队需要测试策略吗
-
-让我们先来看下QA在敏捷项目中的主要工作，如下图所示
-![iteration1](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/iteration.png?raw=true)
-那你可能问“咦，怎么没有测试策略相关内容呢”。其实，整个开发测试流程就体现了测试策略的内容。上图所示的迭代开发流程里面包含了"Automated Acceptance Tests" & “Story Testing” & “System Testing”这些测试活动，那么为什么项目需要这些测试活动？这些活动如何具体如何开展？分别在哪一个项目阶段进行？这些问题都属于测试策略的范畴，是由测试策略定义和落地的。
-
-敏捷开发模型下，迭代式的开发具有周期短和交付压力大的特点，对于如何快速响应新需求，保障新需求的质量以及已实现需求的回归测试都将是测试的挑战。如果没有一个匹配项目上下文，合理规划了测试活动的测试策略，这些挑战就会持续困扰着团队，所以标题的答案是当然需要。测试策略在敏捷开发模型下，通过详细定义项目的测试活动，能够更加合理地利用测试资源和统一项目对测试的认知。
-
-此外，测试策略也是敏捷项目质量保障体系中重要的一节。
+然而我们还是需要一个“计划”来指导迭代中的测试流程和方法，这就是测试策略是一个must have的原因。在敏捷项目中，“小而精”的测试策略比起“大而全”的测试计划而言，最大的优势就是测试策略定义的内容(“怎么测”)是不会轻易受影响改变的，并且在迭代中没有类似的重复活动。
 
 ### 什么时候着手制定测试策略
-具体到项目里，测试策略推荐在项目初期，还没有具体开发测试之前这个阶段来制定。这个阶段的特点是比如在项目刚启动的时候或是还处于探索提议阶段
+具体到项目里，测试策略推荐在项目刚启动的时候或是还处于探索提议阶段制定。在产品需求范围和交付计划大致确认
 
-在产品需求范围和交付计划大致确认
-
-应该在项目生命周期最早的阶段进行开发，。
 
 ### 谁来主导测试策略的编写
 
@@ -88,6 +97,16 @@ QA可以从不同角色收集到不同的信息
 ### 在敏捷团队中制定测试策略的流程
 前期信息收集
 确定测试目标 质量目标 质量模型
+
+此外，还有团队确定了测试策略目标宣言
+```
+“To Constantly Deliver Working Software that Meets Customer’s Requirements”
+by means of
+“Providing Fast Feedback”
+and
+“Defect Prevention, rather than Defect Detection”
+```
+
 测试类型
 测试框架
 测试阶段
@@ -116,3 +135,4 @@ QA可以从不同角色收集到不同的信息
 * [从测试策略到测试架构](http://insights.thoughtworks.cn/from-strategy-to-architecture/)
 * [究竟什么是软件测试策略](https://mp.weixin.qq.com/s?__biz=MjM5ODczMDc1Mw==&mid=2651843309&idx=1&sn=035fc3dbd0ec09d9af5273448f26aa6a&chksm=bd3d07838a4a8e95da90e3d904a714cb746bfd9b5561b78eab0b945dbd5199a8972834075755&scene=0&key=bca8d81f29a4d80e9a99a34999b3106c89c2d69117c01bd7d890e24c8e57ceb4454b4ad2325a612758ee4c17a247a4b93079841f50427a4ad63f3b5a42bcf7c1a7dd62137ce47d6cc6a04657bf3c7b10&ascene=0&uin=MjMyODY4NTU1&devicetype=iMac+MacBookAir6,2+OSX+OSX+10.12.2+build(16C67)&version=12010310&nettype=WIFI&fontScale=100&pass_ticket=xK4r8BIZZrhw3NxB2LSjkI+mRwPZZvhse+yJPq6jtz0=)
 * [agile-test-plan-do-we-really-need-one](https://www.testingexcellence.com/agile-test-plan-do-we-really-need-one/)
+* [A Question About Test Strategy](http://www.satisfice.com/blog/archives/63)
