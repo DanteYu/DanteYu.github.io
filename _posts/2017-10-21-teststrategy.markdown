@@ -47,11 +47,17 @@ Test plan | Test strategy
 在James Bach的博客[A Question About Test Strategy](http://www.satisfice.com/blog/archives/63)中，他把三者描述如下
 
 > **Test Plan**: the set of ideas that guide a test project
+
 > **Test Strategy**: the set of ideas that guide test design
+
 > **Test Logistics**: the set of ideas that guide the application of resources to fulfill a test strategy
+
 > I find these ideas to be a useful jumping off point. Here are some implications:
+
 > The test plan is the sum of test strategy and test logistics.
+
 > The test plan document does not necessarily contain a test plan. This is because many test plan documents are created by people who are following templates without understanding them, or writing things to please their bosses, without knowing how to fulfill their promises, or simply because it once was a genuine test plan but now is obsolete.
+
 > Conversely, a genuine test plan is not necessarily documented. This is because new ideas may occur to you each day that change how you test. In my career, I have mostly operated without written test plans.
 
 ![test_strategy](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/test_strategy.PNG?raw=true)
@@ -82,21 +88,25 @@ Test plan | Test strategy
 最终我们还是需要一个“计划”来指导迭代中的测试流程和方法，这就是测试策略是一个must have的原因。在敏捷项目中，“小而精”的测试策略比起“大而全”的测试计划而言，最大的优势就是测试策略定义的内容(“怎么测”)是不会轻易受影响改变的，并且在迭代中没有类似的重复活动。
 
 ### 什么时候着手制定测试策略
-具体到项目里，测试策略推荐在项目刚启动的时候或是还处于探索提议阶段制定。在产品需求范围和交付计划大致确认
 
+具体到项目里，测试策略推荐在项目刚启动的时候制定。测试策略需要在项目早期就制定下来，用来指导项目的测试活动和方法，从而确定需要的测试资源和保证质量体系的建立。但也不能在产品和技术都还没有确定的时候就制定，因为只有在产品需求范围，技术架构和交付计划大致确认的情况，测试策略才能更加准确，从而减少维护成本。
 
 ### 谁来主导测试策略的编写
 
-QA可以从不同角色收集到不同的信息
-1. 从Business了解到产品愿景，产品发展蓝图和业务流程
-2. 从Project Manager了解到交付计划，交付范围
-3. 从Tech Lead了解到技术框架
+因为测试策略会涉及到很多具体的测试技术和方法，也会要求制定人员具有对质量和测试非常深的理解，所以QA在敏捷团队中应该承担制定测试策略的主要责任，但是这并不意味“只有”QA来编写制定测试策略，测试策略的制定是一个团队活动，QA需要从不同角色收集到不同的信息
+
+1. 从Business了解到产品愿景，产品发展蓝图和业务流程 - 涉及需求分析和确定测试目标等活动
+2. 从Project Manager了解到交付计划，交付范围 - 涉及确定测试类型、测试方法、测试阶段和测试重点等活动
+3. 从Tech Lead了解到技术框架 - 涉及确定集成测试、自动化测试语言、工具和框架选型等活动
 
 从多方收集信息能够保证业务、技术和质量三者对齐，避免误解和冲突，共同发挥最大的作用。
 
+当测试策略制定完成以后，还需要给项目团队进行讲解，确保团队所有相关人员对项目中的测试活动和测试方法有着一致的理解,这样才能保证实施阶段的顺利。
+
 ### 在敏捷团队中制定测试策略的流程
-前期信息收集
-确定测试目标 质量目标 质量模型
+
+##### 前期信息收集
+##### 确定测试目标 质量目标 质量模型
 
 此外，还有团队确定了测试策略目标宣言
 ```
@@ -107,14 +117,23 @@ and
 “Defect Prevention, rather than Defect Detection”
 ```
 
-测试类型
-测试框架
-测试阶段
+##### 确定测试类型
+
+有了质量目标，接下来我们要考虑要怎么达成这个目标了！也就是说，我们应该有哪些测试活动来覆盖每一个目标，每个测试活动又有哪些不同的测试类型组成？
+
+
+
+
+测试四象限
+自动化测试策略 - 金字塔
+##### 确定测试框架
+##### 确定测试阶段
 
 
 角色定义职责
 测试交付物
-测试度量
+##### 测试度量
+质量度量？ 敏捷度量？
 
 ### 测试策略的持续改进
 
