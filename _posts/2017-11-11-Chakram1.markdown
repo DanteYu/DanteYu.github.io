@@ -412,9 +412,16 @@ describe("Check compression", function(){
           return expect(deflate).to.be.encoded.with.deflate;
       });
 
-      it("should detect gzip compression", function () {
+  it("should detect gzip compression", function () {
             var gzip = chakram.get("http://httpbin.org/gzip");
             return expect(gzip).to.be.encoded.with.gzip;
+        });
+
+  it("should support shorter language chains", function () {
+            var deflate = chakram.get("http://httpbin.org/deflate");
+            expect(deflate).not.to.be.gzip;
+            expect(deflate).to.be.deflate;
+            return chakram.wait();
         });
 })
 

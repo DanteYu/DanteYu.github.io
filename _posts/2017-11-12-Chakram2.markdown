@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      Chakram学习笔记（in progress）
+title:      Chakram学习笔记
 subtitle:   chakram模块基本用法
 date:       2017-11-12 12:00:00
 author:     DanteYu
@@ -39,23 +39,33 @@ let testURL = "https://api.douban.com/v2/movie/subject/26794215";
 })
 ```
 
-#### HTTP PUT
-使用`chakram.put(url, data, params)`完成一次HTTP GET请求。此方法返回的promise对象最终会被resolve成一个`ChakramResponse`对象。
+#### HTTP post
+使用`chakram.post(url, data, params)`完成一次HTTP POST请求。此方法返回的promise对象最终会被resolve成一个`ChakramResponse`对象。
 
 ```js
 const chakram = require('../node_modules/chakram/lib/chakram.js'),
     expect = chakram.expect;
 
-describe("Check Wolf Warrir 2", function(){
-  it("should check array in body", function () {
-      var response = chakram.post("http://httpbin.org/post", ["nba", "spurs"]);
-      expect(response).to.have.json("json", ["nba", "spurs"]);
-      expect(response).to.have.header('content-type', "application/json");
-      expect(response).to.have.json('headers.Host', 'httpbin.org');
-      return chakram.wait();
-  });
+describe("Test HTTP POST", function(){
+  var postRequest;
+
+  before(function() {
+   postRequest = chakram.post("http://httpbin.org/post", {
+            nba : "nba",
+            cba : "cba"
+              });
+          });
+
+    it("should ensure matches json exactly", function () {
+        return expect(postRequest).to.have.json('json',{
+                  nba : "nba",
+                  cba : "cba"
+                       })
+                     }
+                   )
 })
 ```
+
 #### Three Promises Related Methods
 ##### chakram.all
 `chakram.all(promiseArray)`接受promises数组作为参数，返回一个promise，并且要在数组中所有promises被完成之后，promise状态才会变为fulfilled，表示异步操作成功。可以用于对多个promises一起处理。

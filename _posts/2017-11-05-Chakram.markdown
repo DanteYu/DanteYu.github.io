@@ -11,13 +11,25 @@ tags:
 
 ### 什么是Chakram
 
-[Chakram](http://dareid.github.io/chakram/)可以让API testing更简单，它可以让你写出直接易懂的测试，保证JSON REST endpoints工作的正确性。暂不支持非JSON的数据格式。
+[Chakram](http://dareid.github.io/chakram/)可以让API testing更简单，它可以让你写出直接易懂的E2E测试，保证JSON REST endpoints工作的正确性。不过，暂不支持非JSON的数据格式。
 
-`Chakram`是基于`node.js`、`mocha`和`chai`打造的，所以`Chakram`可以提供BDD式的测试风格和处理promises。
+`Chakram`是基于[node.js](https://nodejs.org/)、[mocha](http://mochajs.org/)、[chai](http://chaijs.com/)和[request](https://github.com/request/request)打造的，所以`Chakram`可以提供BDD式的测试风格和处理promises。
 
 整个`Chakram`有两大模块组成：
 1. `chakram` - 包含了很多HTTP操作，用于API Testing
 2. `chakram-expectation` - 扩展了`chai.expect`，加上了HTTP matcher，用于判断HTTP相关内容
+
+### Chakram主要特点
+* 提供HTTP相关的验证
+  * 验证status code
+  * 验证cookie
+  * 验证header
+  * 验证JSON和schema
+  * 验证compression
+  * 验证响应时间
+* 基于mocha和chai的BDD的风格
+* promise友好
+* 自定义的验证
 
 ### Chakram的安装运行
 
