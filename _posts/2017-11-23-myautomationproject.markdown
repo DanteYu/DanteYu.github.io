@@ -2,7 +2,7 @@
 layout:     post
 title:      我的自动化测试项目demo
 subtitle:   ""
-date:       2017-04-26 12:00:00
+date:       2017-11-23 12:00:00
 author:     DanteYu
 tags:
     - automation
@@ -32,6 +32,7 @@ tags:
 * [python + webdriver + unittest](https://github.com/DanteYu/Test_Automation_Demo/tree/master/UITesting/python_webdriver_unittest)
 * [js + jasmine + protractor](https://github.com/DanteYu/Test_Automation_Demo/tree/master/UITesting/js_jasmine_protractor)
 * [js + codeceptjs + webdriverio](https://github.com/DanteYu/Test_Automation_Demo/tree/master/UITesting/js_codeceptjs_webdriverio)
+* [js + mocha + chakram](https://github.com/DanteYu/Test_Automation_Demo/tree/master/APITesting/js_mocha_chakram)
 
 repo地址： [MyDemo](https://github.com/DanteYu/Test_Automation_Demo)
 
