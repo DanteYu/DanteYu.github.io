@@ -31,6 +31,11 @@ tags:
 * promise友好
 * 自定义的验证
 
+由上可见，其实`Chakram`并不支持太多的复杂场景，并不像[rest-assured](https://github.com/rest-assured/rest-assured/wiki/Usage)那样做得面面俱到。比如
+* XML的解析
+* Authentication
+* session管理
+
 ### Chakram的安装运行
 
 `Chakram`的运行需要nodejs环境，通过`npm install --save-dev chakram`可以把`Chakram`作为development dependency加入到项目中。
