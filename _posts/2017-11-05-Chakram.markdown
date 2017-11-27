@@ -6,7 +6,6 @@ date:       2017-11-05 12:00:00
 author:     DanteYu
 tags:
     - chakram
-    - APITesting
 ---
 
 ### 什么是Chakram

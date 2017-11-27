@@ -6,7 +6,6 @@ date:       2017-11-11 12:00:00
 author:     DanteYu
 tags:
     - chakram
-    - APITesting
 ---
 
 这篇文章会通过具体例子介绍`chakram-expectation`模块的常用验证方法。
