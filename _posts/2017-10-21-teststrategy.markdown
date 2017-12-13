@@ -112,7 +112,7 @@ Test plan | Test strategy
 4. 确定测试阶段
 5. 确定测试度量
 
-##### 前期项目信息收集
+#### 前期项目信息收集
 
 上面提到了QA可以从不同角色收集到不同的信息，除此之外，使用启发式测试计划语境模型 Heuristic Test Planning Context Model和启发式测试策略模型 Heuristic Test Strategy Model也是一个有效的渠道。具体如何使用这两个模型，请参考[htsm](https://danteyu.github.io/2017/06/21/htsm/)和[htcpm](https://danteyu.github.io/2017/07/13/htpcm/)。
 
@@ -142,25 +142,97 @@ Test plan | Test strategy
 
 只有从不同的维度收集到足够的项目信息并且很好的理解这些信息对项目质量和测试活动的影响，才能帮助我们少走弯路，制定出适合项目和团队的测试策略。
 
-##### 确定质量目标
+#### 确定质量目标
 
 在具体思考“怎么测”之前，我们需要确定项目的质量目标。这个质量目标会对齐项目所有相关人员对于项目质量的理解和期望，明确质量范围也就是测试策略会覆盖的范围。
 
-那质量目标如何设定？
-###### 第一步，参考软件质量特征列表和软件质量模型，建立符合项目上下文的质量模型
+那质量目标如何设定？主要是参考软件质量特征列表和软件质量模型，建立符合项目上下文的产品质量模型，从而确定项目质量目标
 
-软件质量可以有很多不同的分类
+要建立项目产品的质量模型首先就需要先知道一个软件产品的质量属性或特征分别有什么，对应的质量模型是什么样的。幸运的是现在已经有很多可以参考的模型了
+* [软件质量特征列表](http://thetesteye.com/posters/TheTestEye_SoftwareQualityCharacteristics.pdf)
+* [HTML的Quality Criteria Categories](http://www.satisfice.com/tools/htsm.pdf)
+* [ISO/IEC_9126](https://en.wikipedia.org/wiki/ISO/IEC_9126)
+* [ISO/IEC_25010](https://blog.codacy.com/enterprise-software-a-summary-of-iso-25010-software-quality-model-7100575d6f6) [中文解析](https://mp.weixin.qq.com/s/3Y6CvG39EdeGFTlHWWgqLg)
+* [其他软件质量模型](http://www.cnblogs.com/gaochundong/p/software_quality_models.html)
 
-http://thetesteye.com/posters/TheTestEye_SoftwareQualityCharacteristics.pdf
+从上面的质量特征列表或是模型可以看出，一个软件产品的质量由多个质量特征或标准组成，每个质量特征又可以进一步分解为子特征。通过这些已有的质量模型来启发哪些质量特征是对项目产品重要的，哪些质量标准适用于本项目产品。最后得出符合项目上下文的产品质量模型
 
-###### 第二步，分析质量模型，确定质量目标
+比如 我们创建的产品质量模型可以包含以下粗粒度特征：
 
+1. 功能性
+  * 完成度
+  * 精准度
+  * 互用性
+  * 效率
+  * 并发
+2. 性能
+  * 资源利用率
+  * 吞吐量
+  * 持久力
+3. 安全
+  * 认证
+  * 授权
+  * 隐私
+4. 兼容性
+  * 应用兼容
+  * OS兼容
+  * 硬件兼容
+  * 向后兼容
+5. 可用性
+  * 易学性
+  * 易操作性
+  * 可达性
+6. 可靠性
+  * 稳定性
+  * 健壮性
+  * 可恢复性
+  * 错误处理
+  * 数据完整性
+7. 可维护性
+  * 可扩展性
+  * 修复
+  * 构建
+8. 可移植性
+  * 重用
+9. 可安装性
+  * 配置
+  * 升级卸载
 
+上面的质量模型定义了产品质量特征和标准，而这些特征和标准就是我们应该完成的目标！除了上面说到的质量模型，一些具体的metrics也可以被引入来保证项目质量，成为项目质量目标的一部分。举个例子
 
+* 功能性
+  * 验收条件(AC)通过率100%
+  * UI自动化测试覆盖率30%
+  * API自动化测试覆盖率90%
+  * 单元测试覆盖率90%
+  * 没有high severity bug
+* 性能
+  * 吞吐量定义
+  * 资源利用率定义
+  * 响应时间定义
+* 安全
+  * [OWASP TOP TEN](https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project)
+* 兼容性
+  * 浏览器支持
+  * OS支持
+* 可靠性
+  * 线上bug响应时间
+  * 灾难恢复时间
+* 可安装性
+  * 升级时间
+  * 卸载时间
+* 内部质量
+  * 代码复杂度
+  * 重复代码
+  * checkstyle
+  * 包耦合指数
+  * 过多的注释
+  * 未使用的代码
+  * 逻辑错误
+  * code convention
+  * Runtime error
 
-
-
-
+上面提到的标准都是可以通过集成到持续集成流水线的质量工具或测试框架来实现。
 
 此外，还有团队也会使用测试策略目标宣言来打造团队文化。
 ```
@@ -175,7 +247,7 @@ and
 
 有了质量目标，接下来我们要考虑要怎么达成这个目标了！也就是说，我们应该有哪些测试活动来覆盖每一个目标，每个测试活动又有哪些不同的测试类型组成？
 
-测试四象限
+测试四象限提供了敏捷项目
 
 ###### 对于自动化测试单独的策略
 测试金字塔
@@ -214,3 +286,4 @@ and
 * [究竟什么是软件测试策略](https://mp.weixin.qq.com/s?__biz=MjM5ODczMDc1Mw==&mid=2651843309&idx=1&sn=035fc3dbd0ec09d9af5273448f26aa6a&chksm=bd3d07838a4a8e95da90e3d904a714cb746bfd9b5561b78eab0b945dbd5199a8972834075755&scene=0&key=bca8d81f29a4d80e9a99a34999b3106c89c2d69117c01bd7d890e24c8e57ceb4454b4ad2325a612758ee4c17a247a4b93079841f50427a4ad63f3b5a42bcf7c1a7dd62137ce47d6cc6a04657bf3c7b10&ascene=0&uin=MjMyODY4NTU1&devicetype=iMac+MacBookAir6,2+OSX+OSX+10.12.2+build(16C67)&version=12010310&nettype=WIFI&fontScale=100&pass_ticket=xK4r8BIZZrhw3NxB2LSjkI+mRwPZZvhse+yJPq6jtz0=)
 * [agile-test-plan-do-we-really-need-one](https://www.testingexcellence.com/agile-test-plan-do-we-really-need-one/)
 * [A Question About Test Strategy](http://www.satisfice.com/blog/archives/63)
+* [软件质量模型](http://www.cnblogs.com/gaochundong/p/software_quality_models.html)
