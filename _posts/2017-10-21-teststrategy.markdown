@@ -423,4 +423,4 @@ UAT | 用户验收测试 | 手工 | | 每个故事卡QA测试结束后，需要�
 * [agile-test-plan-do-we-really-need-one](https://www.testingexcellence.com/agile-test-plan-do-we-really-need-one/)
 * [A Question About Test Strategy](http://www.satisfice.com/blog/archives/63)
 * [软件质量模型](http://www.cnblogs.com/gaochundong/p/software_quality_models.html)
-* [软件质量度量](file:///Users/diyu/Desktop/SDM312-zhangshuang.pdf)
+* [软件质量度量](http://download.microsoft.com/download/3/3/6/3364ea20-6347-462e-a264-f356fa726833/SDM312-zhangshuang.pdf)
