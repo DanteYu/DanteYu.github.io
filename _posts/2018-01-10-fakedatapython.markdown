@@ -159,7 +159,7 @@ print(radar.random_datetime(start=start, stop=stop))
 ```
 
 #### Mimesis 产生mock data
-[mimesis](http://mimesis.readthedocs.io/)提供了可以生产各类各样数据。这些数据涉及到十几种真实使用场景，比如Dummy data about transport (truck model, car etc.), Personal data (name, surname, age, email etc.), Payment data (credit_card, credit_card_network etc.)。
+[mimesis](http://mimesis.readthedocs.io/)提供了各类各样数据。这些数据涉及到十几种真实使用场景，比如Dummy data about transport (truck model, car etc.), Personal data (name, surname, age, email etc.), Payment data (credit_card, credit_card_network etc.)。
 
 使用`Mimesis`首先要确定locale，Mimesis支持多达33种不同的[语言](https://github.com/lk-geimfari/mimesis#locales)，下面列子展示了德文和中文数据。
 
