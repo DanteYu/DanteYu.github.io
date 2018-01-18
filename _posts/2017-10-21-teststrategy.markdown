@@ -155,7 +155,7 @@ Test plan | Test strategy
 
 要建立项目产品的质量模型首先就需要先知道一个软件产品的质量属性或特征分别有什么，对应的质量模型是什么样的。幸运的是现在已经有很多可以参考的模型了
 * [软件质量特征列表](http://thetesteye.com/posters/TheTestEye_SoftwareQualityCharacteristics.pdf)
-* [HTML的Quality Criteria Categories](http://www.satisfice.com/tools/htsm.pdf)
+* [HTSM的Quality Criteria Categories](http://www.satisfice.com/tools/htsm.pdf)
 * [ISO/IEC_9126](https://en.wikipedia.org/wiki/ISO/IEC_9126)
 * [ISO/IEC_25010](https://blog.codacy.com/enterprise-software-a-summary-of-iso-25010-software-quality-model-7100575d6f6) [中文解析](https://mp.weixin.qq.com/s/3Y6CvG39EdeGFTlHWWgqLg)
 * [其他软件质量模型](http://www.cnblogs.com/gaochundong/p/software_quality_models.html)
