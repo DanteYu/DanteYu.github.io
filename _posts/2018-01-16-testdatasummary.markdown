@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      测试数据的设计与产生(in progress)
+title:      测试数据的设计与产生
 subtitle:   
 date:       2018-01-16 12:00:00
 author:     DanteYu
@@ -70,16 +70,26 @@ Test | 安全测试 | 自动化 | 验证保密性的数据，验证完整性的�
 
 
 ### 专注于test data的测试技术 - Domain Testing
-识别关键数据
-等价类
-边界值
-不寻常的数据
-数据组合
-触发不同状态的数据
 
+在HTSM的Test Technical提到一个专注于 test data的测试技术
+* **域测试 Domain Testing**
+	* 描述： 专注于测试软件所处理的数据 divide and conquer the data
+	* 典型思路
+		* 找到产品处理的所有数据。看输出也看输入
+		* 决定哪些特殊的数据需要测试。考虑边界值、典型值、无效值和最佳代表数据
+		* 考虑数据的组合
 
+Domain Testing是Functional Testing的一种，通过设计制定特殊的数据作为输入来评估软件的输出，解决了在输入域里无法穷尽测试和选择“最佳”子集数据的问题。通常的手段有：
+* 识别关键数据
+* 等价类
+* 边界值
+* 不寻常的数据
+* 数据组合
+* 触发不同状态的数据
 
-"Domain Testing"域测试是专注于测试数据的测试技术，基本适用于每一个故事卡。当确定域测试适用之后，QA就会产生下面的测试想法：
+> in domain testing, we partition a domain into sub-domains(equivalence classes) and then test using values from each sub-domain
+
+Domain Testing的指导性非常显著，实施Domain Testing可以帮我们形成数据相关的测试思路，比如
 
 * 该变动影响和涉及的测试数据有哪些？
   * 数据作为输入变量
@@ -93,16 +103,10 @@ Test | 安全测试 | 自动化 | 验证保密性的数据，验证完整性的�
 * 测试数据如何被系统处理？
   * 大规模的数据处理
   * 同一数据在不同模块之间的处理
-  * 被存储是否成功
+  * 能否能被成功储存
 * 测试数据会在哪些地方以什么方式呈现给用户？
 * 测试数据有哪些特点
   * 完整性 - 数据在被不同功能或模块容纳处理后依然完整
   * 唯一性 - 数据是否在系统里唯一，不能有重复
-  * 一致性 - 单一数据在系统里显示一致
+  * 一致性 - 单一数据在系统不同功能或模块中显示一致
   * 冲突性 - 不同数据之间是否冲突
-
-### 测试数据的更新
-### 测试数据的管理
-
-### 参考
-[software-testing-test-data](https://www.guru99.com/software-testing-test-data.html)
