@@ -84,3 +84,5 @@ tags:
 * [MocksFakesStubsandDummies](http://xunitpatterns.com/Mocks,%20Fakes,%20Stubs%20and%20Dummies.html)
 * [TestDouble](https://martinfowler.com/bliki/TestDouble.html)
 * [doubles](http://python-doublex.readthedocs.io/en/latest/doubles.html)
+* [whats-the-difference-between-faking-mocking-and-stubbing](https://stackoverflow.com/questions/346372/whats-the-difference-between-faking-mocking-and-stubbing?noredirect=1&lq=1)
+* [whats-the-difference-between-a-mock-stub](https://stackoverflow.com/questions/3459287/whats-the-difference-between-a-mock-stub)
