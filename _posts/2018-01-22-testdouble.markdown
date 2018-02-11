@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      Test Double总结 (in progress)
+title:      Test Double总结
 subtitle:   
 date:       2018-01-22 12:00:00
 author:     DanteYu
@@ -55,28 +55,30 @@ tags:
 那和`Mock Object`不同之处是什么呢？`Test Spy`是把待测对象对依赖系统的输出拿到了测试代码里面进行验证，这样的话，如果待测系统的输出不符合期望，`Test Spy`并不像`Mock Object`那样第一时间让测试失败，而是可以在测试代码中加入更多判断信息，让验证和测试结果更加可控和可视化，
 
 
-
 #### Dummy Object - pass around but never actually used
 
-`Dummy Object`对象是指为了调用被测试方法而传入的假参数，为什么说是假参数呢？实际上这些传入的`Dummy`对象并不会对测试有任何作用，仅仅是为了成功调用被测试方法。
+`Dummy Object`对象是指为了调用被测试方法而传入的假参数，为什么说是假参数呢？实际上这些传入的`Dummy`对象并不会对测试有任何作用，仅仅是为了成功调用被测试方法。所以，`Dummy Object`又被称为Dummy parameter或placeholder。
 
 比如有一个类的实例创建要求传入多个参数，这些参数里面没有可选参数，其中有几个参数不会对测试产生任何作用，这时我们就可以创建`Dummy`对象作为假参数去创建这个实例。
 
 ### 模块推荐
-每个不同语言每个定义的推荐工具
-Java
-mockito
-mockwire
-moco
-easymock
-powermock
-jmockit
-Python
-JavaScript
+下面列出了一些可用的Test Double工具
+###### Java
+* [mockito](http://site.mockito.org/)
+* [wiremock](http://wiremock.org/)
+* [moco](https://github.com/dreamhead/moco)
+
+###### Python
+* [doublex](https://pypi.python.org/pypi/doublex) - Powerful test doubles framework for Python
+* [mock](https://docs.python.org/3/library/unittest.mock.html) - (Python standard library) A mocking and patching library
+* [httpretty](https://github.com/gabrielfalcao/HTTPretty) - HTTP request mock tool for Python.
+
+###### JavaScript
+* [jsmockito](https://jsmockito.org/)
+* [sinonjs](http://sinonjs.org/)
 
 ### 总结
-这篇文章总结到我对`Test Double`相关概念的理解。结合上文，总结如下
-
+![testdouble](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/testdouble.png?raw=true)
 
 ### 参考
 * [MocksFakesStubsandDummies](http://xunitpatterns.com/Mocks,%20Fakes,%20Stubs%20and%20Dummies.html)
