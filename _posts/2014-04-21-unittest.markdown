@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      unittest(Pytest)学习笔记
+title:      unittest学习笔记
 subtitle:   ""
 date:       2014-04-21 12:00:00
 author:     DanteYu
@@ -41,6 +41,3 @@ tags:
 ### API
 ![API8](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/unittest8.png?raw=true)
 ![API8](https://github.com/DanteYu/DanteYu.github.io/blob/master/_posts/images/unittest9.png?raw=true)
-
-
-
