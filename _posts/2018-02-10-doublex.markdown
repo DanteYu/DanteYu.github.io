@@ -1,0 +1,127 @@
+---
+layout:     post
+title:      doublex学习笔记
+subtitle:   
+date:       2018-02-10 12:00:00
+author:     DanteYu
+tags:
+    - TestDouble
+---
+
+### 什么是doublex
+
+官网上对于doublex的介绍很简单，就是一个Test Double的Python实现框架
+> Powerful test doubles framework for Python
+
+也可以理解为doublex是Python的一个库，用于实现Test Stub/Spy/Mock。
+
+关于Test Double(Stub/Spy/Mock)的理解，可以参考此篇[文章](https://danteyu.github.io/2018/01/22/testdouble/)。
+
+### doublex的安装
+安装有多种方式，`pip`依然是首选。
+
+`pip3 install doublex`
+
+### doublex基本使用
+
+doublex提供三种类型的Test Double，分别是Stub & Mock & Spy。在介绍它们的具体使用方法之前，先简单介绍下今天例子使用的SUT：
+1. SUT(system under test) - playerService
+2. DOC(depended-on component) - dataService, profileService
+
+playerService接受球员名称和年份，然后返回一个球员的基本信息；这个基本信息由dataService球员数据和profileService球员概况组成，所以playerService依赖于dataService和profileService。由于只是为了体现doublex使用方法的demo，实现非常简单，都是hard code。具体请看github。
+
+#### Test Stub - Stubs tell you what you wanna hear
+
+doublex提供了`Stub()`对象来创建Test Stub，根据参数的不同分为 **Stub** 和 **Free Stub**
+
+###### Stub
+假设如果`dataService`对象就是我们要替换的依赖对象，`Stub(dataService)`带有`dataService`对象为参数，那就代表这个Stub实例具有和`dataService`对象一样的属性，也就是说这个Stub实例可以“替换”`dataService`对象来与SUT进行交互了。
+
+下面代码展示了Stub()基本使用场景和方法
+```python
+from unittest import TestCase, main
+from doublex_demo.Service import dataService as ds
+from doublex_demo.Service import profileService as pos
+from doublex_demo.Service import playerService as pls
+from doublex_demo.Service import bodyService as bs
+from doublex import Stub, ANY_ARG, assert_that, is_
+
+class TestStub(TestCase):
+
+    def test_stub(self):
+
+        playername = "Kawhi Leonard"
+
+        #需使用with关键字来创建Stub
+        #Stub接受dataService的实例作为参数，也可以接受dataService的类对象作为参数，这个取决于实际实现方式
+        #根据dataService的实现，get_assist()等方法不用接受参数，这里的参数必须完全匹配
+        #get_match_number()可以根据参数的不同返回不同的值
+        #returns()方法定义返回值
+        #不能定义非dataService的属性
+        with Stub(ds.dataService) as stub:
+            stub.get_assist().returns("6")
+            stub.get_score().returns("30")
+            stub.get_rebound().returns("10")
+            stub.get_match_number(2015).returns(playername + " plays 80 games at the year of 2015")
+            stub.get_match_number(2016).returns(playername + " plays 81 games at the year of 2016")
+
+        #使用来自于hamcrest的assert_that()和is_()做stub的验证
+        assert_that(stub.get_assist(), is_("6"))
+        assert_that(stub.get_score(), is_("30"))
+        assert_that(stub.get_rebound(), is_("10"))
+        assert_that(stub.get_match_number(2015), is_("Kawhi Leonard plays 80 games at the year of 2015"))
+        assert_that(stub.get_match_number(2016), is_("Kawhi Leonard plays 81 games at the year of 2016"))
+
+        #使用stub代替dataService，来对待测对象playerService进行测试验证
+        player_service_stub_2016 = pls.playerService(playername, 2016, stub, pos.profileService(playername), bs.bodyService())
+        assert_that(
+            player_service_stub_2016.get_player_info().split('\n')[0],
+            is_("Kawhi Leonard - san antonio spurs"))
+        assert_that(
+            player_service_stub_2016.get_player_info().split('\n')[-1],
+            is_("Kawhi Leonard plays 81 games at the year of 2016"))
+
+        player_service_stub_2015 = pls.playerService(playername, 2015, stub, pos.profileService(playername), bs.bodyService())
+        assert_that(
+            player_service_stub_2015.get_player_info().split('\n')[-1],
+            is_("Kawhi Leonard plays 80 games at the year of 2015"))
+
+if __name__ == '__main__':
+    main()
+```
+
+###### Free Stub
+当Stub()不带参数的时候，称之为Free Stub。由于Free Stub没有指定被替换的依赖服务，所以Free Stub的属性不受任何限制，可以自由定义。
+
+```python
+from unittest import TestCase, main
+from doublex_demo.Service import dataService as ds
+from doublex_demo.Service import profileService as pos
+from doublex_demo.Service import playerService as pls
+from doublex_demo.Service import bodyService as bs
+from doublex import Stub, ANY_ARG, assert_that, is_
+
+class TestStub(TestCase):
+
+    def test_stub(self):
+
+        playername = "Kawhi Leonard"
+
+        #当Stub()不带参数的时候，称之为Free Stub
+        #ANY_ARG表示任意参数
+        with Stub() as freestub:
+            freestub.get_assist().returns("6")
+            freestub.get_score().returns("30")
+            freestub.get_rebound().returns("8")
+            freestub.get_match_number(ANY_ARG).returns(playername + " plays 82 games")
+
+        player_service_stub_2017 = pls.playerService(playername, 2017, freestub, pos.profileService(playername), bs.bodyService())
+        #使用freestub代替dataService，来对待测对象playerService进行测试验证
+        assert_that(player_service_stub_2017.get_player_info().split('\n')[-2], is_("8"))
+        assert_that(player_service_stub_2017.get_player_info().split('\n')[-1], is_("Kawhi Leonard plays 82 games"))
+
+if __name__ == '__main__':
+    main()
+```
+
+#### Test Spy - Spies remember everything that happens to them
