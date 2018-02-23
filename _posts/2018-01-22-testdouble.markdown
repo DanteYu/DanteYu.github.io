@@ -52,7 +52,7 @@ tags:
 #### Test Spy - monitor real ones; you can change my behavior
 `Test Spy`是指一个待测系统依赖组件的替身，并且会捕捉和保存待测对象对依赖系统的输出，这个输出会用于测试代码中的验证。`Test Spy`主要用于记录和验证待测对象对依赖系统的输出。
 
-那和`Mock Object`不同之处是什么呢？`Test Spy`是把待测对象对依赖系统的输出拿到了测试代码里面进行验证，这样的话，如果待测系统的输出不符合期望，`Test Spy`并不像`Mock Object`那样第一时间让测试失败，而是可以在测试代码中加入更多判断信息，让验证和测试结果更加可控和可视化，
+那和`Mock Object`不同之处是什么呢？`Test Spy`是把待测对象对依赖系统的输出拿到了测试代码里面进行验证，这样的话，如果待测系统的输出不符合期望，`Test Spy`并不像`Mock Object`那样第一时间让测试失败，而是可以在测试代码中加入更多判断信息，让验证和测试结果更加可控和可视化
 
 
 #### Dummy Object - pass around but never actually used

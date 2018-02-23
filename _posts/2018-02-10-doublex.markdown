@@ -26,9 +26,11 @@ tags:
 
 doublex提供三种类型的Test Double，分别是Stub & Mock & Spy。在介绍它们的具体使用方法之前，先简单介绍下今天例子使用的SUT：
 1. SUT(system under test) - playerService
-2. DOC(depended-on component) - dataService, profileService
+2. DOC(depended-on component) - dataService, profileService, bodyService, salaryService
 
-playerService接受球员名称和年份，然后返回一个球员的基本信息；这个基本信息由dataService球员数据和profileService球员概况组成，所以playerService依赖于dataService和profileService。由于只是为了体现doublex使用方法的demo，实现非常简单，都是hard code。具体请看github。
+playerService接受球员名称和年份，然后返回一个球员的基本信息；这个基本信息由dataService球员数据和profileService球员概况组成，所以playerService依赖于dataService和profileService。playerService也返回由bodyService提供的身体指标，以及由salaryService支持的薪水服务。
+
+由于只是为了体现doublex使用方法的demo，实现非常简单，都是hard code。具体请看github。
 
 #### Test Stub - Stubs tell you what you wanna hear
 
@@ -53,7 +55,7 @@ class TestStub(TestCase):
         playername = "Kawhi Leonard"
 
         #需使用with关键字来创建Stub
-        #Stub接受dataService的实例作为参数，也可以接受dataService的类对象作为参数，这个取决于实际实现方式
+        #Stub接受dataService类对象作为参数，并且实现dataService类对象全部的方法
         #根据dataService的实现，get_assist()等方法不用接受参数，这里的参数必须完全匹配
         #get_match_number()可以根据参数的不同返回不同的值
         #returns()方法定义返回值
@@ -73,7 +75,7 @@ class TestStub(TestCase):
         assert_that(stub.get_match_number(2016), is_("Kawhi Leonard plays 81 games at the year of 2016"))
 
         #使用stub代替dataService，来对待测对象playerService进行测试验证
-        player_service_stub_2016 = pls.playerService(playername, 2016, stub, pos.profileService(playername), bs.bodyService())
+        player_service_stub_2016 = pls.playerService(playername, 2016, stub, pos.profileService(playername), bs.bodyService(), ss.salaryService())
         assert_that(
             player_service_stub_2016.get_player_info().split('\n')[0],
             is_("Kawhi Leonard - san antonio spurs"))
@@ -81,7 +83,7 @@ class TestStub(TestCase):
             player_service_stub_2016.get_player_info().split('\n')[-1],
             is_("Kawhi Leonard plays 81 games at the year of 2016"))
 
-        player_service_stub_2015 = pls.playerService(playername, 2015, stub, pos.profileService(playername), bs.bodyService())
+        player_service_stub_2015 = pls.playerService(playername, 2015, stub, pos.profileService(playername), bs.bodyService(), ss.salaryService())
         assert_that(
             player_service_stub_2015.get_player_info().split('\n')[-1],
             is_("Kawhi Leonard plays 80 games at the year of 2015"))
@@ -115,7 +117,7 @@ class TestStub(TestCase):
             freestub.get_rebound().returns("8")
             freestub.get_match_number(ANY_ARG).returns(playername + " plays 82 games")
 
-        player_service_stub_2017 = pls.playerService(playername, 2017, freestub, pos.profileService(playername), bs.bodyService())
+        player_service_stub_2017 = pls.playerService(playername, 2017, freestub, pos.profileService(playername), bs.bodyService(), ss.salaryService())
         #使用freestub代替dataService，来对待测对象playerService进行测试验证
         assert_that(player_service_stub_2017.get_player_info().split('\n')[-2], is_("8"))
         assert_that(player_service_stub_2017.get_player_info().split('\n')[-1], is_("Kawhi Leonard plays 82 games"))
@@ -124,4 +126,355 @@ if __name__ == '__main__':
     main()
 ```
 
+除了上述的`returns()`方法外，常用的还有`raises()`来模拟异常情况
+```python
+def test_raises(self):
+    with Stub() as stub:
+        stub.foo(2).raises(Exception)
+
+    with self.assertRaises(Exception):
+        stub.foo(2)
+
+#stub.foo()的调用会发生异常
+```
+如果没有使用`returns()`方法，默认的返回值为`None`。
+```python
+from doublex import Stub
+# 如果不是定义返回值，不需要使用with关键字来定义stub
+stub = Stub()
+stub.foo() #这个方法会返回None
+
+#定义返回值，需要使用下面的方式
+with Stub() as stub1:
+  stub1.foo(1).returns("1")
+```
+
+###### Ad-hoc Stub
+通过方法`method_returning()`和`method_raising()`，我们可以实现对实例建立stub。这种方法不需要使用`Stub()`就可以建立stub了。
+
+```python
+def test_adhoc_stub(self):
+       bodyservice = bs.bodyService()
+       #method_returning()直接在实例上建立stub，并设定返回值
+       bodyservice.get_height = method_returning("210cm")
+       assert_that(bodyservice.get_height(), is_("210cm"))
+       #method_raising()直接在实例上建立stub，并抛出异常
+       bodyservice.get_weight = method_raising(Exception)
+       with self.assertRaises(Exception):
+           bodyservice.get_weight()
+```
+
 #### Test Spy - Spies remember everything that happens to them
+doublex提供了`Spy()`对象来创建Test Spy，根据参数的不同分为 **Spy**，**Free Spy**和**Proxy Spy**
+
+下面的例子中，我们使用`Spy(Collaborator)`来代替相应的依赖服务，然后验证SUT是否正确的调用
+依赖服务和传递参数。
+
+###### Spy
+```python
+from unittest import TestCase, main
+from doublex_demo.Service import dataService as ds
+from doublex_demo.Service import profileService as pos
+from doublex_demo.Service import playerService as pls
+from doublex import Spy, called, ProxySpy, assert_that
+from doublex_demo.Service import bodyService as bs
+from doublex_demo.Service import salaryService as ss
+
+class TestSpy(TestCase):
+
+    def test_spy(self):
+
+        playername = "Kawhi Leonard"
+        year = 2017
+        salary = "20m"
+
+        #使用Spy(类对象)来创建spy
+        spy_ss = Spy(ss.salaryService)
+        #通过SUT调用spy对象的方法
+        pls.playerService(playername, 2017, ds.dataService(playername), pos.profileService(playername), bs.bodyService(), spy_ss).set_new_salary(salary)
+        #验证spy_ss.set_salary方法被调用过
+        assert_that(spy_ss.set_salary, called())
+
+        #Spy是Stub的扩展，所以除了记录方法被调用的情况，也可以设定返回值
+        with Spy(bs.bodyService) as spy_bs_as_stub:
+            spy_bs_as_stub.get_height().returns("188cm")
+            spy_bs_as_stub.get_weight().returns("110kg")
+            spy_bs_as_stub.illnessHistory(2017).returns("Year 2017 no injury")
+            spy_bs_as_stub.illnessHistory(2018).returns("Year 2017 has ankle injury")
+        #直接调用spy对象方法
+        spy_bs_as_stub.get_height()
+        spy_bs_as_stub.get_weight()
+        spy_bs_as_stub.illnessHistory(2017)
+        spy_bs_as_stub.illnessHistory(2018)
+        #可以验证spy对象方法已经被调用及其参数接受情况
+        assert_that(spy_bs_as_stub.get_height, called())
+        assert_that(spy_bs_as_stub.get_weight, called())
+        assert_that(spy_bs_as_stub.illnessHistory, called().times(2))
+        #使用anything()去任意匹配
+        assert_that(spy_bs_as_stub.illnessHistory, called().with_args(anything()))        #通过SUT调用spy对象的方法
+        player_service_spy_2016 = pls.playerService(playername, 2017, ds.dataService(playername), pos.profileService(playername), spy_bs_as_stub, ss.salaryService())
+        player_service_spy_2016.get_physical_feature(2017)
+        #验证spy对象方法再一次被方法(SUT)调用
+        assert_that(spy_bs_as_stub.get_height, called().times(2))
+        assert_that(spy_bs_as_stub.get_weight, called().times(2))
+        assert_that(spy_bs_as_stub.illnessHistory, called().times(3))
+
+if __name__ == '__main__':
+    main()
+```
+###### Free Spy
+```python
+from unittest import TestCase, main
+from doublex_demo.Service import dataService as ds
+from doublex_demo.Service import profileService as pos
+from doublex_demo.Service import playerService as pls
+from doublex import Spy, called, ProxySpy, assert_that
+from doublex_demo.Service import bodyService as bs
+from doublex_demo.Service import salaryService as ss
+
+class TestSpy(TestCase):
+
+    def test_spy(self):
+
+        playername = "Kawhi Leonard"
+        year = 2017
+        salary = "20m"
+        #使用with关键字和Spy()来创建free spy
+        #设置和salaryService一样的方法
+        with Spy() as free_ss_spy:
+            free_ss_spy.set_salary(salary).returns("20m")
+        #通过SUT调用spy对象的方法
+        pls.playerService(playername, 2017, ds.dataService(playername), pos.profileService(playername), bs.bodyService(), free_ss_spy).set_new_salary(salary)
+        #验证spy_ss.set_salary方法被调用过
+        assert_that(free_ss_spy.set_salary, called())
+
+if __name__ == '__main__':
+    main()
+```
+###### ProxySpy
+`ProxySpy()`与`Spy()`不同的地方是`ProxySpy()`接受的对象是实例。
+
+不过我们要注意尽量不要使用ProxySpy(),官方文档给出了如下解释：
+> Note the ProxySpy breaks isolation. It is not really a double. Therefore is always the worst double and the last resource.
+
+```python
+from unittest import TestCase, main
+from doublex_demo.Service import dataService as ds
+from doublex_demo.Service import profileService as pos
+from doublex_demo.Service import playerService as pls
+from doublex import Spy, called, ProxySpy, assert_that
+from doublex_demo.Service import bodyService as bs
+from doublex_demo.Service import salaryService as ss
+
+class TestSpy(TestCase):
+
+    def test_spy(self):
+
+        playername = "Kawhi Leonard"
+        year = 2017
+        salary = "20m"
+
+        #传递实例给ProxySpy()
+        spy_pos = ProxySpy(pos.profileService(playername))
+        #通过SUT调用spy对象的方法
+        pls.playerService(playername, 2016, ds.dataService(playername), spy_pos, bs.bodyService(), ss.salaryService()).get_player_info()
+        #验证spy对象方法被调用过
+        assert_that(spy_pos.get_player_team, called())
+
+if __name__ == '__main__':
+    main()
+```
+
+Spy的验证最常用的是下面两个方法
+1. `called()`验证方法调用情况
+2. `with_args()`验证参数调用情况
+
+一个典型的例子如下
+```python
+from hamcrest import contains_string, less_than, greater_than
+from doublex import Spy, assert_that, called
+#不设置返回值，可以不用with关键字
+spy = Spy()
+
+spy.m1()
+spy.m2(None)
+spy.m3(2)
+spy.m4("hi", 3.0)
+spy.m5([1, 2])
+spy.m6(name="john doe")
+
+assert_that(spy.m1, called())
+assert_that(spy.m2, called())
+
+assert_that(spy.m1, called().with_args())
+assert_that(spy.m2, called().with_args(None))
+assert_that(spy.m3, called().with_args(2))
+assert_that(spy.m4, called().with_args("hi", 3.0))
+assert_that(spy.m5, called().with_args([1, 2]))
+assert_that(spy.m6, called().with_args(name="john doe"))
+#使用hamcrest matchers丰富判断条件
+assert_that(spy.m3, called().with_args(less_than(3)))
+assert_that(spy.m3, called().with_args(greater_than(1)))
+assert_that(spy.m6, called().with_args(name=contains_string("doe")))
+```
+
+
+
+#### Mock Object - Mock forces the predefined script
+
+doublex提供了`Mock()`来实现Mock Object的创建。Mock Object预先定义了一些方法调用的顺序，然后Mock Object被调用的时候，会去验证方法是否按照预定义的顺序和参数调用。验证很简单地使用`doublex.verify()`方法，如果不去验证调用的顺序，可以使用`doublex.any_order_verify()`。
+
+```python
+from unittest import TestCase, main
+from doublex_demo.Service import dataService as ds
+from doublex_demo.Service import profileService as pos
+from doublex_demo.Service import playerService as pls
+from doublex import Mock, verify, assert_that, any_order_verify
+from doublex_demo.Service import bodyService as bs
+from doublex_demo.Service import salaryService as ss
+
+class TestSpy(TestCase):
+
+    def test_spy(self):
+
+        playername = "Kawhi Leonard"
+        year = 2017
+        salary = "20m"
+        #使用with关键字和Mock()创建mock object
+        #假设替代salaryService对象
+        #定义mock需要调用的方法及其参数，此方法与被替代的salaryService中的方法相同
+        with Mock() as mock:
+            mock.set_salary("20m")
+        #在SUT playerservice中调用这个mock
+        #之前定义的mock.set_salary("20m")会被SUT调用
+        player_service_mock_2017 = pls.playerService(playername, year, ds.dataService(playername), pos.profileService(playername), bs.bodyService(), mock)
+        player_service_mock_2017.set_new_salary(salary)
+        #verify()验证定义的mock期望是否正确被实现
+        assert_that(mock, verify())
+
+        #假设替代dataService对象
+        #mock可以设置返回值
+        with Mock() as mock_order:
+            mock_order.get_score().returns("22")
+            mock_order.get_assist().returns("3")
+            mock_order.get_rebound().returns("6")
+            mock_order.get_match_number(year).returns("77")
+        #在SUT playerservice中调用这个mock
+        player_service_mock_2017_order = pls.playerService(playername, year, mock_order, pos.profileService(playername), bs.bodyService(), ss.salaryService())
+        player_service_mock_2017_order.get_player_info()
+        # verify()验证定义的mock期望是否正确被实现，且方法调用顺序必须完全一致
+        assert_that(mock_order, verify())
+
+        #假设替代dataService对象，注意mock定义中期望的顺序和之前不一样，也会和执行顺序不一致
+        with Mock() as mock_any_order:
+            mock_any_order.get_score().returns("22")
+            mock_any_order.get_rebound().returns("6")
+            mock_any_order.get_match_number(year).returns("77")
+            mock_any_order.get_assist().returns("3")
+        #在SUT playerservice中调用这个mock
+        player_service_mock_2017_any_order = pls.playerService(playername, year, mock_any_order, pos.profileService(playername),
+                                                         bs.bodyService(), ss.salaryService())
+        player_service_mock_2017_any_order.get_player_info()
+        #any_order_verify()验证定义的mock期望是否正确被实现，且方法调用顺序不要求完全一致
+        assert_that(mock_any_order, any_order_verify())
+
+if __name__ == '__main__':
+    main()
+```
+#### Stubbing properties
+对于使用@property的类，doublex提供了非常简单的处理
+```python
+#假设Student是我们需要替换的类
+class Student(object):
+
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, value):
+        if not isinstance(value, int):
+            raise ValueError('score must be an integer!')
+        if value < 0 or value > 100:
+            raise ValueError('score must between 0 ~ 100!')
+        self._score = value
+
+from doublex import Spy, Mock, Stub, assert_that, is_
+from doublex import property_got, property_set, never, verify
+
+#创建stub，可以直接复制，相当于set操作
+with Stub(Student) as stub:
+    stub.score = 88
+assert_that(stub.score, is_(88))
+
+#建立spy
+spy = Spy(Student)
+#读取score属性，由于没有设置返回值，这里的value会是None
+value = spy.score
+#使用property_got()方法验证属性是否被调用
+assert_that(spy, property_got('score'))
+spy.score = 59
+spy.score = 98
+spy.score = 98
+#使用property_set()方法验证赋值情况
+assert_that(spy, property_set('score').to(59))
+assert_that(spy, property_set('score').to(98).times(2))
+assert_that(spy, never(property_set('score').to(99)))
+
+#创建mock
+with Mock(Student) as mock:
+    #设定期望为调用score
+    mock.score
+#调用score
+mock.score
+#verify()验证
+assert_that(mock, verify())
+
+#创建mock
+with Mock(Student) as mock1:
+    #设定期望为score被赋值为80
+    mock1.score = 80
+#赋值80
+mock1.score=80
+#verify()验证
+assert_that(mock1, verify())
+```
+
+#### Stub delegates
+对于Stub返回值的设定，除了`returns()`方法，doublex还提供了一个`delegates()`方法。`delegates()`方法接受函数或生成器或其他可迭代的对象为参数。
+```python
+def test_delegate_stub(self):
+    def get_height():
+        return "181cm"
+    #创建stub
+    with Stub(bs.bodyService) as stub:
+        #使用delegates()来设定返回值，接受方法或是可以迭代的对象
+        stub.get_height().delegates(get_height)
+        stub.get_weight().delegates(["120kg", "121kg"])
+    #验证返回值
+    assert_that(stub.get_height(), is_("181cm"))
+    assert_that(stub.get_weight(), is_("120kg"))
+    assert_that(stub.get_weight(), is_("121kg"))
+```
+
+#### Stub observer
+Stub的方法是可以被观察的。可以使用`attach()`方法把一个任意方法和Stub方法绑定起来，然后在每次Stub方法调用的时候，这个attached的方法也会被调用。这样的话，我们就可以在Stub中执行其他代码。
+
+```python
+class Observer(object):
+    def __init__(self):
+        self.state = None
+
+    def notify(self, *args, **kargs):
+        self.state = args[0]
+
+observer = Observer()
+stub = Stub()
+stub.foo.attach(observer.notify)
+stub.foo(2)
+
+assert_that(observer.state, is_(2))
+```
+
+### 参考
+* [python-doublex](http://python-doublex.readthedocs.io/en/latest/index.html)
