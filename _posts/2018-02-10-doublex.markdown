@@ -461,19 +461,14 @@ def test_delegate_stub(self):
 Stub的方法是可以被观察的。可以使用`attach()`方法把一个任意方法和Stub方法绑定起来，然后在每次Stub方法调用的时候，这个attached的方法也会被调用。这样的话，我们就可以在Stub中执行其他代码。
 
 ```python
-class Observer(object):
-    def __init__(self):
-        self.state = None
-
-    def notify(self, *args, **kargs):
-        self.state = args[0]
-
-observer = Observer()
-stub = Stub()
-stub.foo.attach(observer.notify)
-stub.foo(2)
-
-assert_that(observer.state, is_(2))
+def test_observer_stub(self):
+    def bar():
+        print("I am attached")
+    with Stub() as stub:
+        stub.foo().returns("I am foo")
+        stub.foo.attach(bar)
+    #bar()会在这里执行
+    assert_that(stub.foo(), is_("I am foo"))
 ```
 
 ### 参考
