@@ -37,10 +37,47 @@ tags:
 * 成为`Responder`响应者，当需要给待测系统注入特定数据，从而对待测系统产生影响
 * 成为`Saboteur`破坏者，当需要给待测系统注入无效数据，从而对待测系统产生异常影响，观察待测系统如何处理错误情况
 
+下面是[python-doublex](http://python-doublex.readthedocs.io/en/latest/index.html)的Stub例子
+```python
+from doublex import Stub, ANY_ARG, assert_that, is_
+
+class Collaborator:
+    def hello(self):
+        return "hello"
+
+    def add(self, a, b):
+        return a + b
+
+with Stub(Collaborator) as stub:
+    stub.hello().raises(SomeException)
+    stub.add(ANY_ARG).returns(4)
+
+assert_that(stub.add(2,3), is_(4))
+```
+
 #### Mock Object - you can set your expectation on me
 `Mock Object`是指一个完全代替待测系统依赖组件，并且用于验证待测系统输出的对象。这个对象接受待测系统的输出，进行处理并且这个输出进行验证，一旦验证通过也会返回值给待测系统。`Mock Object`主要用于接收待测系统的输出，然后进行验证。
 
 `Mock Object`一个重要的特点是它可以对无法在待测系统上直接被观察到的行为或输出进行验证。无法观察到的系统行为或输出可以是数据插入数据库，可以是数据写入文件，也可以是对其他组件的调用。以数据库类型`Mock Object`举例，这个`Mock`的数据库会去接受待测系统发过来的数据，并且对这个数据进行验证，一旦验证通过就会对数据进行处理(插入或更新操作)，然后测试代码会去验证插入是否成功。
+
+下面是[python-doublex](http://python-doublex.readthedocs.io/en/latest/index.html)的Stub例子
+```python
+from doublex import Mock, assert_that, verify
+
+with Mock() as smtp:
+    smtp.helo()
+    smtp.mail(ANY_ARG)
+    smtp.rcpt("bill@apple.com")
+    smtp.data(ANY_ARG).returns(True).times(2)
+
+smtp.helo()
+smtp.mail("poormen@home.net")
+smtp.rcpt("bill@apple.com")
+smtp.data("somebody there?")
+smtp.data("I am afraid..")
+
+assert_that(smtp, verify())
+```
 
 #### Fake Object - you can have me with limited capabilities
 `Fake Object`是指一个轻量级的完全代替待测系统依赖组件的对象，采用更加简单的方法实现依赖组件的功能。`Fake Object`可以是一个“fake DB”比如简单的内存数据库来代替真实的重量级的数据库，也可以是一个“fake web service”比如创建一个简单的web service来返回指定的response。
@@ -54,7 +91,69 @@ tags:
 
 那和`Mock Object`不同之处是什么呢？`Test Spy`是把待测对象对依赖系统的输出拿到了测试代码里面进行验证，这样的话，如果待测系统的输出不符合期望，`Test Spy`并不像`Mock Object`那样第一时间让测试失败，而是可以在测试代码中加入更多判断信息，让验证和测试结果更加可控和可视化
 
+下面是[python-doublex](http://python-doublex.readthedocs.io/en/latest/index.html)的Stub例子
+```python
+from hamcrest import contains_string
+from doublex import Spy, assert_that, called
 
+class Sender:
+    def say(self):
+        return "hi"
+
+    def send_mail(self, address, force=True):
+        pass  # [some amazing code]
+
+sender = Spy(Sender)
+
+sender.send_mail("john.doe@example.net")  # right, Sender.send_mail interface support this
+
+assert_that(sender.send_mail, called())
+assert_that(sender.send_mail, called().with_args("john.doe@example.net"))
+assert_that(sender.send_mail, called().with_args(contains_string("@example.net")))
+
+sender.bar()  # interface mismatch exception
+```
+
+[jasmine](https://jasmine.github.io/2.0/node.html)也支持Test Spy
+```python
+describe("A spy", function() {
+  var foo, bar = null;
+
+  beforeEach(function() {
+    foo = {
+      setBar: function(value) {
+        bar = value;
+      }
+    };
+
+    spyOn(foo, 'setBar');
+
+    foo.setBar(123);
+    foo.setBar(456, 'another param');
+
+  });
+
+it("tracks that the spy was called", function() {
+    expect(foo.setBar).toHaveBeenCalled();
+
+  });
+
+it("tracks that the spy was called x times", function() {
+    expect(foo.setBar).toHaveBeenCalledTimes(2);
+
+  });
+
+it("tracks all the arguments of its calls", function() {
+    expect(foo.setBar).toHaveBeenCalledWith(123);
+    expect(foo.setBar).toHaveBeenCalledWith(456, 'another param');
+
+  });
+
+it("stops all execution on a function", function() {
+    expect(bar).toBeNull();
+  });
+});
+```
 #### Dummy Object - pass around but never actually used
 
 `Dummy Object`对象是指为了调用被测试方法而传入的假参数，为什么说是假参数呢？实际上这些传入的`Dummy`对象并不会对测试有任何作用，仅仅是为了成功调用被测试方法。所以，`Dummy Object`又被称为Dummy parameter或placeholder。
@@ -83,6 +182,7 @@ tags:
 ### 参考
 * [MocksFakesStubsandDummies](http://xunitpatterns.com/Mocks,%20Fakes,%20Stubs%20and%20Dummies.html)
 * [TestDouble](https://martinfowler.com/bliki/TestDouble.html)
-* [doubles](http://python-doublex.readthedocs.io/en/latest/doubles.html)
+* [python-doublex](http://python-doublex.readthedocs.io/en/latest/index.html)
+
 * [whats-the-difference-between-faking-mocking-and-stubbing](https://stackoverflow.com/questions/346372/whats-the-difference-between-faking-mocking-and-stubbing?noredirect=1&lq=1)
 * [whats-the-difference-between-a-mock-stub](https://stackoverflow.com/questions/3459287/whats-the-difference-between-a-mock-stub)

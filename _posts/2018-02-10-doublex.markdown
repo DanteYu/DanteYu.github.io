@@ -317,7 +317,35 @@ assert_that(spy.m3, called().with_args(less_than(3)))
 assert_that(spy.m3, called().with_args(greater_than(1)))
 assert_that(spy.m6, called().with_args(name=contains_string("doe")))
 ```
+`calls()`方法可以帮助我们获得更加具体的参数值和返回值，从而进行复杂的验证
 
+```python
+def test_calls_spy(self):
+    salary = "20m"
+    year = 2017
+    #创建spy
+    with Spy(ss.salaryService) as ss_spy:
+        ss_spy.set_salary(salary)
+    #调用方法
+    ss_spy.set_salary(salary)
+    ss_spy.set_salary("22m")
+    #使用calls取得调用传入的参数
+    #多次调用可以多次取得，calls是一个数组
+    assert_that(ss_spy.set_salary.calls[0].args, is_((salary, )))
+    assert_that(ss_spy.set_salary.calls[1].args, is_(("22m", )))
+
+    #创建spy
+    with Spy(bs.bodyService) as bs_spy:
+        bs_spy.get_height().returns("190cm")
+        bs_spy.illnessHistory(year).returns("no injury")
+    #调用方法
+    bs_spy.get_height()
+    bs_spy.illnessHistory(year)
+    #使用calls取得调用传入的参数和返回值
+    assert_that(bs_spy.get_height.calls[0].retval, is_("190cm"))
+    assert_that(bs_spy.illnessHistory.calls[0].args, is_((year, )))
+    assert_that(bs_spy.illnessHistory.calls[0].retval, is_("no injury"))
+```
 
 
 #### Mock Object - Mock forces the predefined script
@@ -469,6 +497,107 @@ def test_observer_stub(self):
         stub.foo.attach(bar)
     #bar()会在这里执行
     assert_that(stub.foo(), is_("I am foo"))
+```
+
+#### Inline stubbing and mocking
+doublex创建mock/stub/spy一般使用的是double context manager的方式，语法如下所示
+```python
+from doublex import Stub
+
+with Stub() as stub:
+     stub.method(<args>).returns(<value>)
+```
+
+为了易读性，doublex还提供了`when()`和`expect_all()`来实现同样的创建功能。
+
+`when()`用于stub和spy
+```python
+def test_inline_stub(self):
+    #Stub()创建free stub
+    inline_stub_free = Stub()
+    #使用when()设置方法参数和返回值
+    when(inline_stub_free).foo(1).returns("I am inline free stub")
+    assert_that(inline_stub_free.foo(1), is_("I am inline free stub"))
+    #Stub(Collaborator)创建stub
+    inline_stub = Stub(bs.bodyService)
+    # 使用when()设置方法参数和返回值
+    when(inline_stub).get_height().returns("188cm")
+    assert_that(inline_stub.get_height(), is_("188cm"))
+```
+```python
+def test_inline_spy(self):
+    #Spy()创建free spy
+    spy_inline_free = Spy()
+    #使用when()设置方法参数和返回值
+    when(spy_inline_free).foo().returns("I am inline foo")
+    #调用方法
+    spy_inline_free.foo()
+    #验证调用情况
+    assert_that(spy_inline_free.foo(), is_("I am inline foo"))
+    assert_that(spy_inline_free.foo, called())
+
+    #Spy()创建spy
+    spy_inline = Spy(ss.salaryService)
+    #使用when()设置方法参数
+    when(spy_inline).set_salary(ANY_ARG)
+    #调用方法
+    spy_inline.set_salary("12m")
+    #验证调用情况
+    assert_that(spy_inline.set_salary, called().with_args("12m"))
+```
+
+`expect_all()`用于mock
+```python
+def test_inline_mock(self):
+    playername = "Kawhi Leonard"
+    year = 2017
+    #使用Mock()创建mock
+    inline_mock = Mock()
+    #使用expect_all()去设置期望值
+    expect_call(inline_mock).get_score().returns("33")
+    expect_call(inline_mock).get_assist().returns("6")
+    expect_call(inline_mock).get_rebound().returns("7")
+    expect_call(inline_mock).get_match_number(year).returns("no injury")
+    #在SUT playerservice中调用这个mock
+    player_service_mock_2017_order = pls.playerService(playername, year, inline_mock, pos.profileService(playername), bs.bodyService(), ss.salaryService())
+    player_service_mock_2017_order.get_player_info()
+    # verify()验证定义的mock期望是否正确被实现，且方法调用顺序必须完全一致
+    assert_that(inline_mock, verify())
+```
+#### Asynchronous spies
+有些情况下SUT调用依赖组件是一个异步行为，有可能依赖组件的调用执行是延后的，这样的话就会产生下面的问题
+
+```python
+# THE WRONG WAY
+class AsyncTests(unittest.TestCase):
+    def test_wrong_try_to_test_an_async_invocation(self):
+        # given
+        spy = Spy(Collaborator)
+        sut = SUT(spy)
+
+        # when
+        sut.some_method()
+
+        # then
+        assert_that(spy.write, called())
+```
+上面代码中，called()的验证是有可能在spy.write()执行之前就进行了。
+
+doublex提供了一个`async()` matcher来支持异步的spy验证。
+
+```python
+# THE DOUBLEX WAY
+class AsyncTests(unittest.TestCase):
+    def test_test_an_async_invocation_with_doublex_async(self):
+        # given
+        spy = Spy(Collaborator)
+        sut = SUT(spy)
+
+        # when
+        sut.some_method()
+
+        # then
+        assert_that(spy.write, called().async(timeout=1))
 ```
 
 ### 参考
