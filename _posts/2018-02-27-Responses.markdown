@@ -9,7 +9,7 @@ tags:
     - TestDouble
 ---
 #### Responses
-[Responses](https://github.com/getsentry/responses) - 是一个模拟接受请求返回期望值的python库
+[Responses](https://github.com/getsentry/responses) - A utility for mocking out the Python Requests library，主要用于Web Service mocking。
 #### 安装
 使用`pip3 install responses`
 #### 基本使用
@@ -48,7 +48,7 @@ class Demo(TestCase):
                               'Wt' : '230'
                           }
                       }
-        #发送了三次请求
+        #发送了两次请求
         resp = requests.get('https://nbaplayerprofile.com/api/1/kawhi_leonard')
         resp1 = requests.get('https://nbaplayerprofile.com/api/1/kawhi_leonard')
 
@@ -140,4 +140,60 @@ responses.add(
         self.assertEqual(responses.calls[0].request.url, 'https://nbaplayerprofile.com/api/1/createplayer')
         self.assertEqual(responses.calls[0].response.text, '{"name": "Di", "gender": "male", "result": "pass"}')
         self.assertEqual(responses.calls[0].response.headers['User-Agent'], 'Firefox/12.0')
+```
+
+#### 使用context manager来定义response
+除了上面说的`@responses.activate`和`responses.add()`方法外，responses也支持with关键字，作为context manager来定义。
+
+```python
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-os
+import responses
+import requests
+from unittest import TestCase
+
+#不需要使用@responses.activate
+class Demo1(TestCase):
+
+    def test_context_manager(self):
+        #使用with关键字和responses.RequestsMock()
+        with responses.RequestsMock() as resp:
+            #同样使用add()方法定义
+            resp.add(resp.GET,
+                     'https://nbaplayerprofile.com/api/1/kawhi_leonard',
+                     json={
+                         'team': 'San Antonio Spurs',
+                         'personal': {
+                             'DOB': '6/29/1991',
+                             'Ht': '67',
+                             'Wt': '230'
+                         }},
+                     status=200,
+                     content_type='application/json'
+                     )
+
+            expected_Kawhi_profile = {
+                         'team' : 'San Antonio Spurs',
+                          'personal' : {
+                              'DOB' : '6/29/1991',
+                              'Ht' : '67',
+                              'Wt' : '230'
+                          }
+                      }
+
+            # 发送了两次请求
+            resps = requests.get('https://nbaplayerprofile.com/api/1/kawhi_leonard')
+            resps1 = requests.get('https://nbaplayerprofile.com/api/1/kawhi_leonard')
+
+            # 对获得的response进行验证
+            self.assertEqual(resps.status_code, 200)
+            self.assertEqual(resps1.json(), expected_Kawhi_profile)
+
+            # responses.calls会记录所有的请求响应情况，可以利用起来进行验证
+            #这里的responses就是with关键字定义的名称
+            self.assertEqual(len(resp.calls), 2)
+            self.assertEqual(resp.calls[0].request.url, 'https://nbaplayerprofile.com/api/1/kawhi_leonard')
+            self.assertEqual(resp.calls[1].response.text,
+                             '{"team": "San Antonio Spurs", "personal": {"DOB": "6/29/1991", "Ht": "67", "Wt": "230"}}')
+
 ```
