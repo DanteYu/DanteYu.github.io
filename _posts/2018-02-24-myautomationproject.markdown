@@ -39,6 +39,7 @@ tags:
 
 3. Test Double
    * [python + unittest + doublex](https://github.com/DanteYu/Test_Automation_Demo/tree/master/TestDouble/python_unittest_doublex)
+   * [python + unittest + responses](https://github.com/DanteYu/Test_Automation_Demo/tree/master/TestDouble/python_unittest_responses)
 
 
 repo地址： [MyDemo](https://github.com/DanteYu/Test_Automation_Demo)
