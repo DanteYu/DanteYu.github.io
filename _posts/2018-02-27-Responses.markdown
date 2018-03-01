@@ -197,3 +197,43 @@ class Demo1(TestCase):
                              '{"team": "San Antonio Spurs", "personal": {"DOB": "6/29/1991", "Ht": "67", "Wt": "230"}}')
 
 ```
+
+当定义的mock service没有被访问的时候，`AssertionError: Not all requests have been executed`会被raise，这时候需要设置参数`assert_all_requests_are_fired=False`来避免这个异常。
+```python
+def test_requests_fired(self):
+    # 设置assert_all_requests_are_fired来避免AssertionError: Not all requests have been executed`
+    with responses.RequestsMock(assert_all_requests_are_fired=False) as resp:
+        # 同样使用add()方法定义
+        resp.add(resp.GET,
+                 'https://nbaplayerprofile.com/api/1/kawhi_leonard',
+                 json={
+                     'team': 'San Antonio Spurs',
+                     'personal': {
+                         'DOB': '6/29/1991',
+                         'Ht': '67',
+                         'Wt': '230'
+                     }},
+                 status=200,
+                 content_type='application/json'
+                 )
+```
+
+同样的，我们也可以定制化responses，这里需要使用`response_callback`参数。
+```python
+def test_callback(self):
+    #定义response_callback方法，接受一个responses为参数，返回一个responses
+    #这个例子中我们给responses加了一个属性
+    def response_callback(resp):
+        resp.result = 'pass'
+        return resp
+
+    with responses.RequestsMock(response_callback=response_callback) as stub:
+        stub.add(responses.GET,
+                           "https://nbaplayerprofile.com/api/1/foo",
+                            body="I am body"
+                           )
+        resps = requests.get("https://nbaplayerprofile.com/api/1/foo", "I am request")
+        self.assertEqual(resps.text, "I am body")
+        #验证callback方法写入的新属性
+        self.assertEqual(resps.result, "pass")
+```
