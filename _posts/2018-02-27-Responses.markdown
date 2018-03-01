@@ -91,7 +91,7 @@ responses.add(
 ```
 
 #### Dynamic Responses
-如果我们不想要返回固定的body，而是根据请求的不同返回不同的body，这个就需要`responses.add_callback()`功能。具体做法很简单，写一个callback方法处理request，然后返回一个tuple(status, headers, body)，然后callback方法作为参数传入到`responses.add_callback()`中，相当于设置好了返回的status code， header和body。
+如果我们不想要返回固定的responses.body，而是根据请求的不同返回不同的responses.body，这个就需要`responses.add_callback()`功能。具体做法很简单，写一个callback方法处理request，然后返回一个tuple(status, headers, body)，然后callback方法作为参数传入到`responses.add_callback()`中，相当于设置好了返回的status code， header和body。
 
 ```python
     @responses.activate
@@ -152,9 +152,8 @@ import responses
 import requests
 from unittest import TestCase
 
-#不需要使用@responses.activate
 class Demo1(TestCase):
-
+    #不需要使用@responses.activate
     def test_context_manager(self):
         #使用with关键字和responses.RequestsMock()
         with responses.RequestsMock() as resp:
