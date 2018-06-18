@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      我的自动化测试项目demo
-subtitle:   ""
+subtitle:   
 date:       2018-05-24 12:00:00
 author:     DanteYu
 tags:

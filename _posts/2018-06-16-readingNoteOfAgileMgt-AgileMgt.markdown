@@ -7,6 +7,7 @@ author:     DanteYu
 tags:
     - book
 ---
+
 本文是书籍[敏捷项目管理](https://item.jd.com/11837423.html)第四部分“敏捷管理”的读书笔记。
 
 ### 第15章：质量和风险管理
