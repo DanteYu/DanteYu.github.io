@@ -60,7 +60,7 @@ assert_that(stub.add(2,3), is_(4))
 
 `Mock Object`一个重要的特点是它可以对无法在待测系统上直接被观察到的行为或输出进行验证。无法观察到的系统行为或输出可以是数据插入数据库，可以是数据写入文件，也可以是对其他组件的调用。以数据库类型`Mock Object`举例，这个`Mock`的数据库会去接受待测系统发过来的数据，并且对这个数据进行验证，一旦验证通过就会对数据进行处理(插入或更新操作)，然后测试代码会去验证插入是否成功。
 
-下面是[python-doublex](http://python-doublex.readthedocs.io/en/latest/index.html)的Stub例子
+下面是[python-doublex](http://python-doublex.readthedocs.io/en/latest/index.html)的Mock例子
 ```python
 from doublex import Mock, assert_that, verify
 
@@ -91,7 +91,7 @@ assert_that(smtp, verify())
 
 那和`Mock Object`不同之处是什么呢？`Test Spy`是把待测对象对依赖系统的输出拿到了测试代码里面进行验证，这样的话，如果待测系统的输出不符合期望，`Test Spy`并不像`Mock Object`那样第一时间让测试失败，而是可以在测试代码中加入更多判断信息，让验证和测试结果更加可控和可视化
 
-下面是[python-doublex](http://python-doublex.readthedocs.io/en/latest/index.html)的Stub例子
+下面是[python-doublex](http://python-doublex.readthedocs.io/en/latest/index.html)的Spy例子
 ```python
 from hamcrest import contains_string
 from doublex import Spy, assert_that, called

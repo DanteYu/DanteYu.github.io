@@ -369,9 +369,7 @@ describe("A spec using beforeAll and afterAll", function() {
 ```
 ### this 关键字
 
-我们可以通过在`describe`里面设置全局变量来传递此变量到`it()`中。而在`beforeEach`, `it`和`afterEach`中我们可以通过this关键字来分享变量。但是对下一个`beforeEach`, `it`和`afterEach`
-
-`this`关键字都会被重置为empty file
+我们可以通过在`describe`里面设置全局变量来传递此变量到`it()`中。而在`beforeEach`, `it`和`afterEach`中我们可以通过this关键字来分享变量。但是对下一个`beforeEach`, `it`和`afterEach`, `this`关键字都会被重置为empty file
 
 ```javascript
 describe("A spec", function() {
