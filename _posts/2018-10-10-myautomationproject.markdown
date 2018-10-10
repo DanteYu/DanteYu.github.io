@@ -2,7 +2,7 @@
 layout:     post
 title:      我的自动化测试项目demo
 subtitle:   
-date:       2018-05-24 12:00:00
+date:       2018-10-10 12:00:00
 author:     DanteYu
 tags:
     - automation
@@ -31,6 +31,7 @@ tags:
 1. API testing
    * [python + behave + request](https://github.com/DanteYu/Test_Automation_Demo/tree/master/APITesting/python_behave_requests)
    * [js + mocha + chakram](https://github.com/DanteYu/Test_Automation_Demo/tree/master/APITesting/js_mocha_chakram)
+   * [java + restassured + junit](https://github.com/DanteYu/Test_Automation_Demo/tree/master/APITesting/java_restassured_junit)
 
 2. UI testing
    * [js + codeceptjs + webdriverio](https://github.com/DanteYu/Test_Automation_Demo/tree/master/UITesting/js_codeceptjs_webdriverio)
