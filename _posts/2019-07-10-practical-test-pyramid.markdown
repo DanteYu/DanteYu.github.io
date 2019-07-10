@@ -1,13 +1,13 @@
 ---
 layout:     post
-title:      实践中的测试金字塔
+title:      实用的测试金字塔
 subtitle:   
 date:       2018-06-02 12:00:00
 author:     DanteYu
 tags:
     - TestStrategy
 ---
-“测试金字塔”[Test Pyramid](https://martinfowler.com/bliki/TestPyramid.html)是一个提出了有段时间的概念，它是自动化测试策略的理想模型，告诉了我们从成本的角度，我们应该如何组织我们不同类型的测试，比如测试的粒度和数量。最近才看到今年初新出了一篇“实践中的测试金字塔”[The Practical Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html)，这篇文章重温了金字塔的概念，结合近几年测试的发展，举了很多基于实战的经验和例子。这篇文章记录我的读后纪要。
+“测试金字塔”[Test Pyramid](https://martinfowler.com/bliki/TestPyramid.html)是一个提出了有段时间的概念，它是自动化测试策略的理想模型，告诉了我们从成本的角度，我们应该如何组织我们不同类型的测试，比如测试的粒度和数量。最近才看到今年初新出了一篇“实用的测试金字塔”[The Practical Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html)，这篇文章重温了金字塔的概念，结合近几年测试的发展，举了很多基于实战的经验和例子。这篇文章记录我的读后纪要。
 
 #### 测试金字塔
 
