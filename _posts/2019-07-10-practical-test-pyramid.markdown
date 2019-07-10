@@ -2,7 +2,7 @@
 layout:     post
 title:      实用的测试金字塔
 subtitle:   
-date:       2018-06-02 12:00:00
+date:       2019-07-10 12:00:00
 author:     DanteYu
 tags:
     - TestStrategy
