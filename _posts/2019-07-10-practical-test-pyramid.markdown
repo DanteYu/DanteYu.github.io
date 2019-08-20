@@ -19,7 +19,6 @@ tags:
 
 ##### 单元测试
 如果是函数式语言，单元测试的范围就是函数；如果是面向对象语言，单元测试的范围可以从单一方法到整个类。基本思路都是使用不同的参数去验证返回值。
-
 单元测试可以分为两类：
 1. Solitary unit test - 使用`Test Double`(mocks and stubs)去代替所有测试对象的collaborators(被待测对象调用的类)。这样可以避免复杂的setup和一些副作用，排除由测试对象的环境可能引起的问题
 2. Sociable unit test - 只有当collaborators很慢或者有副作用时才使用`Test Double`，比如网络链接或是数据库读取
@@ -37,4 +36,6 @@ tags:
 
 可以理解为`Arrange, Act, Assert`或是`Given, When, Then`。
 
-##### 集成测试
+##### End to End Test
+
+基于cost-value ratio, End to End Test要控制在一个比较小的量级，能够覆盖代表产品最核心价值的user journey。那些组成user journey的steps就能够被自动化。
