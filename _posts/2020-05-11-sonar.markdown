@@ -1,0 +1,113 @@
+---
+layout:     post
+title:      sonar学习笔记
+subtitle:   ""
+date:       2020-05-11 12:00:00
+author:     DanteYu
+tags:
+    - sonar
+---
+#### 代码质量
+
+##### 代码级测试方法
+
+###### 静态方法 - 不执行代码的基础上发现缺陷
+
+1. 人工静态方法
+   1. pair programming
+   2. code view
+   3. 同行评审。基于Pull Request
+2. 自动静态方法
+   1. sonarqube
+   2. coverity
+
+###### 动态方法 - 执行代码的基础上发现缺陷
+
+1. 人工动态方法
+   1. UT
+2. 自动动态方法
+   1. 基于代码自动生成边界测试用例并执行。重点是如何实现边界测试用例的自动生成
+
+---
+
+##### 自动静态方法
+
+1. 不检查业务逻辑。更多发现基于规则的代码错误
+2. 高度自动化、发现问题成本低、发现问题广
+3. 用于质量控制和度量
+4. 易于和CI整合
+
+---
+
+##### Sonar架构
+
+[架构地址](http://localhost:9000/documentation/architecture/architecture-integration/)
+
+---
+
+##### 安装注意事项
+
+1. 需要jdk>=11
+2. 数据库不支持mysql 可以用postgresql
+
+##### 启动
+
+`bash sonar.sh console`   访问 http://localhost:9000/ 即可打开主页。使用`admin\admin`进行登录
+
+在gradle工程里面的`build.gradle`加上
+
+```
+plugins {
+	id "org.sonarqube" version "2.7"
+}
+```
+
+##### 执行
+
+使用下面的这样的gradle命令即可把结果同步给sonar
+
+```
+./gradlew sonarqube \
+  -Dsonar.projectKey=SpringTest \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.login=f6a04f23e771c07794535745325246b7e566a215
+```
+
+---
+
+##### Sonar基本概念
+
+Quality Profiles - rules的集合，可自由组合并应用于不同项目。
+
+Quality Gate - 设置基于扫描结果的门禁
+
+---
+
+##### IDE插件 - SonarLint
+
+SonarLint 会在编写代码时实时提示，并给出建议。也可以连接到SonarQube或SonarCloud，获取对相应项目的配置
+
+---
+
+##### 推荐实践
+
+1. 本地开发调试中，IDE可以对代码实现静态检查(SonarLint)
+
+2. 当代码提交后，CI流水线也有代码静态检查stage。如果有错误，能有效地通知到人和查看结果
+3. 一般针对项目都要求所有开发人员使用统一的静态代码规则库，所以SonarLint最好集成SonarQube
+4. 前端项目和后端项目都应该有。自动化测试项目也推荐用上
+5. 可以定制Quality Profile
+6. 设置合适的Quality Gate
+
+---
+
+##### 其他工具
+
+1. [PMD](https://pmd.github.io/)
+2. JAVA
+   1. [findbugs](http://findbugs.sourceforge.net/)
+   2. [checkstyles](https://checkstyle.sourceforge.io/)
+3. JS
+   1. [eslint](https://eslint.org/)
+   2. [jshint](https://jshint.com/)
+   3. [jslint](
