@@ -9,6 +9,26 @@ tags:
 ---
 这篇文章记录一些使用Rest Assured时遇到的问题以及对应的解决方案
 
+#### 使用multi-part/form-data 上传文件时
+
+* 不要忘了用multiPart第三个参数表明文件类型 下面例子是  `text/csv`
+* new file()的路径可以从src层级写起
+```
+   given()
+                .formParam("publicCouponCode", couponCode)
+                .formParam("source", "AUTOMATION")
+                .multiPart("redemptionCodesFile", new File("src/test/resources/customer_rewards/redemptionCode1.csv"), "text/csv")
+                .log().all()
+                .when()
+                .post("http://localhost:8081/api/v1/redemption-code")
+                .then()
+                .log().all()
+                .assertThat()
+                .statusCode(200);
+```
+
+
+
 ##### json response是列表
 当response是一个列表形式时，我们可以直接使用`$`或者`空字符串`作为路径来识别
 ```
