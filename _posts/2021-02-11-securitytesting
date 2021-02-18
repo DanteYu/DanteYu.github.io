@@ -25,13 +25,8 @@ SQL注入需要输入含有恶意的SQL语句带入数据库执行，通过这�
 
 通过上面的方式可以确定SQL注入是否存在，存在之后，就可以结合其他sql语句进行攻击。对于我们测试人员，在已知数据库结构和数据的情况下，就非常简单了，可以使用下面语句进行攻击
 `1' order by 1#`;(按照Mysql语法，#后面会被注释掉，使用这种方法屏蔽掉后面的单引号，避免语法错误)  不断增加 order by 后面的数字会判断出有多少列
-* 输入`1' union select database(),user()#` 就等于`SELECT first_name, last_name FROM users WHERE user_id = '1' union select database(),user()#`;`  database()将会返回当前网站所使用的数据库名字. user()将会返回执行当前查询的用户名. 类似地还有 `1' union select table_name,table_schema from information_schema.tables where table_schema= 'dvwa'#` information_schema 是 mysql 自带的一张表，这张数据表保存了 Mysql 服务器所有数据库的信息,如数据库名，数据库的表，表栏的数据类型与访问权限等
+* 输入`1' union select database(),user()#` 就等于`SELECT first_name, last_name FROM users WHERE user_id = '1' union select database(),user()#`;`  database()将会返回当前网站所使用的数据库名字. user()将会返回执行当前查询的用户名. 类似地还有 `1' union select table_name,table_schema from information_schema.tables where table_schema= 'dvwa'#` information_schema是mysql自带的一张表，这张数据表保存了Mysql服务器所有数据库的信息,如数据库名，数据库的表，表栏的数据类型与访问权限等
 
-
-作者：Jewel591
-链接：https://www.jianshu.com/p/078df7a35671
-来源：简书
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。`
 
 第二种 使用工具sqlmap
 
