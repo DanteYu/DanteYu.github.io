@@ -19,16 +19,25 @@ tags:
 SQL注入需要输入含有恶意的SQL语句带入数据库执行，通过这个恶意的SQL语句，获取表数据以及对数据增查改删，因为SQL注入漏洞的危害是极大的。 推荐下面二种方法进行测试
 
 第一种 手工测试
+如何判断SQL注入是否存在--> 最为经典的单引号判断法：在参数后面加上单引号,比如: `http://xxx/abc.php?id=1'` 如果页面返回错误，则存在 Sql 注入。原因是无论字符型还是整型都会因为单引号个数不匹配而报错
+
 1.对于数字 使用 `para=100` 判断查询正常, `para=100 and 1=1` 判断查询正常, `para=100'` 判断页面异常或是查询为空， `para=100 and 1=2` 查询数据为空
-2.对于字符串 使用 `para=test` 判断查询正常, `para=test and 1=1` 判断查询正常, `para=test'` 判断页面异常或是查询为空， `para=test and 1=2` 查询数据为空
+2.对于字符串 使用 `para=test` 判断查询正常, `para=test' and '1'='1` 判断查询正常, `para=test'` 判断页面异常或是查询为空， `para=test' and '1'='2` 查询数据为空
 3.对于搜索 使用 `para=test` 判断查询正常, `para=test%' and '%'='` 判断查询正常, `para=test'` 判断页面异常或是查询为空， `para=test%' and 'a%'='b` 查询数据为空
 
-通过上面的方式可以确定SQL注入是否存在，存在之后，就可以结合其他sql语句进行攻击。对于我们测试人员，在已知数据库结构和数据的情况下，就非常简单了，可以使用下面语句进行攻击
+通过上面的方式可以确定SQL注入是否存在，存在之后，就可以结合其他sql语句进行攻击。对于我们测试人员，在已知数据库结构和数据的情况下，就非常简单了，比如使用 `union select` 联合查询继续获取信息
 `1' order by 1#`;(按照Mysql语法，#后面会被注释掉，使用这种方法屏蔽掉后面的单引号，避免语法错误)  不断增加 order by 后面的数字会判断出有多少列
 * 输入`1' union select database(),user()#` 就等于`SELECT first_name, last_name FROM users WHERE user_id = '1' union select database(),user()#`;`  database()将会返回当前网站所使用的数据库名字. user()将会返回执行当前查询的用户名. 类似地还有 `1' union select table_name,table_schema from information_schema.tables where table_schema= 'dvwa'#` information_schema是mysql自带的一张表，这张数据表保存了Mysql服务器所有数据库的信息,如数据库名，数据库的表，表栏的数据类型与访问权限等
 
 
 第二种 使用工具sqlmap
+
+
+
+
+
+
+
 
 ##### 如何修复和预防
 1. 当操作数据库时，需要实现PreparementStatement接口对SQL语句进行预编译处理。
