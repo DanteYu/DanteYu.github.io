@@ -1,0 +1,45 @@
+---
+layout:     post
+title:      docker学习笔记
+subtitle:   ""
+date:       2021-03-29 12:00:00
+author:     DanteYu
+tags:
+    - docker	
+    - devops
+---
+
+记录一些学习docker的基础知识和常用命令。
+
+---
+
+#### 镜像操作
+
+* 查看本地images - `docker image ls`
+* 拉docker hub上的image - `docker image pull node:8.16.1`
+* 有了Dockerfile后，就可以编译打包我们的运行环境 - `docker image build -t komavideo/mynode:v01 .`  
+
+---
+
+#### 容器操作
+
+* 在环境中运行我们的应用 - `docker container run komavideo/mynode:v01`
+
+---
+
+
+#### 创建container，编写`Dockerfile`
+
+```
+FROM node:8.16.1    #使用此镜像
+
+RUN mkdir /src      #在环境初始化时，创建一个子目录
+
+COPY helo.js /src	#copy我本地的文件到新建的子目录里面 
+
+CMD ["node", "/src/helo.js"]	#在环境内跑node命令及其参数
+```
+
+
+
+	
