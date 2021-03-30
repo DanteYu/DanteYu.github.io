@@ -31,9 +31,11 @@ tags:
 	* i, --interactive  Keep STDIN open even if not attached
 	* t, --tty   Allocate a pseudo-TTY
 * 启动nignx - `docker container run --name myweb -d -p 8088:80 nginx:1.17.5-alpine`
+	* 容器内的80端口mapping到本地的8088端口
 	* -d, --detach	Run container in background and print container ID
 	* --name string	Assign a name to the containe
 	* -p, --publish list	Publish a container's port(s) to the host
+* 使用本地文件启动nignx - `docker container run --name myweb -d -p 8088:80 -v /home/lcadmin/myweb:/usr/share/nginx/html:ro nginx:1.17.5-alpine` 把本地目录mapping到容器内目录，这样容器内就是本地的文件内容 ro是read only
 * 停止容器服务 - docker container stop containername
 * 启动存在的容器 - docker container start containername
 * 列出所有容器 - docker container ls -a
