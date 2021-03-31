@@ -27,20 +27,23 @@ tags:
 * 运行制定命令 - `docker container run node:latest ls /etc/` 
 * 在有entrypoint为node情况下，可以直接运行node进程 - `docker container run mynode:latest -v`
 * 在有entrypoint为node情况下，可以直接运行node进程和js脚本 - `docker container run -it mynode:latest -e "console.log('helo')"`
-* -it 交互式的运行 - `docker container run -it mynode:latest`
+* 交互式的运行 - `docker container run --rm -it python:3.8.0-alpine3.10`
 	* i, --interactive  Keep STDIN open even if not attached
 	* t, --tty   Allocate a pseudo-TTY
+	* rm Automatically remove the container when it exits
 * 启动nignx - `docker container run --name myweb -d -p 8088:80 nginx:1.17.5-alpine`
 	* 容器内的80端口mapping到本地的8088端口
 	* -d, --detach	Run container in background and print container ID
 	* --name string	Assign a name to the containe
 	* -p, --publish list	Publish a container's port(s) to the host
 * 使用本地文件启动nignx - `docker container run --name myweb -d -p 8088:80 -v /home/lcadmin/myweb:/usr/share/nginx/html:ro nginx:1.17.5-alpine` 把本地目录mapping到容器内目录，这样容器内就是本地的文件内容 ro是read only
+* 启动PostgreSql数据库服务器 - `docker run --name webdb -p 5432:5432 -e POSTGRES_USER=dbuser -e POSTGRES_PASSWORD=12345678 -d postgres:9.6.16-alpine`
 * 停止容器服务 - docker container stop containername
 * 启动存在的容器 - docker container start containername
 * 列出所有容器 - docker container ls -a
 * 删除指定容器 - docker container rm -f containername
 * 删除所有容器 - docker container prune
+* 进入数据库实例的bash - `sudo docker exec -it webdb /bin/bash`
 ---
 
 
@@ -48,15 +51,21 @@ tags:
 
 ```
 FROM node:8.16.1    #使用此镜像
+FROM python:3.8
 
 RUN mkdir /src      #在环境初始化时，创建一个子目录
+RUN pip3 install numpy
+RUN mkdir -p /workfolder
 
 COPY helo.js /src	#copy我本地的文件到新建的子目录里面 
+COPY ./main.py /workfolder/
 
 ENTRYPOINT ["node"]  #使用 ENTRYPOINT 指令指定执行的进程 运行此镜像后，node进程就启动好了，可以直接带参数`-v`显示node版本号
 CMD ["-v"]	#搭配entrypoint node，可以直接显示node版本号
 
 CMD ["node", "/src/helo.js"]	#在环境内跑node命令及其参数  运行此镜像后 该命令自动运行
+CMD [ "python", "/workfolder/main.py" ]
+
 ```
 
 
