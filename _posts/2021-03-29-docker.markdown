@@ -44,12 +44,15 @@ tags:
 * 删除指定容器 - docker container rm -f containername
 * 删除所有容器 - docker container prune
 * 进入数据库实例的bash - `sudo docker exec -it webdb /bin/bash`
+* 建立Redis永久化卷标 - `docker volume create --name v_redis_data`
+* 绑定卷的查看 - `docker inspect container_instance_name`
+
 ---
 
 
 #### 创建container，编写`Dockerfile`
 
-```
+```bash
 FROM node:8.16.1    #使用此镜像
 FROM python:3.8
 
@@ -68,6 +71,31 @@ CMD [ "python", "/workfolder/main.py" ]
 
 ```
 
+---
+
+#### Docker-compose
+```bash
+
+```yml
+version: '3.8'
+services:
+  myweb:
+    build: .
+    ports:
+    - "8088:5000"
+    volumes:
+    - .:/app
+```
+```
+* 容器启动 - `docker-compose up`
+* 容器重新编译后启动 - `docker-compose up --build`
+* 容器启动(精灵线程) - `docker-compose up -d --build`
+* 查询容器状态 - `docker-compose ps`
+* 执行myweb容器内的命令 - `docker-compose run myweb top`
+* 查看容器输出日志 - `docker-compose logs -f myweb`
+* 容器停止 - `docker-compose stop`
+* 容器停止+消除(容器+网络) - `docker-compose down`
+* 容器停止+消除(容器+网络+镜像) - `docker-compose down --rmi all`
 
 
 	
