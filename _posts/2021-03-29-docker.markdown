@@ -38,11 +38,11 @@ tags:
 	* -p, --publish list	Publish a container's port(s) to the host
 * 使用本地文件启动nignx - `docker container run --name myweb -d -p 8088:80 -v /home/lcadmin/myweb:/usr/share/nginx/html:ro nginx:1.17.5-alpine` 把本地目录mapping到容器内目录，这样容器内就是本地的文件内容 ro是read only
 * 启动PostgreSql数据库服务器 - `docker run --name webdb -p 5432:5432 -e POSTGRES_USER=dbuser -e POSTGRES_PASSWORD=12345678 -d postgres:9.6.16-alpine`
-* 停止容器服务 - docker container stop containername
-* 启动存在的容器 - docker container start containername
-* 列出所有容器 - docker container ls -a
-* 删除指定容器 - docker container rm -f containername
-* 删除所有容器 - docker container prune
+* 停止容器服务 - `docker container stop containername`
+* 启动存在的容器 - `docker container start containername`
+* 列出所有容器 - `docker container ls -a`
+* 删除指定容器 - `docker container rm -f containername`
+* 删除所有容器 - `docker container prune`
 * 进入数据库实例的bash - `sudo docker exec -it webdb /bin/bash`
 * 建立Redis永久化卷标 - `docker volume create --name v_redis_data`
 * 绑定卷的查看 - `docker inspect container_instance_name`
@@ -80,10 +80,10 @@ CMD [ "python", "/workfolder/main.py" ]
 version: '3.8'
 services:
   myweb:
-    build: .
-    ports:
-    - "8088:5000"
-    volumes:
+    build: .  #本地编译打包
+    ports: 
+    - "8088:5000"  #端口号mapping
+    volumes:   #本地卷mapping
     - .:/app
 ```
 ```
