@@ -60,6 +60,8 @@ RUN mkdir /src      #在环境初始化时，创建一个子目录
 RUN pip3 install numpy
 RUN mkdir -p /workfolder
 
+ADD . /app #将当前目录映射到容器内/app目录
+
 COPY helo.js /src	#copy我本地的文件到新建的子目录里面 
 COPY ./main.py /workfolder/
 
@@ -86,6 +88,39 @@ services:
     volumes:   #本地卷mapping
     - .:/app
 ```
+
+```yaml
+version: '3.8'
+services:
+  myweb:
+    build: .
+    ports:
+    - "8088:5000"
+    volumes:
+    - .:/app
+    depends_on:   #依赖服务
+    - myredis
+  myredis:
+    image: redis:6.0.5-alpine
+```
+
+```yaml
+version: '3'
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./app:/app
+    command: sh -c "cd react-sample && yarn start"
+    ports:
+      - "3000:3000"
+    stdin_open: true # 标准输入
+
+```
+
+
 ```
 * 容器启动 - `docker-compose up`
 * 容器重新编译后启动 - `docker-compose up --build`
